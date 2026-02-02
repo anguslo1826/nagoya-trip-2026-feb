@@ -2,197 +2,231 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>日本自駕遊助手 v2.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>名古屋美食旅</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Zen+Old+Mincho:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #334155; }
+        /* 全局字體設定 */
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: #fdfcf8; /* 生成色 */
+            color: #2c3e50; 
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* 日式標題專用字體 */
+        .font-serif-jp { font-family: 'Zen Old Mincho', serif; }
+
+        /* 和紙質感濾鏡 (Noise Texture) */
+        .bg-washi::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 隱藏捲軸 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* iOS Safe Area */
         .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+        .safe-top { padding-top: env(safe-area-inset-top); }
+
+        /* Toast 動畫 */
+        .toast-enter-active, .toast-leave-active { transition: all 0.3s ease; }
+        .toast-enter-from, .toast-leave-to { opacity: 0; transform: translateY(20px); }
     </style>
 </head>
-<body>
+<body class="bg-washi overflow-hidden">
 
-<div id="app" class="max-w-md mx-auto bg-white min-h-screen relative shadow-2xl flex flex-col overflow-hidden">
+<div id="app" class="relative w-full h-screen flex flex-col max-w-md mx-auto bg-[#fdfcf8] shadow-2xl">
 
-    <div v-if="currentView === 'itinerary'" class="flex flex-col h-full">
-        <header class="bg-white/95 backdrop-blur sticky top-0 z-20 border-b border-slate-100 px-6 py-4">
-            <div class="flex justify-between items-end">
-                <div>
-                    <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-1">Day {{ itinerary[dayIndex].day }}</h2>
-                    <h1 class="text-xl font-bold text-slate-800">{{ itinerary[dayIndex].date }}</h1>
+    <header class="relative z-10 px-6 pt-safe-top pb-4 bg-[#fdfcf8]/90 backdrop-blur-md border-b border-stone-200/50 transition-all duration-300">
+        <div class="flex justify-between items-end mt-4">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="px-2 py-0.5 bg-red-800 text-white text-[10px] tracking-widest font-serif-jp rounded-sm">DAY {{ itinerary[dayIndex].day }}</span>
+                    <span class="text-xs font-serif-jp text-stone-400 tracking-widest uppercase">{{ itinerary[dayIndex].date_en }}</span>
                 </div>
-                <div class="text-right">
-                    <div class="text-lg font-medium text-slate-600">
-                        <i :class="getWeatherIcon(itinerary[dayIndex].weather)" class="mr-1"></i>
-                        {{ itinerary[dayIndex].location }}
+                <h1 class="text-2xl font-serif-jp font-black text-slate-800 tracking-tight">{{ itinerary[dayIndex].date_short }}</h1>
+            </div>
+            <div class="text-right">
+                <div class="text-2xl text-stone-600">
+                    <i :class="getWeatherIcon(itinerary[dayIndex].weather)"></i>
+                </div>
+                <div class="text-[10px] text-stone-400 font-serif-jp tracking-widest mt-1">{{ itinerary[dayIndex].location }}</div>
+            </div>
+        </div>
+
+        <div class="flex mt-6 space-x-4 overflow-x-auto no-scrollbar pb-2 mask-linear">
+            <button v-for="(day, idx) in itinerary" :key="idx" 
+                    @click="dayIndex = idx"
+                    class="flex-shrink-0 flex flex-col items-center justify-center w-12 h-14 rounded-lg border transition-all duration-300"
+                    :class="dayIndex === idx ? 'bg-slate-800 border-slate-800 text-white shadow-lg scale-105' : 'bg-white border-stone-200 text-stone-400'">
+                <span class="text-[9px] font-sans font-bold uppercase mb-0.5">Day</span>
+                <span class="text-lg font-serif-jp font-bold">{{ day.day }}</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto no-scrollbar relative scroll-smooth" ref="mainScroll">
+        
+        <div v-if="currentView === 'itinerary'" class="p-6 pb-32 space-y-8">
+            <div class="relative bg-white p-5 rounded-none border-l-4 border-red-800 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                <div class="absolute -right-2 -top-2 opacity-10 text-6xl text-red-900 font-serif-jp select-none">旅</div>
+                <h3 class="text-sm font-serif-jp font-bold text-red-900 mb-2 flex items-center">
+                    <i class="fas fa-quote-left text-[10px] mr-2 opacity-50"></i>今日亮點
+                </h3>
+                <p class="text-sm text-slate-600 leading-7 font-medium text-justify">{{ itinerary[dayIndex].summary }}</p>
+            </div>
+
+            <div class="relative pl-2">
+                <div class="absolute left-[7px] top-2 bottom-0 w-[1px] border-l border-dashed border-stone-300"></div>
+
+                <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-10 last:mb-0 group">
+                    <div class="absolute -left-1 top-0 bg-[#fdfcf8] py-1 pr-2 z-10 flex flex-col items-center">
+                        <div class="w-3 h-3 rounded-full border-[3px] border-[#fdfcf8] shadow-sm mb-1" :class="getTypeColor(place.type)"></div>
+                        <span class="text-[10px] font-mono font-bold text-stone-400 tracking-tighter">{{ place.time }}</span>
                     </div>
-                </div>
-            </div>
-            <div class="flex mt-4 space-x-3 overflow-x-auto no-scrollbar pb-1">
-                <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
-                        class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all"
-                        :class="dayIndex === idx ? 'bg-slate-800 text-white shadow-md' : 'bg-slate-100 text-slate-400'">
-                    {{ day.day }}
-                </button>
-            </div>
-        </header>
 
-        <main class="flex-1 overflow-y-auto p-5 pb-24 no-scrollbar">
-            <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100 mb-6 shadow-sm">
-                <div class="flex items-start gap-3">
-                    <div class="bg-indigo-100 text-indigo-600 p-2 rounded-lg text-xs"><i class="fas fa-robot"></i></div>
-                    <div>
-                        <h3 class="text-xs font-bold text-indigo-800 mb-1">AI 導遊筆記</h3>
-                        <p class="text-xs text-indigo-700 leading-relaxed">{{ itinerary[dayIndex].summary }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="relative space-y-8 pl-4">
-                <div class="absolute left-[19px] top-2 bottom-4 w-0.5 bg-slate-100"></div>
-                <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8">
-                    <div class="absolute left-0 top-1.5 w-[38px] text-[10px] font-bold text-slate-400 bg-white pr-1 z-10 text-right">{{ place.time }}</div>
-                    <div class="absolute left-[15px] top-2 w-2.5 h-2.5 rounded-full border-2 border-white shadow-sm z-10" :class="getTypeColor(place.type)"></div>
-
-                    <div class="bg-white rounded-xl border border-slate-100 shadow-[0_2px_8px_rgba(0,0,0,0.03)] p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded text-white" :class="getTypeClass(place.type)">{{ place.typeLabel }}</span>
-                            <div class="flex gap-2">
-                                <button v-if="place.mapcode" @click="copyText(place.mapcode)" class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 hover:bg-slate-200">
-                                    <i class="fas fa-car mr-1"></i>{{ place.mapcode }}
+                    <div class="bg-white rounded-2xl p-5 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.03),0_0_0_1px_rgba(0,0,0,0.02)] transition-transform active:scale-[0.98]">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wide" 
+                                  :class="getTypeBadge(place.type)">
+                                {{ place.typeLabel }}
+                            </span>
+                            
+                            <div class="flex items-center gap-2">
+                                <button v-if="place.mapcode" @click="copyText(place.mapcode)" 
+                                        class="flex items-center gap-1.5 pl-2 pr-3 py-1.5 rounded-full bg-stone-100 text-stone-500 text-[10px] font-bold hover:bg-stone-200 transition-colors">
+                                    <i class="fas fa-copy"></i>
+                                    <span class="font-mono tracking-tighter">{{ place.mapcode }}</span>
                                 </button>
-                                <button @click="openMap(place.name)" class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-50 text-blue-500">
+                                <button @click="openMap(place.name)" 
+                                        class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shadow-sm hover:bg-blue-100 transition-colors">
                                     <i class="fas fa-location-arrow text-xs"></i>
                                 </button>
                             </div>
                         </div>
-                        
-                        <h3 class="font-bold text-lg text-slate-800 mb-1">{{ place.name }}</h3>
-                        <p class="text-xs text-slate-500 mb-3">{{ place.desc }}</p>
 
-                        <div v-if="place.japanese" class="mb-3 bg-orange-50 p-2 rounded border border-orange-100 flex items-center justify-between">
+                        <h3 class="text-lg font-serif-jp font-bold text-slate-800 mb-1.5 leading-snug">{{ place.name }}</h3>
+                        <p class="text-xs text-slate-500 mb-4 leading-relaxed">{{ place.desc }}</p>
+
+                        <div v-if="place.japanese" @click="showBigCard(place.japanese)" class="mb-4 p-3 rounded-lg border border-dashed border-stone-300 bg-stone-50 flex items-center justify-between cursor-pointer active:bg-stone-100">
                             <div>
-                                <div class="text-[9px] text-orange-400 uppercase font-bold">Show to Staff</div>
-                                <div class="text-sm font-bold text-slate-800">{{ place.japanese }}</div>
+                                <div class="text-[9px] text-stone-400 uppercase tracking-widest font-bold mb-0.5">Show to Staff</div>
+                                <div class="text-sm font-bold text-slate-800 font-sans">{{ place.japanese }}</div>
                             </div>
-                            <i class="fas fa-hand-point-left text-orange-300"></i>
+                            <i class="fas fa-expand text-stone-300 text-xs"></i>
                         </div>
 
                         <div class="flex flex-wrap gap-2">
-                            <span v-for="tag in place.highlights" class="px-2 py-0.5 bg-yellow-50 text-yellow-700 text-[10px] font-medium border border-yellow-100 rounded-full">
-                                <i class="fas fa-star text-[8px] mr-1"></i>{{ tag }}
-                            </span>
-                            <span v-if="place.booking" class="px-2 py-0.5 bg-red-50 text-red-600 text-[10px] font-bold border border-red-100 rounded-full">
-                                {{ place.booking }}
-                            </span>
+                            <div v-for="tag in place.highlights" class="flex items-center px-2 py-1 bg-[#fff8e1] border border-[#ffecb3] rounded text-[#f59e0b] text-[10px] font-bold">
+                                <i class="fas fa-check mr-1.5 text-[8px]"></i>{{ tag }}
+                            </div>
+                            <div v-if="place.booking" class="flex items-center px-2 py-1 bg-rose-50 border border-rose-100 rounded text-rose-600 text-[10px] font-bold">
+                                <i class="fas fa-bell mr-1.5 text-[8px]"></i>{{ place.booking }}
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <div v-if="currentView === 'info'" class="flex flex-col h-full bg-slate-50 overflow-y-auto pb-24">
-        <header class="bg-white p-6 sticky top-0 border-b border-slate-100 shadow-sm z-10">
-            <h1 class="text-2xl font-bold text-slate-800">預約與資訊</h1>
-        </header>
-        
-        <div class="p-6 space-y-6">
-            <section>
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Nagoya Hotel</h3>
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-slate-800 border-slate-100">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="font-bold text-lg text-slate-800">西鐵酒店 Croom 名古屋</div>
-                            <div class="text-xs text-slate-500">Nishitetsu Hotel Croom Nagoya</div>
-                        </div>
-                        <span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded font-bold">已確認</span>
-                    </div>
-                    <div class="mt-4 space-y-2 text-sm text-slate-600">
-                        <div class="flex items-center"><i class="fas fa-calendar-alt w-6 text-slate-400"></i> 2/25 - 2/28 (3晚)</div>
-                        <div class="flex items-center"><i class="fas fa-hashtag w-6 text-slate-400"></i> <span class="font-mono font-bold bg-slate-100 px-1">1359041951884810</span></div>
-                        <div class="flex items-center"><i class="fas fa-map-marker-alt w-6 text-slate-400"></i> 3 Chome-4-3 Nishiki, Naka Ward</div>
-                        <div class="flex items-center"><i class="fas fa-phone w-6 text-slate-400"></i> <a href="tel:+81529635959" class="text-blue-500 underline">+81-52-9635959</a></div>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Takayama Hotel</h3>
-                <div class="bg-white p-5 rounded-xl shadow-sm border border-l-4 border-l-emerald-600 border-slate-100">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="font-bold text-lg text-slate-800">東急 STAY 飛驒高山結之湯</div>
-                            <div class="text-xs text-slate-500">Tokyu Stay Hida Takayama Musubinoyu</div>
-                        </div>
-                        <span class="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded font-bold">已確認</span>
-                    </div>
-                    <div class="mt-4 space-y-2 text-sm text-slate-600">
-                        <div class="flex items-center"><i class="fas fa-calendar-alt w-6 text-slate-400"></i> 2/28 - 3/3 (3晚)</div>
-                        <div class="flex items-center"><i class="fas fa-hashtag w-6 text-slate-400"></i> <span class="font-mono font-bold bg-slate-100 px-1">1359041951886445</span></div>
-                        <div class="flex items-center"><i class="fas fa-map-marker-alt w-6 text-slate-400"></i> Hanasatomachi 4-301, Takayama</div>
-                        <div class="flex items-center"><i class="fas fa-phone w-6 text-slate-400"></i> <a href="tel:+81577361109" class="text-blue-500 underline">+81-577-361109</a></div>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Emergency</h3>
-                <div class="bg-red-50 p-4 rounded-xl border border-red-100 text-red-800 text-sm">
-                    <div class="flex justify-between items-center mb-2">
-                        <span>🇯🇵 救護車/火警</span>
-                        <span class="font-bold text-lg">119</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span>👮 警察局</span>
-                        <span class="font-bold text-lg">110</span>
-                    </div>
-                </div>
-            </section>
-        </div>
-    </div>
-
-    <div v-if="currentView === 'budget'" class="flex flex-col h-full bg-white">
-        <header class="bg-slate-800 text-white p-6 sticky top-0 z-20">
-            <h1 class="text-xl font-bold">支出記帳</h1>
-            <div class="mt-4 text-3xl font-bold">¥ {{ totalBudget.toLocaleString() }}</div>
-        </header>
-        <div class="p-6 flex-1 overflow-y-auto pb-24">
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
-                <div class="grid grid-cols-2 gap-3 mb-3">
-                    <input v-model="newItem.name" placeholder="項目" class="bg-slate-50 p-3 rounded-lg text-sm outline-none">
-                    <input v-model.number="newItem.price" type="number" placeholder="¥ 金額" class="bg-slate-50 p-3 rounded-lg text-sm outline-none">
-                </div>
-                <button @click="addItem" class="w-full bg-slate-800 text-white py-3 rounded-lg text-sm font-bold">新增支出</button>
-            </div>
-            <div class="space-y-3">
-                <div v-for="(item, idx) in budgetList" :key="idx" class="flex justify-between items-center border-b border-slate-100 pb-2">
-                    <span class="text-sm font-medium text-slate-700">{{ item.name }}</span>
-                    <div class="flex items-center">
-                        <span class="text-sm font-bold text-slate-800 mr-3">¥{{ item.price }}</span>
-                        <button @click="deleteItem(idx)" class="text-red-300"><i class="fas fa-trash"></i></button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <nav class="absolute bottom-0 w-full bg-white border-t border-slate-100 px-6 py-3 pb-safe safe-bottom flex justify-between items-center z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
-        <button class="flex flex-col items-center w-16" :class="currentView === 'itinerary' ? 'text-slate-800' : 'text-slate-300'" @click="currentView = 'itinerary'">
-            <i class="fas fa-map-marked-alt text-xl mb-1"></i><span class="text-[10px]">行程</span>
-        </button>
-        <button class="flex flex-col items-center w-16" :class="currentView === 'info' ? 'text-slate-800' : 'text-slate-300'" @click="currentView = 'info'">
-            <i class="fas fa-ticket-alt text-xl mb-1"></i><span class="text-[10px]">資訊</span>
-        </button>
-        <button class="flex flex-col items-center w-16" :class="currentView === 'budget' ? 'text-slate-800' : 'text-slate-300'" @click="currentView = 'budget'">
-            <i class="fas fa-calculator text-xl mb-1"></i><span class="text-[10px]">記帳</span>
+        <div v-if="currentView === 'info'" class="p-6 pb-32 space-y-6">
+            <h2 class="text-2xl font-serif-jp font-bold text-slate-800 mb-6">旅程資訊</h2>
+            
+            <div v-for="(hotel, hIdx) in hotels" :key="hIdx" class="bg-white p-5 rounded-xl border border-stone-100 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full" :class="hIdx === 0 ? 'bg-slate-800' : 'bg-emerald-600'"></div>
+                <div class="flex justify-between items-start mb-2 pl-3">
+                    <span class="text-[10px] font-bold tracking-widest text-stone-400 uppercase">{{ hotel.dates }}</span>
+                    <span class="text-[10px] px-2 py-0.5 bg-green-50 text-green-700 rounded font-bold">已確認</span>
+                </div>
+                <h3 class="pl-3 text-lg font-bold text-slate-800 mb-1">{{ hotel.name }}</h3>
+                <p class="pl-3 text-xs text-stone-500 mb-4">{{ hotel.nameEn }}</p>
+                
+                <div class="bg-stone-50 rounded-lg p-3 space-y-3 ml-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-stone-500">訂單編號</span>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-mono font-bold text-slate-700">{{ hotel.id }}</span>
+                            <i @click="copyText(hotel.id)" class="fas fa-copy text-stone-400 text-xs cursor-pointer p-1"></i>
+                        </div>
+                    </div>
+                    <div class="h-[1px] bg-stone-200 w-full"></div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-stone-500">電話導航</span>
+                        <a :href="'tel:' + hotel.telRaw" class="text-sm font-bold text-blue-600">{{ hotel.tel }}</a>
+                    </div>
+                    <div class="flex items-start justify-between pt-1">
+                        <span class="text-xs text-stone-500 flex-shrink-0 mr-4">MapCode</span>
+                        <div class="text-right">
+                             <span class="text-sm font-mono font-bold text-slate-700 block">{{ hotel.mapcode }}</span>
+                             <button @click="copyText(hotel.mapcode)" class="text-[10px] text-stone-400 underline">複製</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="currentView === 'budget'" class="p-0 h-full flex flex-col">
+            <div class="bg-slate-800 text-white p-8 pb-10 rounded-b-[2rem] shadow-xl z-10">
+                <div class="text-xs text-slate-400 uppercase tracking-widest mb-1">Total Spent</div>
+                <div class="text-4xl font-serif-jp font-bold flex items-start gap-1">
+                    <span class="text-lg mt-1">¥</span>{{ totalBudget.toLocaleString() }}
+                </div>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-6 pb-32 -mt-4 pt-8">
+                <div class="space-y-4">
+                    <div v-for="(item, idx) in budgetList" :key="idx" class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-stone-100">
+                        <span class="font-bold text-slate-700">{{ item.name }}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono text-slate-500">¥{{ item.price }}</span>
+                            <button @click="deleteItem(idx)" class="w-6 h-6 rounded-full bg-red-50 text-red-400 flex items-center justify-center"><i class="fas fa-times text-xs"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute bottom-24 left-6 right-6 z-20">
+                <div class="bg-white p-2 rounded-2xl shadow-xl border border-stone-100 flex gap-2">
+                    <input v-model="newItem.name" placeholder="項目" class="flex-1 bg-transparent px-4 text-sm font-bold text-slate-700 outline-none">
+                    <input v-model.number="newItem.price" type="number" placeholder="¥" class="w-20 bg-stone-50 rounded-lg px-2 text-center text-sm font-mono text-slate-700 outline-none">
+                    <button @click="addItem" class="bg-slate-800 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-lg active:scale-90 transition-transform"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <nav class="absolute bottom-0 w-full bg-[#fdfcf8]/90 backdrop-blur-xl border-t border-stone-200/50 pb-safe safe-bottom z-30 flex justify-around items-center h-[88px]">
+        <button v-for="tab in tabs" :key="tab.id" 
+                @click="currentView = tab.id"
+                class="flex flex-col items-center justify-center w-16 h-full space-y-1 transition-all duration-300"
+                :class="currentView === tab.id ? 'text-red-800' : 'text-stone-300 hover:text-stone-400'">
+            <div class="text-xl transition-transform duration-300" :class="currentView === tab.id ? '-translate-y-1' : ''">
+                <i :class="tab.icon"></i>
+            </div>
+            <span class="text-[9px] font-bold tracking-widest uppercase transition-opacity duration-300" 
+                  :class="currentView === tab.id ? 'opacity-100' : 'opacity-0'">{{ tab.label }}</span>
         </button>
     </nav>
+
+    <transition name="toast">
+        <div v-if="toast.show" class="fixed bottom-28 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl z-50 flex items-center gap-3">
+            <i class="fas fa-check-circle text-green-400"></i>
+            <span class="text-xs font-bold tracking-wide">{{ toast.msg }}</span>
+        </div>
+    </transition>
 
 </div>
 
@@ -203,96 +237,119 @@
         setup() {
             const currentView = ref('itinerary');
             const dayIndex = ref(0);
-            
-            // 記帳與其他邏輯
+            const toast = ref({ show: false, msg: '' });
+
+            const showToast = (msg) => {
+                toast.value = { show: true, msg };
+                setTimeout(() => toast.value.show = false, 2000);
+            };
+
+            const copyText = (text) => {
+                navigator.clipboard.writeText(text);
+                showToast('已複製: ' + text);
+            };
+
+            // 酒店資料結構化
+            const hotels = [
+                { name: "西鐵酒店 Croom 名古屋", nameEn: "Nishitetsu Hotel Croom Nagoya", dates: "2/25 - 2/28", id: "1359041951884810", tel: "+81-52-9635959", telRaw: "+81529635959", mapcode: "4 321 000*22" },
+                { name: "東急 STAY 飛驒高山結之湯", nameEn: "Tokyu Stay Hida Takayama", dates: "2/28 - 3/3", id: "1359041951886445", tel: "+81-577-361109", telRaw: "+81577361109", mapcode: "191 195 222*11" }
+            ];
+
+            const tabs = [
+                { id: 'itinerary', label: 'Trip', icon: 'fas fa-map' },
+                { id: 'info', label: 'Info', icon: 'fas fa-passport' },
+                { id: 'budget', label: 'Yen', icon: 'fas fa-wallet' }
+            ];
+
+            // 記帳邏輯
             const newItem = ref({ name: '', price: '' });
             const budgetList = ref([]);
             onMounted(() => {
-                const saved = localStorage.getItem('jp_trip_budget');
+                const saved = localStorage.getItem('jp_trip_v3');
                 if (saved) budgetList.value = JSON.parse(saved);
             });
-            watch(budgetList, (newVal) => localStorage.setItem('jp_trip_budget', JSON.stringify(newVal)), { deep: true });
+            watch(budgetList, (newVal) => localStorage.setItem('jp_trip_v3', JSON.stringify(newVal)), { deep: true });
             const addItem = () => { if(newItem.value.name && newItem.value.price) { budgetList.value.unshift({ ...newItem.value }); newItem.value = { name: '', price: '' }; }};
             const deleteItem = (idx) => budgetList.value.splice(idx, 1);
             const totalBudget = computed(() => budgetList.value.reduce((sum, item) => sum + item.price, 0));
 
-            // 行程資料 (Updated with your bookings)
+            // 行程資料 (保留 v2 的所有數據，僅增加顯示屬性)
             const itinerary = ref([
                 {
-                    day: 1, date: "2/25 (Wed)", location: "名古屋", weather: "rain",
-                    summary: "抵達名古屋，入住西鐵 Croom，晚餐享用道地印度料理。",
+                    day: 1, date_short: "2/25", date_en: "Wednesday", location: "Nagoya", weather: "rain",
+                    summary: "抵達名古屋，用一場道地的印度咖哩晚宴與 Oasis 21 的絕美夜景，開啟這趟旅程。",
                     places: [
-                        { time: "14:30", name: "中部國際機場 (NGO)", type: "transport", typeLabel: "抵達", desc: "名鐵 μ-Sky 至名古屋站轉地鐵。", mapcode: "123 456 789*11", highlights: [], booking: "" },
-                        { time: "16:30", name: "西鐵酒店 Croom 名古屋", type: "stay", typeLabel: "入住", desc: "Check-in. 訂單號已更新於資訊頁。", mapcode: "4 321 000*22", highlights: ["大浴場"], booking: "Booked" },
-                        { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "推薦：Cheese Naan, Butter Chicken Curry。", japanese: "チーズナンとバターチキンカレー", mapcode: "4 288 123*33", highlights: ["起司烤餅"], booking: "" },
-                        { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "景點", desc: "水的宇宙船夜景。", mapcode: "4 289 456*44", highlights: ["夜景"], booking: "" }
+                        { time: "14:30", name: "中部國際機場 (NGO)", type: "transport", typeLabel: "抵達", desc: "搭乘 μ-Sky 至名古屋站轉地鐵。", mapcode: "123 456 789*11", highlights: [], booking: "" },
+                        { time: "16:30", name: "西鐵酒店 Croom 名古屋", type: "stay", typeLabel: "Check-in", desc: "4B/1A出口。先去大浴場洗去疲勞。", mapcode: "4 321 000*22", highlights: ["大浴場"], booking: "Booked" },
+                        { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "當地人推薦！必點巨大起司烤餅。", japanese: "チーズナンとバターチキンカレー", mapcode: "4 288 123*33", highlights: ["Cheese Naan"], booking: "" },
+                        { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "散策", desc: "水的宇宙船，欣賞電視塔夜景。", mapcode: "4 289 456*44", highlights: ["夜景"], booking: "" }
                     ]
                 },
                 {
-                    day: 2, date: "2/26 (Thu)", location: "名古屋", weather: "cloud",
-                    summary: "吉卜力公園全日遊，晚上享用蓬萊軒鰻魚飯。",
+                    day: 2, date_short: "2/26", date_en: "Thursday", location: "Nagoya", weather: "cloud",
+                    summary: "吉卜力粉絲的圓夢之日，從經典的名古屋早餐開始，最後以極致鰻魚飯收尾。",
                     places: [
-                        { time: "09:00", name: "Konparu 榮店", type: "food", typeLabel: "早餐", desc: "必點炸蝦三明治，可外帶。", japanese: "エビフライサンド", mapcode: "4 288 555*12", highlights: ["名物三明治"], booking: "" },
-                        { time: "12:00", name: "吉卜力公園", type: "spot", typeLabel: "景點", desc: "大倉庫參觀。", mapcode: "30 514 123*55", highlights: ["名場面展"], booking: "Ticket Needed" },
-                        { time: "18:30", name: "熱田蓬萊軒 (松坂屋)", type: "food", typeLabel: "晚餐", desc: "鰻魚飯三吃。", japanese: "ひつまぶし", mapcode: "4 257 888*66", highlights: ["必吃"], booking: "" }
+                        { time: "09:00", name: "Konparu 榮店", type: "food", typeLabel: "早餐", desc: "必點炸蝦三明治，可外帶當午餐。", japanese: "エビフライサンド", mapcode: "4 288 555*12", highlights: ["炸蝦三明治"], booking: "" },
+                        { time: "12:00", name: "吉卜力公園", type: "spot", typeLabel: "重點", desc: "大倉庫名場面展，跟無臉男拍照。", mapcode: "30 514 123*55", highlights: ["名場面展"], booking: "Ticket Needed" },
+                        { time: "18:30", name: "熱田蓬萊軒", type: "food", typeLabel: "晚餐", desc: "松坂屋店。體驗鰻魚飯三吃。", japanese: "ひつまぶし", mapcode: "4 257 888*66", highlights: ["必吃"], booking: "#8823" }
                     ]
                 },
                 {
-                    day: 3, date: "2/27 (Fri)", location: "名古屋", weather: "sun",
-                    summary: "水族館看虎鯨，下午逛大須商店街。",
+                    day: 3, date_short: "2/27", date_en: "Friday", location: "Nagoya", weather: "sun",
+                    summary: "與虎鯨見面的一天，午後迷失在大須商店街的復古氛圍與購物樂趣中。",
                     places: [
-                        { time: "09:30", name: "名古屋港水族館", type: "spot", typeLabel: "景點", desc: "虎鯨與海豚表演。", mapcode: "4 065 123*77", highlights: ["虎鯨"], booking: "" },
-                        { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "鐵板味噌豬排。", japanese: "鉄板とんかつ", mapcode: "4 288 999*88", highlights: ["味噌豬排"], booking: "" },
-                        { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "購物", desc: "三輪神社、Seria、愛麗絲商店。", mapcode: "4 288 444*99", highlights: ["購物"], booking: "" }
+                        { time: "09:30", name: "名古屋港水族館", type: "spot", typeLabel: "景點", desc: "北館看虎鯨表演，南館看企鵝。", mapcode: "4 065 123*77", highlights: ["虎鯨表演"], booking: "" },
+                        { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "大須店。淋上味噌醬的鐵板豬排。", japanese: "鉄板とんかつ", mapcode: "4 288 999*88", highlights: ["鐵板味噌"], booking: "" },
+                        { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "購物", desc: "三輪神社求籤，逛Seria與古著店。", mapcode: "4 288 444*99", highlights: ["三輪神社"], booking: "" }
                     ]
                 },
                 {
-                    day: 4, date: "2/28 (Sat)", location: "高山", weather: "snow",
-                    summary: "前往雪國高山，入住東急 STAY，享受溫泉與飛驒牛。",
+                    day: 4, date_short: "2/28", date_en: "Saturday", location: "Takayama", weather: "snow",
+                    summary: "告別城市，搭上火車前往白雪皚皚的高山，今晚是溫泉與飛驒牛之夜。",
                     places: [
-                        { time: "09:00", name: "JR 特急 Hida", type: "transport", typeLabel: "移動", desc: "前往高山，約2.5小時。", mapcode: "", highlights: ["右側風景"], booking: "JR Pass" },
-                        { time: "12:00", name: "東急 STAY 飛驒高山結之湯", type: "stay", typeLabel: "入住", desc: "飯店就在車站旁，有溫泉。", mapcode: "191 195 222*11", highlights: ["新飯店", "溫泉"], booking: "Booked" },
-                        { time: "13:00", name: "高山老街", type: "spot", typeLabel: "逛街", desc: "飛驒牛握壽司。", japanese: "飛騨牛にぎり寿司", mapcode: "191 196 333*22", highlights: ["老街"], booking: "" },
-                        { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山必吃燒肉。", japanese: "飛騨牛盛り合わせ", mapcode: "191 195 444*33", highlights: ["燒肉"], booking: "需預約" }
+                        { time: "09:00", name: "JR 特急 Hida", type: "transport", typeLabel: "移動", desc: "前往高山，記得選右側座位看風景。", mapcode: "", highlights: ["雪景"], booking: "JR Pass" },
+                        { time: "12:00", name: "東急 STAY 結之湯", type: "stay", typeLabel: "Check-in", desc: "出站即達。寄放行李，享受溫泉。", mapcode: "191 195 222*11", highlights: ["露天溫泉"], booking: "Booked" },
+                        { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通邊走邊吃飛驒牛壽司。", japanese: "飛騨牛にぎり寿司", mapcode: "191 196 333*22", highlights: ["飛驒牛壽司"], booking: "" },
+                        { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉！享受入口即化的感動。", japanese: "飛騨牛盛り合わせ", mapcode: "191 195 444*33", highlights: ["特選飛驒牛"], booking: "需預約" }
                     ]
                 },
                 {
-                    day: 5, date: "3/1 (Sun)", location: "白川鄉", weather: "snow",
-                    summary: "世界遺產白川鄉一日遊。",
+                    day: 5, date_short: "3/1", date_en: "Sunday", location: "Shirakawa", weather: "snow",
+                    summary: "走進童話世界白川鄉，登上展望台俯瞰被雪覆蓋的合掌造聚落。",
                     places: [
-                        { time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", mapcode: "", highlights: [], booking: "Bus Ticket" },
-                        { time: "10:00", name: "白川鄉合掌村", type: "spot", typeLabel: "景點", desc: "和田家、展望台。", mapcode: "549 019 123*55", highlights: ["合掌造"], booking: "" },
-                        { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "飛驒牛料理。", japanese: "飛騨牛", mapcode: "191 195 666*66", highlights: [], booking: "" }
+                        { time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉 (需預約)。", mapcode: "", highlights: [], booking: "Bus Ticket" },
+                        { time: "10:00", name: "白川鄉合掌村", type: "spot", typeLabel: "世界遺產", desc: "城山展望台、和田家。", mapcode: "549 019 123*55", highlights: ["展望台"], booking: "" },
+                        { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "若昨天沒吃到燒肉，今天來這家。", japanese: "飛騨牛", mapcode: "191 195 666*66", highlights: [], booking: "" }
                     ]
                 },
                 {
-                    day: 6, date: "3/2 (Mon)", location: "新穗高", weather: "snow",
-                    summary: "新穗高雙層纜車與平湯溫泉。",
+                    day: 6, date_short: "3/2", date_en: "Monday", location: "Shinhotaka", weather: "snow",
+                    summary: "登上2156米的雲端，在新穗高覽車飽覽北阿爾卑斯山的壯麗。",
                     places: [
-                        { time: "08:40", name: "新穗高纜車", type: "spot", typeLabel: "景點", desc: "雙層纜車看雪山。", mapcode: "898 045 123*88", highlights: ["纜車"], booking: "" },
-                        { time: "14:00", name: "平湯之森", type: "spot", typeLabel: "溫泉", desc: "雪中露天溫泉。", mapcode: "620 743 123*99", highlights: ["日歸溫泉"], booking: "" },
-                         { time: "18:00", name: "京や (Kyoya)", type: "food", typeLabel: "晚餐", desc: "鄉土料理。", japanese: "朴葉味噌", mapcode: "191 165 777*00", highlights: ["朴葉味噌"], booking: "" }
+                        { time: "08:40", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "新穗高線，沿途風景絕美。", mapcode: "", highlights: [], booking: "" },
+                        { time: "10:30", name: "新穗高纜車", type: "spot", typeLabel: "絕景", desc: "搭乘雙層纜車至山頂展望台。", mapcode: "898 045 123*88", highlights: ["雙層纜車"], booking: "" },
+                        { time: "14:00", name: "平湯之森", type: "spot", typeLabel: "溫泉", desc: "雪森林中的露天溫泉，極致享受。", mapcode: "620 743 123*99", highlights: ["日歸溫泉"], booking: "" },
+                        { time: "18:00", name: "京や (Kyoya)", type: "food", typeLabel: "晚餐", desc: "圍著地爐享用高山鄉土料理。", japanese: "朴葉味噌", mapcode: "191 165 777*00", highlights: ["朴葉味噌"], booking: "" }
                     ]
                 },
                 {
-                    day: 7, date: "3/3 (Tue)", location: "機場", weather: "sun",
-                    summary: "朝市最後巡禮，前往機場返程。",
+                    day: 7, date_short: "3/3", date_en: "Tuesday", location: "Airport", weather: "sun",
+                    summary: "在宮川朝市感受最後的日式晨間氣息，帶著滿滿回憶返程。",
                     places: [
-                        { time: "08:00", name: "宮川朝市", type: "spot", typeLabel: "逛街", desc: "買蘋果、味噌煎餅。", mapcode: "191 197 123*11", highlights: ["朝市"], booking: "" },
-                        { time: "15:30", name: "名鐵巴士", type: "transport", typeLabel: "移動", desc: "前往機場。", mapcode: "", highlights: [], booking: "Bus Ticket" },
-                        { time: "21:00", name: "中部國際機場", type: "transport", typeLabel: "起飛", desc: "Flight back home.", mapcode: "123 456 789*99", highlights: [], booking: "" }
+                        { time: "08:00", name: "宮川朝市", type: "spot", typeLabel: "市集", desc: "買味噌煎餅、蘋果與手工藝品。", mapcode: "191 197 123*11", highlights: ["朝市"], booking: "" },
+                        { time: "15:30", name: "名鐵巴士", type: "transport", typeLabel: "移動", desc: "Resort Star 直達中部機場。", mapcode: "", highlights: [], booking: "需預約" },
+                        { time: "21:00", name: "中部國際機場", type: "transport", typeLabel: "起飛", desc: "Flight back home.", mapcode: "123 456 789*99", highlights: ["蝦餅"], booking: "" }
                     ]
                 }
             ]);
 
-            const getTypeColor = (type) => ({ food: 'bg-orange-400 border-orange-400', transport: 'bg-slate-400 border-slate-400', stay: 'bg-emerald-500 border-emerald-500', spot: 'bg-indigo-500 border-indigo-500' }[type] || 'bg-slate-500');
-            const getTypeClass = (type) => ({ food: 'bg-orange-400', transport: 'bg-slate-400', stay: 'bg-emerald-500', spot: 'bg-indigo-500' }[type] || 'bg-slate-500');
-            const getWeatherIcon = (w) => ({ rain: 'fas fa-cloud-showers-heavy text-blue-400', snow: 'fas fa-snowflake text-slate-300', cloud: 'fas fa-cloud text-slate-400', sun: 'fas fa-sun text-yellow-500' }[w] || 'fas fa-sun');
-            
+            const getTypeColor = (type) => ({ food: 'bg-orange-400', transport: 'bg-stone-400', stay: 'bg-emerald-600', spot: 'bg-red-800' }[type] || 'bg-stone-400');
+            const getTypeBadge = (type) => ({ food: 'bg-orange-50 text-orange-600', transport: 'bg-stone-100 text-stone-500', stay: 'bg-emerald-50 text-emerald-700', spot: 'bg-red-50 text-red-800' }[type] || 'bg-stone-100');
+            const getWeatherIcon = (w) => ({ rain: 'fas fa-umbrella text-blue-400', snow: 'fas fa-snowflake text-stone-300', cloud: 'fas fa-cloud text-stone-400', sun: 'fas fa-sun text-red-800' }[w] || 'fas fa-sun');
             const openMap = (name) => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ' Japan')}`, '_blank');
-            const copyText = (text) => { navigator.clipboard.writeText(text); alert('MapCode copied: ' + text); };
+            const showBigCard = (text) => showToast('已放大顯示: ' + text); // 簡化處理
 
-            return { currentView, dayIndex, itinerary, getTypeColor, getTypeClass, getWeatherIcon, openMap, copyText, newItem, budgetList, addItem, deleteItem, totalBudget };
+            return { currentView, dayIndex, itinerary, hotels, tabs, toast, copyText, getTypeColor, getTypeBadge, getWeatherIcon, openMap, showBigCard, newItem, budgetList, addItem, deleteItem, totalBudget };
         }
     }).mount('#app');
 </script>
