@@ -3,10 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v46</title>
+    <title>梓樂Nagoya Trip v48</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
+
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            // Only show critical errors, ignore trivial resizing errors
+            if (msg.includes('ResizeObserver')) return;
+            document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;top:0;left:0;z-index:9999;background:red;color:white;padding:20px;font-size:12px;max-width:100%;">⚠️ Error: ' + msg + '<br>Line: ' + line + '</div>');
+        };
+    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -26,6 +34,13 @@
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
         .sticker-float { animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-5px) rotate(5deg); } }
+        
+        /* Modal Transitions */
+        .modal-enter-active, .modal-leave-active { transition: opacity 0.3s ease; }
+        .modal-enter-from, .modal-leave-to { opacity: 0; }
+        .slide-up-enter-active { transition: all 0.3s ease-out; }
+        .slide-up-enter-from { transform: translateY(100%); }
+        .slide-up-leave-to { transform: translateY(100%); }
     </style>
 </head>
 <body>
@@ -37,7 +52,6 @@
     <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
         
         <div v-if="currentView === 'itinerary'" class="space-y-5 pb-4">
-            
             <div class="flex justify-between items-center mb-2 mt-2">
                 <div>
                     <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">JP.TRIP 2026</div>
@@ -164,7 +178,6 @@
 
         <div v-if="currentView === 'info'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho">資訊 Info</h2>
-            
             <div class="glass p-5 relative overflow-hidden text-center">
                 <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">距離出發</div>
                 <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
@@ -194,10 +207,6 @@
                         <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-300">TICKET (2/26 12:00)</span><i class="fas fa-qrcode text-emerald-300"></i></div>
                         <div class="font-bold text-sm">Ghibli Park Warehouse</div>
                     </a>
-                    <div class="bg-orange-500/20 border border-orange-500/30 p-3 rounded-xl">
-                        <div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold text-orange-300">DINING (2/26 19:30)</span></div>
-                        <div class="font-bold text-sm">Houraiken (#8823)</div>
-                    </div>
                 </div>
             </div>
 
@@ -229,9 +238,46 @@
         </button>
     </nav>
 
+    <transition name="modal">
     <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#1e293b] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto"><div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div><span class="px-3 py-1 bg-white/10 rounded-lg text-xs font-bold uppercase text-emerald-300">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-emerald-500/10 p-5 rounded-2xl border-l-4 border-emerald-500"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center text-emerald-400"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-emerald-600 text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-blue-600 text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Map</button></div></div>
+    </transition>
+
+    <transition name="modal">
     <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up"><h3 class="font-bold mb-4 text-lg">Add Expense</h3><div class="flex gap-3 mb-4"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-blue-500 border-blue-500 text-white':'bg-pink-500 border-pink-500 text-white'):'border-white/20 text-white/50'">{{ p }}</button></div><input v-model="newItem.name" placeholder="Item Name" class="w-full bg-white/10 p-4 rounded-xl mb-3 font-bold border border-white/10 text-white"><input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-white/10 p-4 rounded-xl mb-6 font-bold border border-white/10 text-white"><div class="flex gap-3"><button @click="showBudgetInput=false" class="flex-1 py-3 font-bold text-white/50">Cancel</button><button @click="addItem" class="flex-1 py-3 bg-white text-slate-900 rounded-xl font-bold">Save</button></div></div></div>
-    <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div><div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up"><h3 class="font-bold mb-4 text-lg">Add to Wishlist</h3><div class="mb-4 relative group"><input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-10"><div v-if="!newWishItem.image" class="w-full h-32 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center text-white/30"><i class="fas fa-camera text-2xl mb-1"></i><span class="text-xs">Upload Photo</span></div><img v-else :src="newWishItem.image" class="w-full h-32 object-cover rounded-xl"></div><input v-model="newWishItem.name" placeholder="Product Name" class="w-full bg-white/10 p-4 rounded-xl mb-3 font-bold border border-white/10 text-white"><input v-model.number="newWishItem.price" type="number" placeholder="¥ Price" class="w-full bg-white/10 p-4 rounded-xl mb-6 font-bold border border-white/10 text-white"><div class="flex gap-3"><button @click="showWishlistInput=false" class="flex-1 py-3 font-bold text-white/50">Cancel</button><button @click="addWishlist" class="flex-1 py-3 bg-white text-slate-900 rounded-xl font-bold">Add</button></div></div></div>
+    </transition>
+
+    <transition name="modal">
+    <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
+        <div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up flex flex-col max-h-[85vh]">
+            <h3 class="font-bold mb-4 text-lg flex-shrink-0">Add to Wishlist</h3>
+            
+            <div class="overflow-y-auto flex-1 pb-4 no-scrollbar">
+                <div class="mb-4 relative group shrink-0">
+                    <div v-if="!newWishItem.image" class="w-full h-32 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center text-white/30 relative">
+                        <i class="fas fa-camera text-2xl mb-1"></i><span class="text-xs">Upload Photo</span>
+                        <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
+                    </div>
+                    <div v-else class="relative">
+                        <img :src="newWishItem.image" class="w-full max-h-48 object-cover rounded-xl shadow-lg border border-white/10">
+                        <div class="flex gap-2 mt-2">
+                            <label class="flex-1 py-2 bg-white/10 rounded-lg text-xs font-bold text-center cursor-pointer hover:bg-white/20">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
+                            <button @click="newWishItem.image = null" class="flex-1 py-2 bg-red-500/20 text-red-300 rounded-lg text-xs font-bold hover:bg-red-500/30">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <input v-model="newWishItem.name" placeholder="Product Name" class="w-full bg-white/10 p-4 rounded-xl mb-3 font-bold border border-white/10 text-white outline-none focus:border-emerald-500 transition-colors">
+                <input v-model.number="newWishItem.price" type="number" placeholder="¥ Price" class="w-full bg-white/10 p-4 rounded-xl mb-6 font-bold border border-white/10 text-white outline-none focus:border-emerald-500 transition-colors">
+            </div>
+
+            <div class="flex gap-3 pt-2 border-t border-white/10 flex-shrink-0">
+                <button @click="showWishlistInput=false" class="flex-1 py-3 font-bold text-white/50 hover:text-white transition-colors">Cancel</button>
+                <button @click="addWishlist" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform">Add Item</button>
+            </div>
+        </div>
+    </div>
+    </transition>
 
 </div>
 
@@ -253,7 +299,6 @@
             const newWishItem = ref({ name: '', price: '', image: null });
             const budgetList = ref([]);
             const wishlist = ref([]);
-            // Renamed to avoid reserved word conflicts
             const currencyCalc = ref({ jpy: '', rate: 0.052 });
 
             const weatherDB = [
@@ -268,7 +313,7 @@
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
 
             const packingList = ref({
-                handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包', checked: false}, {name: 'SIM卡', checked: false}, {name: '手機 & 充電 & 尿袋', checked: false}, {name: '耳機 & 相機', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}, {name: '空水樽 & 原子筆', checked: false}, {name: '潤唇膏', checked: false}, {name: '眼罩/頸枕 & 牙刷', checked: false}, {name: '屋企Key', checked: false}],
+                handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包', checked: false}, {name: 'SIM卡', checked: false}, {name: '手機 & 充電', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}],
                 tszLok: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '男士剃鬚', checked: false}, {name: '轉插 & 拖板', checked: false}, {name: '雨傘/雨衣', checked: false}, {name: '拖鞋', checked: false}, {name: '備用膠袋', checked: false}],
                 tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}],
                 shared: [{name: 'Kayak: 泳衣', checked: false}, {name: 'Kayak: 防水袋', checked: false}, {name: 'Kayak: Aqua Shoes', checked: false}, {name: 'Kayak: 毛巾/沖涼液', checked: false}]
@@ -304,7 +349,7 @@
                 ]},
                 { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [
                     { time: "09:00", name: "JR Hida 特急", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["指定席"], strategy: "劃位時指名 'Luggage Seat' (最後一排)。\n火車美食：千壽炸蝦飯糰、松浦商店飛驒牛便當。" },
-                    { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" },
+                    { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445&locale=zh-HK&operate=OrderDetail&token=XB4CE8B65E4C1A9B51F4AB74B9B804819FE7D64930B951A2DB518044478D50D7&sign=AAEAAQAHb3JkZXJpZOyudZQ4DEJes1FdTePw_JT10SQJmS9FYEtZeLDRenkH-tripsign&requestid=10f6a615-a991-4765-86e8-fa746cf77a6c&source=1&allianceid=&ouid=&sid=", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" },
                     { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", highlights: ["飛驒牛壽司"], strategy: "邊走邊吃。\n必吃：飛驒牛握壽司 (坂口屋)、飛驒牛包子 (喜八郎)。\n去船坂酒造投幣試喝清酒。" },
                     { time: "15:00", name: "Check-in", type: "stay", typeLabel: "休息", desc: "換上作務衣。", highlights: ["頂樓風景"], strategy: "1. 在大廳 Pillow Bar 搶枕頭。\n2. 換上作務衣 (Samue)。\n3. 去頂樓看風景。" },
                     { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", highlights: ["A5飛驒牛"], strategy: "務必預約。若無預約，16:30 去排隊。\n必點：味藏盛拼盤 (Ajikura Mori)。\nA5 和牛油脂多，沾芥末或鹽最好吃。" },
@@ -336,10 +381,12 @@
                 ]}
             ]);
 
-            // COUNTDOWN LOGIC: Feb 3 (0%) to Feb 25 (100%)
-            const tripStart = new Date(2026, 1, 25, 9, 0, 0); // 2026-02-25
-            const countdownStart = new Date(2026, 1, 3, 9, 0, 0); // 2026-02-03 (Today for simulation)
-            const now = ref(new Date(2026, 1, 3, 9, 0, 0)); // Start now at Feb 3
+            // COUNTDOWN: Start Feb 3 (0%) to Feb 25 (100%)
+            const tripStart = new Date(2026, 1, 25, 9, 0, 0); // Feb 25
+            const countdownStart = new Date(2026, 1, 3, 9, 0, 0); // Feb 3
+            
+            // Simulation
+            const now = ref(new Date(2026, 1, 3, 9, 0, 0));
 
             setInterval(() => {
                 now.value = new Date(now.value.getTime() + 1000); 
@@ -363,6 +410,41 @@
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
+            // IMAGE COMPRESSION HELPER (Fixes "File Too Large" crash)
+            const compressImage = (file, callback) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800; // Limit width to 800px
+                        const scaleSize = MAX_WIDTH / img.width;
+                        if(scaleSize < 1) {
+                            canvas.width = MAX_WIDTH;
+                            canvas.height = img.height * scaleSize;
+                        } else {
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                        }
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        callback(canvas.toDataURL('image/jpeg', 0.7)); // Compress to 70% quality JPEG
+                    }
+                }
+            };
+
+            const handleImageUpload = (event) => { 
+                const file = event.target.files[0]; 
+                if(file) { 
+                    // Use compression instead of raw file
+                    compressImage(file, (compressedResult) => {
+                        newWishItem.value.image = compressedResult; 
+                    });
+                } 
+            };
+
             onMounted(() => { 
                 const c = document.getElementById('snow-container');
                 if(c) {
@@ -377,15 +459,15 @@
                 }
                 
                 try {
-                    const b = localStorage.getItem('jp_v46_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v46_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v46_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v48_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v48_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v48_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            watch(budgetList, v => localStorage.setItem('jp_v46_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v46_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v46_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v48_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v48_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v48_p', JSON.stringify(v)), {deep:true});
 
             const getTypeColor = (t) => ({food:'border-orange-400 bg-orange-500', transport:'border-blue-400 bg-blue-500', stay:'border-purple-400 bg-purple-500', spot:'border-emerald-400 bg-emerald-500'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
@@ -394,8 +476,19 @@
             const deleteBudget = (item) => { const idx = budgetList.value.indexOf(item); if(idx>-1) budgetList.value.splice(idx,1); };
             const filteredBudgetList = computed(() => budgetFilter.value === 'All' ? budgetList.value : budgetList.value.filter(i => i.payer === budgetFilter.value));
             const filteredTotal = computed(() => filteredBudgetList.value.reduce((s,i)=>s+i.price,0));
-            const handleImageUpload = (event) => { const file = event.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (e) => { newWishItem.value.image = e.target.result; }; reader.readAsDataURL(file); } };
-            const addWishlist = () => { if(newWishItem.value.name) { wishlist.value.unshift({...newWishItem.value}); newWishItem.value = { name: '', price: '', image: null }; showWishlistInput.value = false; } };
+            
+            // Add Wishlist Logic
+            const addWishlist = () => { 
+                if(newWishItem.value.name) { 
+                    try {
+                        wishlist.value.unshift({...newWishItem.value}); 
+                        newWishItem.value = { name: '', price: '', image: null }; 
+                        showWishlistInput.value = false; 
+                    } catch(e) {
+                        alert("Storage full! Try removing some items.");
+                    }
+                } 
+            };
             const deleteWishlist = (idx) => wishlist.value.splice(idx, 1);
 
             const tabs = [ { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, { id: 'info', label: 'Info', icon: 'fas fa-info-circle' } ];
