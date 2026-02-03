@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v52</title>
+    <title>梓樂Nagoya Trip v53</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -14,24 +14,39 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* THEME */
-        :root { --navy-bg: #0f172a; --text-light: #f8fafc; --accent: #10b981; }
-        body { font-family: 'Zen Maru Gothic', sans-serif; background-color: var(--navy-bg); color: var(--text-light); margin: 0; padding: 0; height: 100dvh; width: 100vw; overflow: hidden; }
+        /* THEME - Updated with "蒼灰の地層" Color Palette */
+        :root {
+            --main-bg: #70808f;     /* Slate Blue */
+            --secondary-bg: #91867f; /* Medium Taupe/Gray */
+            --text-light: #c5b59d;  /* Sand Beige */
+            --text-dark: #726251;   /* Misty Umber */
+            --accent: #726251;      /* Misty Umber */
+            --glass-bg: rgba(112, 128, 143, 0.85); /* Slate Blue with opacity */
+            --glass-border: rgba(197, 181, 157, 0.2); /* Sand Beige with opacity */
+        }
+        body { font-family: 'Zen Maru Gothic', sans-serif; background-color: var(--main-bg); color: var(--text-light); margin: 0; padding: 0; height: 100dvh; width: 100vw; overflow: hidden; }
         .font-mincho { font-family: 'Shippori Mincho', serif; }
-        .glass { background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
+        .glass { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 20px; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
         .safe-bottom { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
-        .sticker-float { animation: float 6s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-5px) rotate(5deg); } }
         [v-cloak] { display: none !important; }
+
+        /* Utility classes for new colors */
+        .bg-main { background-color: var(--main-bg); }
+        .bg-secondary { background-color: var(--secondary-bg); }
+        .text-light { color: var(--text-light); }
+        .text-dark { color: var(--text-dark); }
+        .bg-accent { background-color: var(--accent); }
+        .text-accent { color: var(--accent); }
+        .border-light { border-color: var(--glass-border); }
     </style>
 </head>
 <body>
 
-<div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#0f172a]">
+<div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-main">
     
     <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
         
@@ -39,84 +54,83 @@
             
             <div class="flex justify-between items-center mb-2 mt-2">
                 <div>
-                    <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">JP.TRIP 2026</div>
-                    <h1 class="text-3xl font-black font-mincho text-white flex items-center gap-2">
+                    <div class="text-[10px] font-bold text-light opacity-80 uppercase tracking-widest">JP.TRIP 2026</div>
+                    <h1 class="text-3xl font-black font-mincho text-light flex items-center gap-2">
                         <i class="fas fa-chess-rook text-xl opacity-80"></i> 梓樂Nagoya Trip 🇯🇵
                     </h1>
                 </div>
-                <div class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-lg bg-gray-700">
+                <div class="w-10 h-10 rounded-full border-2 border-light overflow-hidden shadow-lg bg-secondary">
                     <img src="icon.jpg" class="w-full h-full object-cover" onerror="this.style.display='none'">
                 </div>
             </div>
 
-            <div class="glass p-5 relative overflow-hidden mb-2 border border-white/10 shadow-xl bg-gradient-to-br from-[#1e293b] to-[#0f172a]">
+            <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl">
                 <div class="flex justify-between items-end mb-2">
-                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider">距離出發 (HKO Time)</span>
-                    <i class="fas fa-plane text-emerald-400 animate-pulse"></i>
+                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider text-light">距離出發 (HKO Time)</span>
+                    <i class="fas fa-plane text-light animate-pulse"></i>
                 </div>
-                <div class="flex items-baseline gap-2 mb-4">
-                    <span class="text-6xl font-black font-mono text-emerald-300 tracking-tighter">{{ countdown.days }}</span>
+                <div class="flex items-baseline gap-2 mb-4 text-light">
+                    <span class="text-6xl font-black font-mono tracking-tighter">{{ countdown.days }}</span>
                     <span class="text-sm font-bold opacity-80">Days</span>
-                    <span class="text-2xl font-mono font-bold text-white/80 ml-2">{{ countdown.hours }}:{{ countdown.minutes }}:{{ countdown.seconds }}</span>
+                    <span class="text-2xl font-mono font-bold ml-2">{{ countdown.hours }}:{{ countdown.minutes }}:{{ countdown.seconds }}</span>
                 </div>
-                <div class="relative w-full h-2 bg-white/10 rounded-full mt-2">
-                    <div class="absolute top-0 left-0 h-full bg-emerald-400 rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }">
-                        <i class="fas fa-plane absolute -right-2 -top-1.5 text-emerald-300 text-xs transform rotate-45 shadow-glow"></i>
+                <div class="relative w-full h-2 bg-black/20 rounded-full mt-2">
+                    <div class="absolute top-0 left-0 h-full bg-accent rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }">
+                        <i class="fas fa-plane absolute -right-2 -top-1.5 text-accent text-xs transform rotate-45 shadow-glow"></i>
                     </div>
                 </div>
-                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono">
+                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono text-light">
                     <span>Now ({{ nowFormatted }})</span>
                     <span>2026.02.25 Go</span>
                 </div>
             </div>
 
-            <div class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-white/10 shadow-lg">
+            <div class="bg-main/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-light shadow-lg">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar mask-linear">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
                             class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer active:scale-95"
-                            :class="dayIndex === idx ? 'bg-white text-slate-900 border-white shadow-lg scale-105' : 'bg-white/5 border-white/10 text-white/40'">
+                            :class="dayIndex === idx ? 'bg-light text-dark border-light shadow-lg scale-105' : 'bg-white/5 border-light text-light/60'">
                         <span class="text-[9px] font-bold uppercase">{{ day.date_en.substr(0,3) }}</span>
                         <span class="text-lg font-black">{{ day.day }}</span>
                     </button>
                 </div>
             </div>
 
-            <div class="glass p-3 border-l-4 border-emerald-500 flex items-center justify-between">
+            <div class="glass p-3 border-l-4 border-accent flex items-center justify-between">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span>
-                    <span class="text-xs font-bold text-emerald-400">{{ itinerary[dayIndex].location }}</span>
+                    <span class="text-[10px] font-bold text-light/60 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span>
+                    <span class="text-xs font-bold text-light">{{ itinerary[dayIndex].location }}</span>
                 </div>
-                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%]">
+                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%] text-light">
                     <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[2.5rem]">
-                        <span class="text-[9px] text-white/40 font-mono">{{ h.time }}</span>
-                        <i :class="h.icon" class="text-sm my-0.5" :class="h.icon.includes('sun')?'text-yellow-400':h.icon.includes('snow')?'text-blue-300':'text-gray-400'"></i>
+                        <span class="text-[9px] opacity-60 font-mono">{{ h.time }}</span>
+                        <i :class="h.icon" class="text-sm my-0.5"></i>
                         <span class="text-[10px] font-bold">{{ h.temp }}</span>
                     </div>
                 </div>
             </div>
 
             <div class="relative pl-2">
-                <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-white/10 rounded-full"></div>
+                <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-light/20 rounded-full"></div>
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
-                    <div class="absolute left-0 top-0 w-4 h-4 bg-[#0f172a] border-[3px] rounded-full z-10" :class="getTypeColor(place.type)"></div>
-                    <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border border-white/5 hover:border-white/20 z-10">
-                        <i v-if="pIdx % 3 === 0" class="fas fa-cat absolute right-2 top-2 text-4xl opacity-5 rotate-12 sticker-float"></i>
+                    <div class="absolute left-0 top-0 w-4 h-4 bg-main border-[3px] rounded-full z-10" :class="getTypeColor(place.type)"></div>
+                    <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border-light hover:bg-white/5 z-10">
                         <div class="flex justify-between items-start mb-2 relative z-10">
-                            <span class="text-[10px] font-black bg-white/10 px-2 py-1 rounded">{{ place.time }}</span>
-                            <span class="text-[10px] font-bold opacity-60 uppercase">{{ place.typeLabel }}</span>
+                            <span class="text-[10px] font-black bg-black/20 px-2 py-1 rounded text-light">{{ place.time }}</span>
+                            <span class="text-[10px] font-bold opacity-60 uppercase text-light">{{ place.typeLabel }}</span>
                         </div>
-                        <h3 class="text-lg font-black mb-1 relative z-10">{{ place.name }}</h3>
-                        <p class="text-xs text-white/60 line-clamp-1 mb-2 relative z-10">{{ place.desc }}</p>
+                        <h3 class="text-lg font-black mb-1 relative z-10 text-light">{{ place.name }}</h3>
+                        <p class="text-xs text-light/80 line-clamp-1 mb-2 relative z-10">{{ place.desc }}</p>
 
-                        <div v-if="place.bookingType === 'flight'" class="mt-3 bg-indigo-900/40 p-3 rounded-xl border border-indigo-500/30 flex justify-between items-center relative z-20">
-                            <div class="flex flex-col"><span class="text-[10px] text-indigo-300 font-bold uppercase">Flight</span><span class="text-lg font-mono font-bold text-white">{{ place.flightNo }}</span></div>
-                            <div class="text-right"><span class="text-[10px] text-white/50 block">Info</span><span class="text-sm font-bold text-indigo-200">{{ place.terminal }}</span></div>
+                        <div v-if="place.bookingType === 'flight'" class="mt-3 bg-secondary/40 p-3 rounded-xl border border-light/30 flex justify-between items-center relative z-20">
+                            <div class="flex flex-col"><span class="text-[10px] text-light/60 font-bold uppercase">Flight</span><span class="text-lg font-mono font-bold text-light">{{ place.flightNo }}</span></div>
+                            <div class="text-right"><span class="text-[10px] text-light/50 block">Info</span><span class="text-sm font-bold text-light/80">{{ place.terminal }}</span></div>
                         </div>
-                        <a v-if="place.bookingType === 'ticket'" :href="place.ticketLink" target="_blank" class="mt-3 block bg-emerald-600 p-3 rounded-xl text-center shadow-lg relative z-20 active:scale-95 transition-transform" @click.stop><span class="text-xs font-bold text-white flex items-center justify-center gap-2"><i class="fas fa-qrcode"></i> View Ticket</span></a>
-                        <a v-if="place.bookingType === 'hotel'" :href="place.hotelLink" target="_blank" class="mt-3 block bg-blue-600 p-3 rounded-xl text-center shadow-lg relative z-20 active:scale-95 transition-transform" @click.stop><span class="text-xs font-bold text-white flex items-center justify-center gap-2"><i class="fas fa-bed"></i> View Booking</span></a>
+                        <a v-if="place.bookingType === 'ticket'" :href="place.ticketLink" target="_blank" class="mt-3 block bg-accent p-3 rounded-xl text-center shadow-lg relative z-20 active:scale-95 transition-transform" @click.stop><span class="text-xs font-bold text-light flex items-center justify-center gap-2"><i class="fas fa-qrcode"></i> View Ticket</span></a>
+                        <a v-if="place.bookingType === 'hotel'" :href="place.hotelLink" target="_blank" class="mt-3 block bg-secondary p-3 rounded-xl text-center shadow-lg relative z-20 active:scale-95 transition-transform" @click.stop><span class="text-xs font-bold text-light flex items-center justify-center gap-2"><i class="fas fa-bed"></i> View Booking</span></a>
 
                         <div class="flex flex-wrap gap-2 mt-2 relative z-10">
-                            <span v-for="tag in place.highlights" class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] font-bold text-emerald-300">{{ tag }}</span>
+                            <span v-for="tag in place.highlights" class="px-2 py-1 bg-white/5 border border-light/20 rounded text-[10px] font-bold text-light">{{ tag }}</span>
                         </div>
                     </div>
                 </div>
@@ -124,134 +138,145 @@
         </div>
 
         <div v-if="currentView === 'wallet'" class="space-y-6 pt-4">
-            <h2 class="text-2xl font-black font-mincho">Spend & Buyyyyy</h2>
+            <h2 class="text-2xl font-black font-mincho text-light">Spend & Buyyyyy</h2>
             <div class="flex bg-white/10 p-1 rounded-xl">
-                <button @click="walletMode='expense'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-white text-slate-900 shadow-sm':'text-white/50'">記帳 Expenses</button>
-                <button @click="walletMode='wishlist'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='wishlist'?'bg-white text-slate-900 shadow-sm':'text-white/50'">購物 Wishlist</button>
+                <button @click="walletMode='expense'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-light text-dark shadow-sm':'text-light/60'">記帳 Expenses</button>
+                <button @click="walletMode='wishlist'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='wishlist'?'bg-light text-dark shadow-sm':'text-light/60'">購物 Wishlist</button>
             </div>
             <div v-if="walletMode==='expense'" class="space-y-4">
                 <div class="flex gap-2 overflow-x-auto no-scrollbar">
-                    <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-white text-slate-900 border-white':'bg-transparent text-white/50 border-white/20'">All</button>
-                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-blue-500 text-white border-blue-500':'bg-transparent text-blue-300 border-blue-500/30'">👦 TszLok</button>
-                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-pink-500 text-white border-pink-500':'bg-transparent text-pink-300 border-pink-500/30'">👧 TszTung</button>
+                    <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-light text-dark border-light':'bg-transparent text-light/60 border-light/20'">All</button>
+                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-secondary text-light border-secondary':'bg-transparent text-secondary border-secondary/30'">👦 TszLok</button>
+                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-accent text-light border-accent':'bg-transparent text-accent border-accent/30'">👧 TszTung</button>
                 </div>
-                <div class="glass p-5 flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900">
-                    <div class="flex flex-col"><span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
-                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-blue-500/20 text-blue-400':'bg-pink-500/20 text-pink-400'"><i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i></div>
+                <div class="glass p-5 flex justify-between items-center">
+                    <div class="flex flex-col text-light"><span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
+                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-secondary/20 text-secondary':'bg-accent/20 text-accent'"><i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i></div>
                 </div>
                 <div class="space-y-3 pb-20">
-                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center">
-                        <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full flex items-center justify-center text-sm bg-white shadow-sm border-2" :class="item.payer==='TszLok'?'border-blue-500 text-blue-500':'border-pink-500 text-pink-500'"><i class="fas" :class="item.payer==='TszLok'?'fa-male':'fa-female'"></i></div><span class="text-sm font-bold">{{ item.name }}</span></div>
-                        <div class="flex items-center gap-3"><span class="font-mono font-bold opacity-80">¥{{ item.price }}</span><button @click="deleteBudget(item)" class="text-white/20 hover:text-red-400"><i class="fas fa-times text-xs"></i></button></div>
+                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center text-light">
+                        <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full flex items-center justify-center text-sm bg-white shadow-sm border-2" :class="item.payer==='TszLok'?'border-secondary text-secondary':'border-accent text-accent'"><i class="fas" :class="item.payer==='TszLok'?'fa-male':'fa-female'"></i></div><span class="text-sm font-bold">{{ item.name }}</span></div>
+                        <div class="flex items-center gap-3"><span class="font-mono font-bold opacity-80">¥{{ item.price }}</span><button @click="deleteBudget(item)" class="text-light/40 hover:text-red-400"><i class="fas fa-times text-xs"></i></button></div>
                     </div>
                 </div>
-                <div class="fixed bottom-24 right-6 z-40"><button @click="showBudgetInput=true" class="w-14 h-14 bg-emerald-500 text-white rounded-full shadow-xl flex items-center justify-center text-xl"><i class="fas fa-plus"></i></button></div>
+                <div class="fixed bottom-24 right-6 z-40"><button @click="showBudgetInput=true" class="w-14 h-14 bg-accent text-light rounded-full shadow-xl flex items-center justify-center text-xl"><i class="fas fa-plus"></i></button></div>
             </div>
             <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 pb-20">
-                <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-white/20 hover:bg-white/5 cursor-pointer"><i class="fas fa-camera text-2xl mb-2 text-white/50"></i><span class="text-xs">Add</span></div>
-                <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group"><button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button><img :src="item.image" class="w-full aspect-square object-cover"><div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold text-emerald-400">¥{{ item.price }}</div></div></div>
+                <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-light/30 hover:bg-white/5 cursor-pointer text-light/60 hover:text-light"><i class="fas fa-camera text-2xl mb-2"></i><span class="text-xs">Add</span></div>
+                <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group"><button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 opacity-0 group-hover:opacity-100 transition-opacity text-light"><i class="fas fa-times"></i></button><img :src="item.image" class="w-full aspect-square object-cover"><div class="p-3 text-light"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold text-accent">¥{{ item.price }}</div></div></div>
             </div>
         </div>
 
         <div v-if="currentView === 'packing'" class="space-y-6 pt-4">
-            <h2 class="text-2xl font-black font-mincho">行李清單</h2>
+            <h2 class="text-2xl font-black font-mincho text-light">行李清單</h2>
             <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden">
-                <div class="bg-white/5 px-5 py-3 flex items-center gap-3 border-b border-white/5"><i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male text-blue-400':key==='tszTung'?'fa-female text-pink-400':'fa-water'"></i><span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span></div>
-                <div class="p-2 grid gap-1"><label v-for="(item, idx) in group" :key="idx" class="flex items-center p-3 hover:bg-white/5 rounded-xl cursor-pointer check-box transition-colors"><input type="checkbox" v-model="item.checked" class="hidden"><div class="w-5 h-5 rounded border-2 border-white/30 flex items-center justify-center mr-3 transition-colors bg-white/5"><i class="fas fa-check text-white text-[10px] opacity-0"></i></div><span class="text-sm font-bold transition-opacity" :class="{'line-through opacity-30': item.checked}">{{ item.name }}</span></label></div>
+                <div class="bg-white/5 px-5 py-3 flex items-center gap-3 border-b border-light/10 text-light"><i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male text-secondary':key==='tszTung'?'fa-female text-accent':'fa-water'"></i><span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span></div>
+                <div class="p-2 grid gap-1"><label v-for="(item, idx) in group" :key="idx" class="flex items-center p-3 hover:bg-white/5 rounded-xl cursor-pointer check-box transition-colors"><input type="checkbox" v-model="item.checked" class="hidden"><div class="w-5 h-5 rounded border-2 border-light/30 flex items-center justify-center mr-3 transition-colors bg-white/5"><i class="fas fa-check text-dark text-[10px] opacity-0"></i></div><span class="text-sm font-bold transition-opacity text-light" :class="{'line-through opacity-50': item.checked}">{{ item.name }}</span></label></div>
             </div>
         </div>
 
         <div v-if="currentView === 'info'" class="space-y-6 pt-4">
-            <h2 class="text-2xl font-black font-mincho">資訊 Info</h2>
-            <div class="glass p-5 relative overflow-hidden text-center">
-                <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
+            <h2 class="text-2xl font-black font-mincho text-light">資訊 Info</h2>
+            <div class="glass p-5 relative overflow-hidden text-center text-light">
+                <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
                 <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
                 <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
             </div>
 
-            <div class="glass p-5">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-4 flex items-center"><i class="fas fa-ticket-alt mr-2 text-emerald-400"></i>My Reservations</h3>
+            <div class="glass p-5 text-light">
+                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-4 flex items-center"><i class="fas fa-ticket-alt mr-2"></i>My Reservations</h3>
                 <div class="space-y-3">
-                    <div class="bg-indigo-500/20 border border-indigo-500/30 p-3 rounded-xl">
-                        <div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold text-indigo-300">FLIGHT (2/25)</span><span class="font-mono font-bold text-white">UO680</span></div>
+                    <div class="bg-secondary/30 border border-light/20 p-3 rounded-xl">
+                        <div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold opacity-80">FLIGHT (2/25)</span><span class="font-mono font-bold">UO680</span></div>
                         <div class="flex justify-between text-xs font-bold opacity-80"><span>HKG 14:30</span><i class="fas fa-arrow-right opacity-50"></i><span>NGO</span></div>
                     </div>
-                    <div class="bg-indigo-500/20 border border-indigo-500/30 p-3 rounded-xl">
-                        <div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold text-indigo-300">FLIGHT (3/3)</span><span class="font-mono font-bold text-white">UO685</span></div>
+                    <div class="bg-secondary/30 border border-light/20 p-3 rounded-xl">
+                        <div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold opacity-80">FLIGHT (3/3)</span><span class="font-mono font-bold">UO685</span></div>
                         <div class="flex justify-between text-xs font-bold opacity-80"><span>NGO 21:00</span><i class="fas fa-arrow-right opacity-50"></i><span>HKG</span></div>
                     </div>
-                    <a href="https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810" target="_blank" class="block bg-blue-500/20 border border-blue-500/30 p-3 rounded-xl active:scale-95 transition-transform">
-                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-blue-300">HOTEL (2/25-2/28)</span><i class="fas fa-external-link-alt text-[10px] text-blue-300"></i></div>
+                    <a href="https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810" target="_blank" class="block bg-secondary/30 border border-light/20 p-3 rounded-xl active:scale-95 transition-transform">
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold opacity-80">HOTEL (2/25-2/28)</span><i class="fas fa-external-link-alt text-[10px] opacity-60"></i></div>
                         <div class="font-bold text-sm">Nishitetsu Croom Nagoya</div>
                     </a>
-                    <a href="https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445" target="_blank" class="block bg-blue-500/20 border border-blue-500/30 p-3 rounded-xl active:scale-95 transition-transform">
-                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-blue-300">HOTEL (2/28-3/1)</span><i class="fas fa-external-link-alt text-[10px] text-blue-300"></i></div>
+                    <a href="https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445" target="_blank" class="block bg-secondary/30 border border-light/20 p-3 rounded-xl active:scale-95 transition-transform">
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold opacity-80">HOTEL (2/28-3/1)</span><i class="fas fa-external-link-alt text-[10px] opacity-60"></i></div>
                         <div class="font-bold text-sm">Takayama Ouan</div>
                     </a>
-                    <a href="https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f" target="_blank" class="block bg-emerald-500/20 border border-emerald-500/30 p-3 rounded-xl active:scale-95 transition-transform">
-                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-emerald-300">TICKET (2/26 12:00)</span><i class="fas fa-qrcode text-emerald-300"></i></div>
+                    <a href="https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f" target="_blank" class="block bg-accent/30 border border-light/20 p-3 rounded-xl active:scale-95 transition-transform">
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold opacity-80">TICKET (2/26 12:00)</span><i class="fas fa-qrcode opacity-60"></i></div>
                         <div class="font-bold text-sm">Ghibli Park Warehouse</div>
                     </a>
                 </div>
             </div>
 
-            <div class="glass p-5">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3"><i class="fas fa-calculator mr-2 text-yellow-400"></i>Currency Calc</h3>
+            <div class="glass p-5 text-light">
+                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3"><i class="fas fa-calculator mr-2"></i>Currency Calc</h3>
                 <div class="flex items-center gap-4">
                     <div class="flex-1 bg-white/10 rounded-xl p-3">
                         <label class="text-[9px] font-bold opacity-50 block mb-1">JPY (¥)</label>
-                        <input type="number" v-model="currencyCalc.jpy" class="w-full font-mono font-bold text-xl bg-transparent outline-none" placeholder="0">
+                        <input type="number" v-model="currencyCalc.jpy" class="w-full font-mono font-bold text-xl bg-transparent outline-none text-light" placeholder="0">
                     </div>
                     <i class="fas fa-exchange-alt opacity-30 text-xs"></i>
                     <div class="flex-1 bg-white/10 rounded-xl p-3">
                         <label class="text-[9px] font-bold opacity-50 block mb-1">HKD ($)</label>
-                        <div class="font-mono font-bold text-xl text-emerald-400">{{ (currencyCalc.jpy * currencyCalc.rate).toFixed(1) }}</div>
+                        <div class="font-mono font-bold text-xl text-accent">{{ (currencyCalc.jpy * currencyCalc.rate).toFixed(1) }}</div>
                     </div>
                 </div>
                 <div class="text-[10px] text-right mt-2 opacity-40 font-mono">Rate: {{ currencyCalc.rate }}</div>
             </div>
 
-            <div class="glass p-5 border-l-4 border-orange-400"><h3 class="text-xs font-bold text-orange-400 uppercase tracking-widest mb-3"><i class="fas fa-store mr-2"></i>Konbini 必吃</h3><ul class="text-sm space-y-2 font-bold opacity-80"><li>🍦 7-11: Ohayo 焦糖烤布蕾冰淇淋</li><li>🍳 7-11: 雞蛋沙拉三明治</li><li>🍗 Lawson: 炸雞塊君 (Red)</li><li>🥛 Meiji R-1 優格飲</li></ul></div>
+            <div class="glass p-5 border-l-4 border-accent text-light"><h3 class="text-xs font-bold opacity-80 uppercase tracking-widest mb-3"><i class="fas fa-store mr-2"></i>Konbini 必吃</h3><ul class="text-sm space-y-2 font-bold opacity-80"><li>🍦 7-11: Ohayo 焦糖烤布蕾冰淇淋</li><li>🍳 7-11: 雞蛋沙拉三明治</li><li>🍗 Lawson: 炸雞塊君 (Red)</li><li>🥛 Meiji R-1 優格飲</li></ul></div>
         </div>
 
     </main>
 
-    <nav class="fixed bottom-0 w-full h-[85px] bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 z-50 flex justify-around items-center px-2 pb-safe-bottom">
-        <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer active:scale-95" :class="currentView === tab.id ? 'text-emerald-400 scale-110' : 'text-white/40'">
+    <nav class="fixed bottom-0 w-full h-[85px] bg-main/95 backdrop-blur-xl border-t border-light/10 z-50 flex justify-around items-center px-2 pb-safe-bottom">
+        <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer active:scale-95" :class="currentView === tab.id ? 'text-accent scale-110' : 'text-light/40'">
             <i :class="tab.icon" class="text-xl"></i>
             <span class="text-[9px] font-bold uppercase tracking-widest">{{ tab.label }}</span>
         </button>
     </nav>
 
-    <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#1e293b] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto"><div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div><span class="px-3 py-1 bg-white/10 rounded-lg text-xs font-bold uppercase text-emerald-300">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-emerald-500/10 p-5 rounded-2xl border-l-4 border-emerald-500"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center text-emerald-400"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-emerald-600 text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-blue-600 text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Map</button></div></div>
+    <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-secondary w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-light"><div class="w-12 h-1 bg-light/30 rounded-full mx-auto mb-6"></div><span class="px-3 py-1 bg-black/20 rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-accent/20 p-5 rounded-2xl border-l-4 border-accent"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-accent text-light text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-secondary/80 text-light text-center rounded-2xl font-bold shadow-lg border border-light/20">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-light text-dark rounded-2xl font-bold shadow-lg">Open Map</button></div></div>
     
-    <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up"><h3 class="font-bold mb-4 text-lg">Add Expense</h3><div class="flex gap-3 mb-4"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-blue-500 border-blue-500 text-white':'bg-pink-500 border-pink-500 text-white'):'border-white/20 text-white/50'">{{ p }}</button></div><input v-model="newItem.name" placeholder="Item Name" class="w-full bg-white/10 p-4 rounded-xl mb-3 font-bold border border-white/10 text-white"><input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-white/10 p-4 rounded-xl mb-6 font-bold border border-white/10 text-white"><div class="flex gap-3"><button @click="showBudgetInput=false" class="flex-1 py-3 font-bold text-white/50">Cancel</button><button @click="addItem" class="flex-1 py-3 bg-white text-slate-900 rounded-xl font-bold">Save</button></div></div></div>
+    <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-secondary w-full max-w-md p-6 rounded-t-3xl animate-slide-up text-light"><h3 class="font-bold mb-4 text-lg">Add Expense</h3><div class="flex gap-3 mb-4"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-secondary border-secondary text-light':'bg-accent border-accent text-light'):'border-light/20 text-light/50'">{{ p }}</button></div><input v-model="newItem.name" placeholder="Item Name" class="w-full bg-black/20 p-4 rounded-xl mb-3 font-bold border border-light/10 text-light placeholder-light/40"><input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-black/20 p-4 rounded-xl mb-6 font-bold border border-light/10 text-light placeholder-light/40"><div class="flex gap-3"><button @click="showBudgetInput=false" class="flex-1 py-3 font-bold text-light/50">Cancel</button><button @click="addItem" class="flex-1 py-3 bg-light text-dark rounded-xl font-bold">Save</button></div></div></div>
     
     <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
-        <div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up max-h-[85vh] overflow-y-auto">
-            <h3 class="font-bold mb-6 text-lg">Add to Wishlist</h3>
+        <div class="bg-secondary w-full max-w-md p-6 rounded-t-3xl animate-slide-up max-h-[90vh] flex flex-col text-light overflow-y-auto">
             
-            <div class="mb-4 relative group w-full">
-                <div v-if="!newWishItem.image" class="w-full h-32 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center text-white/30 relative">
-                    <i class="fas fa-camera text-2xl mb-1"></i><span class="text-xs">Upload Photo</span>
-                    <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
-                </div>
-                <div v-else class="relative w-full">
-                    <img :src="newWishItem.image" class="w-full max-h-48 object-cover rounded-xl shadow-lg border border-white/10">
-                    <div class="flex gap-2 mt-2">
-                        <label class="flex-1 py-3 bg-white/10 rounded-lg text-xs font-bold text-center cursor-pointer hover:bg-white/20 text-white">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
-                        <button @click="newWishItem.image = null" class="flex-1 py-3 bg-red-500/20 text-red-300 rounded-lg text-xs font-bold hover:bg-red-500/30">Remove</button>
+            <h3 class="font-bold mb-6 text-lg flex-shrink-0">Add to Wishlist</h3>
+            
+            <div class="flex-1 flex flex-col">
+                <div class="mb-6 relative group w-full flex-shrink-0">
+                    <div v-if="!newWishItem.image" class="w-full h-40 bg-black/20 border-2 border-dashed border-light/30 rounded-xl flex flex-col items-center justify-center text-light/40 relative hover:bg-black/30 transition-colors">
+                        <i class="fas fa-camera text-3xl mb-2"></i><span class="text-sm font-bold">Upload Photo</span>
+                        <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
+                    </div>
+                    <div v-else class="relative w-full">
+                        <img :src="newWishItem.image" class="w-full max-h-64 object-cover rounded-xl shadow-lg border border-light/10">
+                        <div class="flex gap-3 mt-3">
+                            <label class="flex-1 py-3 bg-black/30 rounded-xl text-sm font-bold text-center cursor-pointer hover:bg-black/40 text-light transition-colors">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
+                            <button @click="newWishItem.image = null" class="flex-1 py-3 bg-red-500/20 text-red-300 rounded-xl text-sm font-bold hover:bg-red-500/30 transition-colors">Remove</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <input v-model="newWishItem.name" placeholder="Product Name" class="w-full bg-white/10 p-4 rounded-xl mb-4 font-bold border border-white/10 text-white outline-none focus:border-emerald-500 transition-colors">
-            <input v-model.number="newWishItem.price" type="number" placeholder="¥ Price" class="w-full bg-white/10 p-4 rounded-xl mb-8 font-bold border border-white/10 text-white outline-none focus:border-emerald-500 transition-colors">
+                
+                <div class="space-y-4 flex-shrink-0">
+                    <div>
+                        <label class="block text-xs font-bold opacity-60 mb-1 ml-1">Product Name</label>
+                        <input v-model="newWishItem.name" class="w-full bg-light p-4 rounded-xl font-bold border-2 border-transparent text-dark outline-none focus:border-accent transition-colors placeholder-dark/30">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold opacity-60 mb-1 ml-1">Price (¥)</label>
+                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-light p-4 rounded-xl font-bold border-2 border-transparent text-dark outline-none focus:border-accent transition-colors placeholder-dark/30">
+                    </div>
+                </div>
 
-            <div class="flex gap-3 mb-10">
-                <button @click="showWishlistInput=false" class="flex-1 py-3 font-bold text-white/50 hover:text-white transition-colors">Cancel</button>
-                <button @click="addWishlist" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform">Add Item</button>
+                <div class="flex gap-3 mt-8 mb-4 flex-shrink-0">
+                    <button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-light/60 hover:text-light transition-colors rounded-xl border border-light/10">Cancel</button>
+                    <button @click="addWishlist" class="flex-1 py-4 bg-accent text-light rounded-xl font-bold shadow-lg active:scale-95 transition-transform">Add Item</button>
+                </div>
             </div>
         </div>
     </div>
@@ -440,15 +465,15 @@
 
             onMounted(() => { 
                 try {
-                    const b = localStorage.getItem('jp_v52_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v52_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v52_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v53_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v53_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v53_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            watch(budgetList, v => localStorage.setItem('jp_v52_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v52_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v52_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v53_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v53_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v53_p', JSON.stringify(v)), {deep:true});
 
             const getTypeColor = (t) => ({food:'border-orange-400 bg-orange-500', transport:'border-blue-400 bg-blue-500', stay:'border-purple-400 bg-purple-500', spot:'border-emerald-400 bg-emerald-500'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
