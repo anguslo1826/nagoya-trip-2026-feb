@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>JP.TRIP 2026 v25</title>
+    <title>JP.TRIP 2026 v26</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -18,29 +18,50 @@
         :root {
             --navy-bg: #0f172a; 
             --text-light: #f8fafc;
-            --accent: #10b981; /* Emerald */
+            --accent: #10b981;
         }
 
         body { 
             font-family: 'Zen Maru Gothic', sans-serif; 
             background-color: var(--navy-bg); 
             color: var(--text-light);
-            height: 100vh; /* Fallback */
-            height: 100dvh; /* Dynamic Height */
-            width: 100vw;
-            overflow: hidden; 
+            margin: 0; padding: 0;
+            overflow: hidden; /* Prevent body scroll */
         }
         
         .font-mincho { font-family: 'Shippori Mincho', serif; }
         
-        /* SNOW EFFECT (Non-blocking) */
+        /* APP CONTAINER - FIXED FULL SCREEN */
+        #app {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--navy-bg);
+            z-index: 1;
+        }
+
+        /* BACKGROUND SNOW */
         .snow-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .snowflake { position: absolute; top: -10px; color: white; opacity: 0.3; animation: fall linear infinite; }
         @keyframes fall { to { transform: translateY(110vh); } }
 
+        /* SCROLLABLE CONTENT AREA */
+        #main-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: 100px; /* Space for Nav */
+            padding-left: 20px;
+            padding-right: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
         /* GLASS CARD */
         .glass {
-            background: rgba(30, 41, 59, 0.85);
+            background: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -51,10 +72,6 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* SAFE AREA */
-        .safe-top { padding-top: max(env(safe-area-inset-top), 20px); }
-        .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 20px); }
-
         /* CHECKBOX */
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
         
@@ -65,25 +82,25 @@
 </head>
 <body>
 
-<div id="app" class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#0f172a]">
+<div id="app">
     
     <div class="snow-container" id="snow-container"></div>
 
-    <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-6 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
+    <div id="main-content" class="no-scrollbar">
         
-        <div v-if="currentView === 'itinerary'" class="space-y-5 animate-fade-in pb-4">
+        <div v-if="currentView === 'itinerary'" class="space-y-6 animate-fade-in">
             
-            <div class="flex justify-between items-center mb-2">
+            <div class="flex justify-between items-center mt-2">
                 <div>
                     <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">JP.TRIP 2026</div>
-                    <h1 class="text-3xl font-black font-mincho text-white">名古屋・高山</h1>
+                    <h1 class="text-3xl font-black font-mincho text-white">名古屋旅</h1>
                 </div>
                 <div class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-lg">
                     <img src="icon.jpg" class="w-full h-full object-cover">
                 </div>
             </div>
 
-            <div class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-white/10">
+            <div class="sticky top-0 z-30 bg-[#0f172a]/95 backdrop-blur-md py-3 -mx-5 px-5 border-b border-white/10 shadow-lg">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar mask-linear">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
                             class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer"
@@ -94,29 +111,28 @@
                 </div>
             </div>
 
-            <div class="glass p-3 border-l-4 border-emerald-500 flex items-center justify-between">
-                <div class="flex flex-col">
-                    <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span>
-                    <span class="text-xs font-bold text-emerald-400">{{ itinerary[dayIndex].location }}</span>
+            <div class="glass p-4 border-l-4 border-emerald-500">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-[10px] font-bold text-white/50 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</h3>
+                    <span class="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded">{{ itinerary[dayIndex].location }}</span>
                 </div>
-                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%]">
-                    <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[2.5rem]">
-                        <span class="text-[9px] text-white/40 font-mono">{{ h.time }}</span>
-                        <i :class="h.icon" class="text-sm my-0.5" :class="h.icon.includes('sun')?'text-yellow-400':h.icon.includes('snow')?'text-blue-300':'text-gray-400'"></i>
-                        <span class="text-[10px] font-bold">{{ h.temp }}</span>
+                <div class="flex gap-4 overflow-x-auto no-scrollbar">
+                    <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[3rem]">
+                        <span class="text-[9px] text-white/40 font-mono mb-1">{{ h.time }}</span>
+                        <i :class="h.icon" class="text-lg mb-1" :class="h.icon.includes('sun')?'text-yellow-400':h.icon.includes('snow')?'text-blue-300':'text-gray-400'"></i>
+                        <span class="text-xs font-bold">{{ h.temp }}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="relative pl-2">
+            <div class="relative pl-2 pb-6">
                 <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-white/10 rounded-full"></div>
                 
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
                     <div class="absolute left-0 top-0 w-4 h-4 bg-[#0f172a] border-[3px] rounded-full z-10" :class="getTypeColor(place.type)"></div>
                     
-                    <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border border-white/5 hover:border-white/20 z-10">
+                    <div @click="openDetail(place)" class="glass p-5 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border border-white/5 hover:border-white/20 z-10">
                         <i v-if="pIdx % 3 === 0" class="fas fa-cat absolute right-2 top-2 text-4xl opacity-5 rotate-12 sticker-float"></i>
-                        <i v-if="pIdx % 3 === 1" class="fas fa-leaf absolute right-2 bottom-2 text-4xl opacity-5 -rotate-12 sticker-float"></i>
 
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-white/10 px-2 py-1 rounded">{{ place.time }}</span>
@@ -154,15 +170,15 @@
             <h2 class="text-2xl font-black font-mincho">錢包 & 購物</h2>
             
             <div class="flex bg-white/10 p-1 rounded-xl">
-                <button @click="walletMode='expense'" class="flex-1 py-2 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-white text-slate-900 shadow-sm':'text-white/50'">記帳 Expenses</button>
-                <button @click="walletMode='wishlist'" class="flex-1 py-2 rounded-lg text-xs font-bold transition-all" :class="walletMode==='wishlist'?'bg-white text-slate-900 shadow-sm':'text-white/50'">購物清單 Wishlist</button>
+                <button @click="walletMode='expense'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-white text-slate-900 shadow-sm':'text-white/50'">記帳 Expenses</button>
+                <button @click="walletMode='wishlist'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='wishlist'?'bg-white text-slate-900 shadow-sm':'text-white/50'">購物清單 Wishlist</button>
             </div>
 
             <div v-if="walletMode==='expense'" class="space-y-4">
                 <div class="flex gap-2 overflow-x-auto no-scrollbar">
                     <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-white text-slate-900 border-white':'bg-transparent text-white/50 border-white/20'">全部 All</button>
-                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-blue-500 text-white border-blue-500':'bg-transparent text-blue-300 border-blue-500/30'"><i class="fas fa-male mr-1"></i>TszLok</button>
-                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-pink-500 text-white border-pink-500':'bg-transparent text-pink-300 border-pink-500/30'"><i class="fas fa-female mr-1"></i>TszTung</button>
+                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-blue-500 text-white border-blue-500':'bg-transparent text-blue-300 border-blue-500/30'">👦 TszLok</button>
+                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-pink-500 text-white border-pink-500':'bg-transparent text-pink-300 border-pink-500/30'">👧 TszTung</button>
                 </div>
 
                 <div class="glass p-5 flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900">
@@ -226,7 +242,7 @@
         </div>
 
         <div v-if="currentView === 'tools'" class="space-y-6 pt-4 animate-fade-in">
-            <h2 class="text-2xl font-black font-mincho">工具 & 資訊</h2>
+            <h2 class="text-2xl font-black font-mincho">資訊 Info</h2>
             
             <div class="glass p-5 relative overflow-hidden">
                 <img src="icon.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20">
@@ -243,9 +259,9 @@
             </div>
         </div>
 
-    </main>
+    </div>
 
-    <nav class="bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-2 pb-safe-bottom h-[85px] shrink-0 z-50">
+    <nav class="bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-2 pb-safe-bottom h-[85px] z-50 fixed bottom-0 w-full">
         <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" 
                 class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer"
                 :class="currentView === tab.id ? 'text-emerald-400 scale-110' : 'text-white/40'">
@@ -288,7 +304,7 @@
 
     createApp({
         setup() {
-            const currentView = ref('itinerary'); // DEFAULT HOME IS ITINERARY
+            const currentView = ref('itinerary');
             const dayIndex = ref(0);
             const detailModal = ref({ show: false, data: {} });
             
@@ -303,7 +319,7 @@
             const budgetList = ref([]);
             const wishlist = ref([]);
 
-            // DATABASE FOR WEATHER
+            // WEATHER DATABASE
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -320,11 +336,11 @@
             const packingList = ref({
                 handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包 (日幣/港幣/卡)', checked: false}, {name: 'SIM卡 & 針', checked: false}, {name: '手機 & 充電 & 尿袋', checked: false}, {name: '耳機 & 相機', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}, {name: '空水樽 & 原子筆', checked: false}, {name: '潤唇膏', checked: false}, {name: '眼罩/頸枕 & 牙刷', checked: false}, {name: '屋企Key', checked: false}],
                 tszLok: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '男士剃鬚', checked: false}, {name: '轉插 & 拖板', checked: false}, {name: '雨傘/雨衣', checked: false}, {name: '拖鞋', checked: false}, {name: '備用膠袋', checked: false}],
-                tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品 & 卸妝水', checked: false}, {name: '護膚品 (面霜/防曬)', checked: false}, {name: '洗面/洗髮/護髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}],
+                tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮/護髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}],
                 shared: [{name: 'Kayak: 泳衣', checked: false}, {name: 'Kayak: 防水袋', checked: false}, {name: 'Kayak: Aqua Shoes', checked: false}, {name: 'Kayak: 毛巾/沖涼液', checked: false}]
             });
 
-            // ITINERARY (DATA RESTORED)
+            // ITINERARY
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
                     { time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", strategy: "1. 購買『μ-Sky』特急券。\n2. 全車指定席。", highlights: ["綠茶"], bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達" },
@@ -352,7 +368,7 @@
                     { time: "09:00", name: "JR Hida", type: "transport", typeLabel: "移動", desc: "前往高山。", strategy: "坐最後一排 Luggage Seat。", highlights: ["指定席"] },
                     { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", strategy: "大廳寄放行李。", highlights: [], bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445&locale=zh-HK&operate=OrderDetail&token=XB4CE8B65E4C1A9B51F4AB74B9B804819FE7D64930B951A2DB518044478D50D7&sign=AAEAAQAHb3JkZXJpZOyudZQ4DEJes1FdTePw_JT10SQJmS9FYEtZeLDRenkH-tripsign&requestid=10f6a615-a991-4765-86e8-fa746cf77a6c&source=1&allianceid=&ouid=&sid=" },
                     { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", strategy: "吃飛驒牛握壽司。", highlights: ["壽司"] },
-                    { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", strategy: "● 必點：Ajikura Mori 拼盤。\n● 握壽司必點。", highlights: ["飛驒牛"], booking: "需預約" },
+                    { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", strategy: "● 務必預約 (若無，16:30去排隊)。\n● 點 'Ajikura Mori' 拼盤。\n● 這裡的握壽司比老街好吃，必點。", highlights: ["特選飛驒牛"], booking: "需預約" },
                     { time: "22:00", name: "夜鳴拉麵", type: "food", typeLabel: "宵夜", desc: "飯店免費。", strategy: "不要錯過。", highlights: ["免費"] }
                 ]},
                 { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa-go", places: [
@@ -387,24 +403,18 @@
                     minutes: Math.floor((diff%(1000*60*60))/(1000*60)).toString().padStart(2,'0')
                 };
             });
-            const tripProgress = computed(() => {
-                const booking = new Date('2025-02-25T10:00:00+09:00');
-                const total = tripStart - booking;
-                const elapsed = now.value - booking;
-                return Math.min(Math.max((elapsed/total)*100, 0), 100);
-            });
             setInterval(() => now.value = new Date(), 60000);
 
             // PERSISTENCE
             onMounted(() => { 
                 initSnow();
-                const b = localStorage.getItem('jp_v25_b'); if(b) budgetList.value = JSON.parse(b); 
-                const w = localStorage.getItem('jp_v25_w'); if(w) wishlist.value = JSON.parse(w); 
-                const p = localStorage.getItem('jp_v25_p'); if(p) packingList.value = JSON.parse(p);
+                const b = localStorage.getItem('jp_v26_b'); if(b) budgetList.value = JSON.parse(b); 
+                const w = localStorage.getItem('jp_v26_w'); if(w) wishlist.value = JSON.parse(w); 
+                const p = localStorage.getItem('jp_v26_p'); if(p) packingList.value = JSON.parse(p);
             });
-            watch(budgetList, v => localStorage.setItem('jp_v25_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v25_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v25_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v26_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v26_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v26_p', JSON.stringify(v)), {deep:true});
 
             const initSnow = () => {
                 const c = document.getElementById('snow-container');
@@ -445,7 +455,7 @@
             
             const calc = ref({ jpy: '', rate: 0.052 });
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, tripProgress, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, calc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal };
+            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, calc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal };
         }
     }).mount('#app');
 </script>
