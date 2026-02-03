@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v50</title>
+    <title>梓樂Nagoya Trip v52</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -229,29 +229,27 @@
     
     <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
-        <div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up flex flex-col max-h-[85vh]">
-            <h3 class="font-bold mb-4 text-lg flex-shrink-0">Add to Wishlist</h3>
+        <div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up max-h-[85vh] overflow-y-auto">
+            <h3 class="font-bold mb-6 text-lg">Add to Wishlist</h3>
             
-            <div class="overflow-y-auto flex-1 pb-4 no-scrollbar">
-                <div class="mb-4 relative group shrink-0">
-                    <div v-if="!newWishItem.image" class="w-full h-32 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center text-white/30 relative">
-                        <i class="fas fa-camera text-2xl mb-1"></i><span class="text-xs">Upload Photo</span>
-                        <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
-                    </div>
-                    <div v-else class="relative">
-                        <img :src="newWishItem.image" class="w-full max-h-48 object-cover rounded-xl shadow-lg border border-white/10">
-                        <div class="flex gap-2 mt-2">
-                            <label class="flex-1 py-2 bg-white/10 rounded-lg text-xs font-bold text-center cursor-pointer hover:bg-white/20">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
-                            <button @click="newWishItem.image = null" class="flex-1 py-2 bg-red-500/20 text-red-300 rounded-lg text-xs font-bold hover:bg-red-500/30">Remove</button>
-                        </div>
+            <div class="mb-4 relative group w-full">
+                <div v-if="!newWishItem.image" class="w-full h-32 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center text-white/30 relative">
+                    <i class="fas fa-camera text-2xl mb-1"></i><span class="text-xs">Upload Photo</span>
+                    <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
+                </div>
+                <div v-else class="relative w-full">
+                    <img :src="newWishItem.image" class="w-full max-h-48 object-cover rounded-xl shadow-lg border border-white/10">
+                    <div class="flex gap-2 mt-2">
+                        <label class="flex-1 py-3 bg-white/10 rounded-lg text-xs font-bold text-center cursor-pointer hover:bg-white/20 text-white">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
+                        <button @click="newWishItem.image = null" class="flex-1 py-3 bg-red-500/20 text-red-300 rounded-lg text-xs font-bold hover:bg-red-500/30">Remove</button>
                     </div>
                 </div>
-                
-                <input v-model="newWishItem.name" placeholder="Product Name" class="w-full bg-white p-4 rounded-xl mb-3 font-bold border border-gray-300 text-black outline-none focus:border-emerald-500 transition-colors relative z-50">
-                <input v-model.number="newWishItem.price" type="number" placeholder="¥ Price" class="w-full bg-white p-4 rounded-xl mb-6 font-bold border border-gray-300 text-black outline-none focus:border-emerald-500 transition-colors relative z-50">
             </div>
+            
+            <input v-model="newWishItem.name" placeholder="Product Name" class="w-full bg-white/10 p-4 rounded-xl mb-4 font-bold border border-white/10 text-white outline-none focus:border-emerald-500 transition-colors">
+            <input v-model.number="newWishItem.price" type="number" placeholder="¥ Price" class="w-full bg-white/10 p-4 rounded-xl mb-8 font-bold border border-white/10 text-white outline-none focus:border-emerald-500 transition-colors">
 
-            <div class="flex gap-3 pt-2 border-t border-white/10 flex-shrink-0">
+            <div class="flex gap-3 mb-10">
                 <button @click="showWishlistInput=false" class="flex-1 py-3 font-bold text-white/50 hover:text-white transition-colors">Cancel</button>
                 <button @click="addWishlist" class="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform">Add Item</button>
             </div>
@@ -294,10 +292,9 @@
             const packingList = ref({
                 handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包', checked: false}, {name: 'SIM卡', checked: false}, {name: '手機 & 充電', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}],
                 tszLok: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '男士剃鬚', checked: false}, {name: '轉插 & 拖板', checked: false}, {name: '雨傘/雨衣', checked: false}, {name: '拖鞋', checked: false}, {name: '備用膠袋', checked: false}],
-                tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}],
-                shared: [{name: 'Kayak: 泳衣', checked: false}, {name: 'Kayak: 防水袋', checked: false}, {name: 'Kayak: Aqua Shoes', checked: false}, {name: 'Kayak: 毛巾/沖涼液', checked: false}]
+                tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}]
             });
-            const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)', shared: 'Kayak / Shared' };
+            const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
 
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
@@ -443,15 +440,15 @@
 
             onMounted(() => { 
                 try {
-                    const b = localStorage.getItem('jp_v50_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v50_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v50_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v52_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v52_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v52_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            watch(budgetList, v => localStorage.setItem('jp_v50_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v50_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v50_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v52_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v52_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v52_p', JSON.stringify(v)), {deep:true});
 
             const getTypeColor = (t) => ({food:'border-orange-400 bg-orange-500', transport:'border-blue-400 bg-blue-500', stay:'border-purple-400 bg-purple-500', spot:'border-emerald-400 bg-emerald-500'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
