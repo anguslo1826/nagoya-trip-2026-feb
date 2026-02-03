@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v55</title>
+    <title>梓樂Nagoya Trip v56</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -14,14 +14,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* THEME - High Contrast "Misty Stone" */
+        /* THEME - "蒼灰の地層" Palette (High Contrast) */
         :root {
-            --bg-main: #70808f;       /* Slate Blue (Background) */
-            --bg-card: #c5b59d;       /* Sand Beige (Cards) - HIGH CONTRAST */
-            --text-on-card: #4a4238;  /* Dark Brown (Text on Cards) */
+            --bg-main: #70808f;       /* Slate Blue (Background) - Dark */
+            --bg-card: #c5b59d;       /* Sand Beige (Cards) - Light */
+            --text-on-card: #4a4238;  /* Dark Brown (Text on Cards) - High Contrast */
             --text-on-bg: #f3f0eb;    /* Off White (Text on Background) */
-            --accent: #91867f;        /* Taupe (Accents) */
-            --input-bg: #e6e2dd;      /* Lighter Beige (Inputs) */
+            --accent: #91867f;        /* Misty Umber (Secondary) */
+            --highlight: #726251;     /* Dark Accent */
         }
 
         body { 
@@ -35,22 +35,21 @@
         
         .font-mincho { font-family: 'Shippori Mincho', serif; }
         
-        /* CARD STYLES */
+        /* CARD STYLES - Solid Beige for visibility */
         .glass { 
-            background: rgba(197, 181, 157, 0.95); /* Opaque Beige */
+            background-color: var(--bg-card);
             color: var(--text-on-card);
-            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border: 1px solid rgba(255,255,255,0.3); 
             border-radius: 20px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
-        /* UTILS */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
         .safe-bottom { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
         
-        /* Modal Animation */
+        /* Modal Transitions */
         .modal-enter-active, .modal-leave-active { transition: opacity 0.3s ease; }
         .modal-enter-from, .modal-leave-to { opacity: 0; }
         .slide-up-enter-active { transition: transform 0.3s ease-out; }
@@ -75,37 +74,37 @@
                         <i class="fas fa-chess-rook text-xl opacity-80"></i> 梓樂Nagoya Trip 🇯🇵
                     </h1>
                 </div>
-                <div class="w-10 h-10 rounded-full border-2 border-white/30 overflow-hidden shadow-lg bg-[#91867f]">
+                <div class="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden shadow-lg bg-[#c5b59d]">
                     <img src="icon.jpg" class="w-full h-full object-cover" onerror="this.style.display='none'">
                 </div>
             </div>
 
-            <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl bg-[#c5b59d] text-[#4a4238]">
+            <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl">
                 <div class="flex justify-between items-end mb-2">
-                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider">距離出發 (HKO Time)</span>
+                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider text-[#4a4238]">距離出發 (HKO Time)</span>
                     <i class="fas fa-plane text-[#726251] animate-pulse"></i>
                 </div>
-                <div class="flex items-baseline gap-2 mb-4">
+                <div class="flex items-baseline gap-2 mb-4 text-[#4a4238]">
                     <span class="text-6xl font-black font-mono tracking-tighter">{{ countdown.days }}</span>
                     <span class="text-sm font-bold opacity-80">Days</span>
                     <span class="text-2xl font-mono font-bold ml-2">{{ countdown.hours }}:{{ countdown.minutes }}:{{ countdown.seconds }}</span>
                 </div>
-                <div class="relative w-full h-2 bg-[#726251]/20 rounded-full mt-2">
+                <div class="relative w-full h-2 bg-[#4a4238]/10 rounded-full mt-2">
                     <div class="absolute top-0 left-0 h-full bg-[#726251] rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }">
                         <i class="fas fa-plane absolute -right-2 -top-1.5 text-[#726251] text-xs transform rotate-45"></i>
                     </div>
                 </div>
-                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono">
+                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono text-[#4a4238]">
                     <span>Now ({{ nowFormatted }})</span>
                     <span>2026.02.25 Go</span>
                 </div>
             </div>
 
-            <div class="bg-[#70808f]/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-white/10 shadow-lg">
+            <div class="bg-[#70808f]/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-[#c5b59d]/30 shadow-lg">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar mask-linear">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
                             class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer active:scale-95"
-                            :class="dayIndex === idx ? 'bg-[#c5b59d] text-[#4a4238] shadow-lg scale-105' : 'bg-white/10 border-white/10 text-white/60'">
+                            :class="dayIndex === idx ? 'bg-[#c5b59d] text-[#4a4238] border-[#c5b59d] shadow-lg scale-105' : 'bg-white/10 border-white/10 text-white/60'">
                         <span class="text-[9px] font-bold uppercase">{{ day.date_en.substr(0,3) }}</span>
                         <span class="text-lg font-black">{{ day.day }}</span>
                     </button>
@@ -114,10 +113,10 @@
 
             <div class="glass p-3 border-l-4 border-[#726251] flex items-center justify-between">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold opacity-60 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span>
-                    <span class="text-xs font-bold">{{ itinerary[dayIndex].location }}</span>
+                    <span class="text-[10px] font-bold opacity-60 uppercase tracking-wider text-[#4a4238]">{{ itinerary[dayIndex].date_short }} Weather</span>
+                    <span class="text-xs font-bold text-[#4a4238]">{{ itinerary[dayIndex].location }}</span>
                 </div>
-                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%]">
+                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%] text-[#4a4238]">
                     <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[2.5rem]">
                         <span class="text-[9px] opacity-60 font-mono">{{ h.time }}</span>
                         <i :class="h.icon" class="text-sm my-0.5"></i>
@@ -127,24 +126,24 @@
             </div>
 
             <div class="relative pl-2">
-                <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-white/20 rounded-full"></div>
+                <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-[#c5b59d]/30 rounded-full"></div>
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
                     <div class="absolute left-0 top-0 w-4 h-4 bg-[#c5b59d] border-[3px] border-[#70808f] rounded-full z-10"></div>
                     <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer hover:bg-[#d6c9b5] z-10">
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-[#70808f] text-white px-2 py-1 rounded">{{ place.time }}</span>
-                            <span class="text-[10px] font-bold opacity-60 uppercase">{{ place.typeLabel }}</span>
+                            <span class="text-[10px] font-bold opacity-60 uppercase text-[#4a4238]">{{ place.typeLabel }}</span>
                         </div>
-                        <h3 class="text-lg font-black mb-1 relative z-10">{{ place.name }}</h3>
-                        <p class="text-xs opacity-80 line-clamp-1 mb-2 relative z-10">{{ place.desc }}</p>
+                        <h3 class="text-lg font-black mb-1 relative z-10 text-[#4a4238]">{{ place.name }}</h3>
+                        <p class="text-xs text-[#4a4238]/80 line-clamp-1 mb-2 relative z-10">{{ place.desc }}</p>
 
-                        <div v-if="place.bookingType === 'flight'" class="mt-3 bg-[#70808f]/10 p-3 rounded-xl border border-[#70808f]/20 flex justify-between items-center relative z-20">
+                        <div v-if="place.bookingType === 'flight'" class="mt-3 bg-[#70808f]/10 p-3 rounded-xl border border-[#70808f]/20 flex justify-between items-center relative z-20 text-[#4a4238]">
                             <div class="flex flex-col"><span class="text-[10px] font-bold uppercase opacity-60">Flight</span><span class="text-lg font-mono font-bold">{{ place.flightNo }}</span></div>
                             <div class="text-right"><span class="text-[10px] opacity-50 block">Info</span><span class="text-sm font-bold opacity-80">{{ place.terminal }}</span></div>
                         </div>
                         
                         <div class="flex flex-wrap gap-2 mt-2 relative z-10">
-                            <span v-for="tag in place.highlights" class="px-2 py-1 bg-white/50 border border-black/5 rounded text-[10px] font-bold text-[#726251]">{{ tag }}</span>
+                            <span v-for="tag in place.highlights" class="px-2 py-1 bg-white/50 border border-[#4a4238]/10 rounded text-[10px] font-bold text-[#726251]">{{ tag }}</span>
                         </div>
                     </div>
                 </div>
@@ -160,47 +159,48 @@
             
             <div v-if="walletMode==='expense'" class="space-y-4">
                 <div class="flex gap-2 overflow-x-auto no-scrollbar">
-                    <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-[#c5b59d] text-[#4a4238]':'bg-transparent text-white/60 border-white/20'">All</button>
-                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-[#91867f] text-white':'bg-transparent text-[#91867f] border-[#91867f]'">👦 TszLok</button>
-                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-[#726251] text-white':'bg-transparent text-[#726251] border-[#726251]'">👧 TszTung</button>
+                    <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-[#c5b59d] text-[#4a4238] border-[#c5b59d]':'bg-transparent text-white/60 border-white/20'">All</button>
+                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-[#91867f] text-white border-[#91867f]':'bg-transparent text-[#91867f] border-[#91867f]'">👦 TszLok</button>
+                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-[#726251] text-white border-[#726251]':'bg-transparent text-[#726251] border-[#726251]'">👧 TszTung</button>
                 </div>
                 
-                <div class="glass p-5 flex justify-between items-center">
+                <div class="glass p-5 flex justify-between items-center text-[#4a4238]">
                     <div class="flex flex-col"><span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
+                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-[#91867f] text-white':'bg-[#726251] text-white'"><i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i></div>
                 </div>
                 
                 <div class="space-y-3 pb-20">
-                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center">
+                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center text-[#4a4238]">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs text-white" :class="item.payer==='TszLok'?'bg-[#91867f]':'bg-[#726251]'">{{ item.payer[0] }}</div>
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs text-white shadow-sm" :class="item.payer==='TszLok'?'bg-[#91867f]':'bg-[#726251]'">{{ item.payer[0] }}</div>
                             <span class="text-sm font-bold">{{ item.name }}</span>
                         </div>
-                        <div class="flex items-center gap-3"><span class="font-mono font-bold opacity-80">¥{{ item.price }}</span><button @click="deleteBudget(item)" class="opacity-40 hover:text-red-600"><i class="fas fa-times"></i></button></div>
+                        <div class="flex items-center gap-3"><span class="font-mono font-bold opacity-80">¥{{ item.price }}</span><button @click="deleteBudget(item)" class="opacity-40 hover:text-red-600 hover:opacity-100 transition-opacity"><i class="fas fa-times text-xs"></i></button></div>
                     </div>
                 </div>
                 
                 <div class="fixed bottom-24 right-6 z-40">
-                    <button @click="showBudgetInput=true" class="w-14 h-14 bg-[#c5b59d] text-[#4a4238] rounded-full shadow-xl flex items-center justify-center text-xl border-2 border-white/20"><i class="fas fa-plus"></i></button>
+                    <button @click="showBudgetInput=true" class="w-14 h-14 bg-[#c5b59d] text-[#4a4238] rounded-full shadow-xl flex items-center justify-center text-xl border-2 border-white/20 active:scale-90 transition-transform"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
 
             <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 pb-20">
-                <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-[#4a4238]/20 hover:bg-[#d6c9b5] cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
+                <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-[#4a4238]/20 hover:bg-[#d6c9b5] cursor-pointer text-[#4a4238]/60 hover:text-[#4a4238] transition-colors">
                     <i class="fas fa-camera text-2xl mb-2"></i><span class="text-xs font-bold">Add Item</span>
                 </div>
                 <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
-                    <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 text-white"><i class="fas fa-times"></i></button>
+                    <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 text-white shadow-md"><i class="fas fa-times"></i></button>
                     <img :src="item.image" class="w-full aspect-square object-cover">
-                    <div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold opacity-60">¥{{ item.price }}</div></div>
+                    <div class="p-3 text-[#4a4238]"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold text-[#726251]">¥{{ item.price }}</div></div>
                 </div>
             </div>
         </div>
 
         <div v-if="currentView === 'packing'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">行李清單</h2>
-            <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden">
+            <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden text-[#4a4238]">
                 <div class="bg-[#726251]/10 px-5 py-3 flex items-center gap-3 border-b border-[#4a4238]/10">
-                    <i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male':key==='tszTung'?'fa-female':'fa-box'"></i>
+                    <i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male text-[#91867f]':key==='tszTung'?'fa-female text-[#726251]':'fa-box'"></i>
                     <span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span>
                 </div>
                 <div class="p-2 grid gap-1">
@@ -216,23 +216,23 @@
         <div v-if="currentView === 'info'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">資訊 Info</h2>
             
-            <div class="glass p-5 text-center">
+            <div class="glass p-5 text-center text-[#4a4238]">
                 <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
                 <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
                 <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
             </div>
 
-            <div class="glass p-5">
+            <div class="glass p-5 text-[#4a4238]">
                 <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3"><i class="fas fa-calculator mr-2"></i>Currency Calc</h3>
                 <div class="flex items-center gap-4">
-                    <div class="flex-1 bg-[#e6e2dd] rounded-xl p-3">
-                        <label class="text-[9px] font-bold opacity-50 block mb-1 text-black">JPY (¥)</label>
-                        <input type="number" v-model="currencyCalc.jpy" class="w-full font-mono font-bold text-xl bg-transparent outline-none text-black" placeholder="0">
+                    <div class="flex-1 bg-white/50 rounded-xl p-3 border border-[#4a4238]/10">
+                        <label class="text-[9px] font-bold opacity-50 block mb-1">JPY (¥)</label>
+                        <input type="number" v-model="currencyCalc.jpy" class="w-full font-mono font-bold text-xl bg-transparent outline-none text-[#4a4238]" placeholder="0">
                     </div>
                     <i class="fas fa-exchange-alt opacity-30 text-xs"></i>
-                    <div class="flex-1 bg-[#e6e2dd] rounded-xl p-3">
-                        <label class="text-[9px] font-bold opacity-50 block mb-1 text-black">HKD ($)</label>
-                        <div class="font-mono font-bold text-xl text-[#70808f]">{{ (currencyCalc.jpy * currencyCalc.rate).toFixed(1) }}</div>
+                    <div class="flex-1 bg-white/50 rounded-xl p-3 border border-[#4a4238]/10">
+                        <label class="text-[9px] font-bold opacity-50 block mb-1">HKD ($)</label>
+                        <div class="font-mono font-bold text-xl text-[#726251]">{{ (currencyCalc.jpy * currencyCalc.rate).toFixed(1) }}</div>
                     </div>
                 </div>
             </div>
@@ -240,62 +240,88 @@
 
     </main>
 
-    <nav class="fixed bottom-0 w-full h-[85px] bg-[#70808f]/95 backdrop-blur-xl border-t border-white/10 z-50 flex justify-around items-center px-2 pb-safe-bottom">
+    <nav class="fixed bottom-0 w-full h-[85px] bg-[#70808f]/95 backdrop-blur-xl border-t border-[#c5b59d]/20 z-50 flex justify-around items-center px-2 pb-safe-bottom">
         <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer active:scale-95" :class="currentView === tab.id ? 'text-[#c5b59d] scale-110' : 'text-white/40'">
             <i :class="tab.icon" class="text-xl"></i>
             <span class="text-[9px] font-bold uppercase tracking-widest">{{ tab.label }}</span>
         </button>
     </nav>
 
-    <transition name="modal">
     <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div>
-        <div class="bg-[#f3f0eb] w-full max-w-md p-6 rounded-t-3xl animate-slide-up text-[#4a4238]">
-            <h3 class="font-bold mb-4 text-lg">Add Expense</h3>
-            <div class="flex gap-3 mb-4">
-                <button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?'bg-[#91867f] text-white':'border-[#91867f]/30 text-[#91867f]'">{{ p }}</button>
-            </div>
-            <input v-model="newItem.name" placeholder="Item Name" class="w-full bg-white p-4 rounded-xl mb-3 font-bold border border-gray-300 text-black outline-none focus:border-[#70808f]">
-            <input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-white p-4 rounded-xl mb-6 font-bold border border-gray-300 text-black outline-none focus:border-[#70808f]">
-            <div class="flex gap-3">
-                <button @click="showBudgetInput=false" class="flex-1 py-3 font-bold opacity-50">Cancel</button>
-                <button @click="addItem" class="flex-1 py-3 bg-[#70808f] text-white rounded-xl font-bold">Save</button>
+        <div class="bg-[#c5b59d] w-full max-w-md p-6 rounded-t-3xl animate-slide-up text-[#4a4238] flex flex-col max-h-[90vh] overflow-y-auto">
+            <h3 class="font-bold mb-6 text-lg flex-shrink-0">Add Expense</h3>
+            <div class="flex-1 flex flex-col pb-20"> 
+                <div class="flex gap-3 mb-4">
+                    <button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button>
+                </div>
+                <input v-model="newItem.name" placeholder="Item Name" class="w-full bg-white p-4 rounded-xl mb-4 font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none transition-colors">
+                <input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-white p-4 rounded-xl mb-8 font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none transition-colors">
+                
+                <div class="flex gap-3 mt-4">
+                    <button @click="showBudgetInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 hover:text-[#4a4238]">Cancel</button>
+                    <button @click="addItem" class="flex-1 py-4 bg-[#70808f] text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform">Save</button>
+                </div>
             </div>
         </div>
     </div>
-    </transition>
     
-    <transition name="modal">
     <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
-        <div class="bg-[#f3f0eb] w-full max-w-md p-6 rounded-t-3xl animate-slide-up flex flex-col max-h-[90vh] text-[#4a4238]">
-            <h3 class="font-bold mb-4 text-lg flex-shrink-0">Add to Wishlist</h3>
+        <div class="bg-[#c5b59d] w-full max-w-md p-6 rounded-t-3xl animate-slide-up flex flex-col max-h-[90vh] text-[#4a4238] overflow-y-auto">
+            <h3 class="font-bold mb-6 text-lg flex-shrink-0">Add to Wishlist</h3>
             
-            <div class="overflow-y-auto flex-1 pb-4 no-scrollbar">
-                <div class="mb-4 relative group w-full flex-shrink-0">
-                    <div v-if="!newWishItem.image" class="w-full h-40 bg-white border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 relative">
+            <div class="flex-1 flex flex-col pb-20"> 
+                <div class="mb-6 relative group w-full flex-shrink-0">
+                    <div v-if="!newWishItem.image" class="w-full h-40 bg-white/50 border-2 border-dashed border-[#4a4238]/30 rounded-xl flex flex-col items-center justify-center text-[#4a4238]/40 relative hover:bg-white/70 transition-colors">
                         <i class="fas fa-camera text-3xl mb-2"></i><span class="text-sm font-bold">Upload Photo</span>
                         <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
                     </div>
                     <div v-else class="relative w-full">
-                        <img :src="newWishItem.image" class="w-full max-h-48 object-cover rounded-xl shadow-md border border-gray-200">
-                        <div class="flex gap-2 mt-2">
-                            <label class="flex-1 py-2 bg-gray-200 rounded-lg text-xs font-bold text-center cursor-pointer text-gray-700">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
-                            <button @click="newWishItem.image = null" class="flex-1 py-2 bg-red-100 text-red-500 rounded-lg text-xs font-bold">Remove</button>
+                        <img :src="newWishItem.image" class="w-full max-h-64 object-cover rounded-xl shadow-lg border border-white/50">
+                        <div class="flex gap-3 mt-3">
+                            <label class="flex-1 py-3 bg-white/50 rounded-xl text-sm font-bold text-center cursor-pointer hover:bg-white/80 text-[#4a4238] transition-colors">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
+                            <button @click="newWishItem.image = null" class="flex-1 py-3 bg-red-100 text-red-500 rounded-xl text-sm font-bold hover:bg-red-200 transition-colors">Remove</button>
                         </div>
                     </div>
                 </div>
                 
-                <input v-model="newWishItem.name" placeholder="Product Name" class="w-full bg-white p-4 rounded-xl mb-3 font-bold border border-gray-300 text-black outline-none focus:border-[#70808f]">
-                <input v-model.number="newWishItem.price" type="number" placeholder="¥ Price" class="w-full bg-white p-4 rounded-xl mb-4 font-bold border border-gray-300 text-black outline-none focus:border-[#70808f]">
-            </div>
+                <div class="space-y-4 flex-shrink-0">
+                    <div>
+                        <label class="block text-xs font-bold opacity-60 mb-1 ml-1">Product Name</label>
+                        <input v-model="newWishItem.name" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] transition-colors placeholder-[#4a4238]/30">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold opacity-60 mb-1 ml-1">Price (¥)</label>
+                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] transition-colors placeholder-[#4a4238]/30">
+                    </div>
+                </div>
 
-            <div class="flex gap-3 pt-2 border-t border-gray-200 flex-shrink-0">
-                <button @click="showWishlistInput=false" class="flex-1 py-3 font-bold opacity-50">Cancel</button>
-                <button @click="addWishlist" class="flex-1 py-3 bg-[#70808f] text-white rounded-xl font-bold shadow-lg">Add Item</button>
+                <div class="flex gap-3 mt-8 mb-4 flex-shrink-0">
+                    <button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 hover:text-[#4a4238] transition-colors">Cancel</button>
+                    <button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform">Add Item</button>
+                </div>
             </div>
         </div>
     </div>
-    </transition>
+
+    <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
+        <div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238]">
+            <div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div>
+            <span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span>
+            <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
+            <div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div>
+            <div class="space-y-6 text-sm leading-relaxed">
+                <div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div>
+                <div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div>
+            </div>
+            <div class="mt-6 space-y-3">
+                <a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a>
+                <a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a>
+            </div>
+            <div class="h-6"></div>
+            <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button>
+        </div>
+    </div>
 
 </div>
 
@@ -319,6 +345,7 @@
             const wishlist = ref([]);
             const currencyCalc = ref({ jpy: '', rate: 0.052 });
 
+            // ... (Data remains the same, omitted for brevity but included in full code above) ...
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -402,7 +429,6 @@
             const tripStart = new Date(2026, 1, 25, 9, 0, 0); // 2026-02-25
             const countdownStart = new Date(2026, 1, 3, 9, 0, 0); 
             
-            // Sync with HK Time
             const getHKTime = () => {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -434,38 +460,35 @@
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
-            // IMAGE COMPRESSION HELPER (With Fallback)
+            // FIXED: Aggressive compression to prevent storage quota error
             const compressImage = (file, callback) => {
-                if(file.size < 500000) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => callback(e.target.result);
-                    reader.readAsDataURL(file);
+                // If larger than 5MB, reject immediately to save memory
+                if(file.size > 5000000) {
+                    alert('Image too large (>5MB). Please pick a smaller one.');
                     return;
                 }
+                
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = (event) => {
                     const img = new Image();
                     img.src = event.target.result;
                     img.onload = () => {
-                        try {
-                            const canvas = document.createElement('canvas');
-                            const MAX_WIDTH = 800; 
-                            const scaleSize = MAX_WIDTH / img.width;
-                            if(scaleSize < 1) {
-                                canvas.width = MAX_WIDTH;
-                                canvas.height = img.height * scaleSize;
-                            } else {
-                                canvas.width = img.width;
-                                canvas.height = img.height;
-                            }
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            callback(canvas.toDataURL('image/jpeg', 0.6)); 
-                        } catch (e) {
-                            alert("Compression failed, using raw image.");
-                            callback(event.target.result);
+                        const canvas = document.createElement('canvas');
+                        // Aggressive resize: Max 600px width
+                        const MAX_WIDTH = 600; 
+                        const scaleSize = MAX_WIDTH / img.width;
+                        if(scaleSize < 1) {
+                            canvas.width = MAX_WIDTH;
+                            canvas.height = img.height * scaleSize;
+                        } else {
+                            canvas.width = img.width;
+                            canvas.height = img.height;
                         }
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        // Aggressive quality reduction: 0.5
+                        callback(canvas.toDataURL('image/jpeg', 0.5)); 
                     }
                 }
             };
@@ -480,16 +503,29 @@
             };
 
             onMounted(() => { 
+                // Wrapped in try-catch to prevent white screen of death
                 try {
-                    const b = localStorage.getItem('jp_v55_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v55_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v55_p'); if(p) packingList.value = JSON.parse(p);
-                } catch(e) { console.error("Storage error", e); }
+                    const b = localStorage.getItem('jp_v56_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v56_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v56_p'); if(p) packingList.value = JSON.parse(p);
+                } catch(e) { console.error("Storage load error", e); }
             });
             
-            watch(budgetList, v => localStorage.setItem('jp_v55_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v55_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v55_p', JSON.stringify(v)), {deep:true});
+            // Watchers with error handling for quota exceeded
+            watch(budgetList, v => {
+                try { localStorage.setItem('jp_v56_b', JSON.stringify(v)); } 
+                catch(e) { alert("Storage Full! Cannot save expense."); }
+            }, {deep:true});
+            
+            watch(wishlist, v => {
+                try { localStorage.setItem('jp_v56_w', JSON.stringify(v)); } 
+                catch(e) { alert("Storage Full! Image might be too big."); }
+            }, {deep:true});
+            
+            watch(packingList, v => {
+                try { localStorage.setItem('jp_v56_p', JSON.stringify(v)); } 
+                catch(e) { console.error(e); }
+            }, {deep:true});
 
             const getTypeColor = (t) => ({food:'border-orange-400 bg-orange-500', transport:'border-blue-400 bg-blue-500', stay:'border-purple-400 bg-purple-500', spot:'border-emerald-400 bg-emerald-500'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
