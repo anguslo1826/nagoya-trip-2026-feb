@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v48</title>
+    <title>梓樂Nagoya Trip v49</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
 
     <script>
-        window.onerror = function(msg, url, line, col, error) {
-            // Only show critical errors, ignore trivial resizing errors
+        window.onerror = function(msg, url, line) {
             if (msg.includes('ResizeObserver')) return;
-            document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;top:0;left:0;z-index:9999;background:red;color:white;padding:20px;font-size:12px;max-width:100%;">⚠️ Error: ' + msg + '<br>Line: ' + line + '</div>');
+            // document.body.innerHTML += '<div style="position:fixed;bottom:0;left:0;background:red;color:white;z-index:9999;padding:10px;">Error: '+msg+'</div>';
         };
     </script>
 
@@ -34,21 +33,13 @@
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
         .sticker-float { animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-5px) rotate(5deg); } }
-        
-        /* Modal Transitions */
-        .modal-enter-active, .modal-leave-active { transition: opacity 0.3s ease; }
-        .modal-enter-from, .modal-leave-to { opacity: 0; }
-        .slide-up-enter-active { transition: all 0.3s ease-out; }
-        .slide-up-enter-from { transform: translateY(100%); }
-        .slide-up-leave-to { transform: translateY(100%); }
+        [v-cloak] { display: none !important; }
     </style>
 </head>
 <body>
 
-<div id="app" class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#0f172a]">
+<div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#0f172a]">
     
-    <div class="absolute inset-0 pointer-events-none z-0" id="snow-container"></div>
-
     <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
         
         <div v-if="currentView === 'itinerary'" class="space-y-5 pb-4">
@@ -66,13 +57,13 @@
 
             <div class="glass p-5 relative overflow-hidden mb-2 border border-white/10 shadow-xl bg-gradient-to-br from-[#1e293b] to-[#0f172a]">
                 <div class="flex justify-between items-end mb-2">
-                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider">距離出發 (Start: 2/3)</span>
+                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider">距離出發 (HK Time)</span>
                     <i class="fas fa-plane text-emerald-400 animate-pulse"></i>
                 </div>
                 <div class="flex items-baseline gap-2 mb-4">
                     <span class="text-6xl font-black font-mono text-emerald-300 tracking-tighter">{{ countdown.days }}</span>
                     <span class="text-sm font-bold opacity-80">Days</span>
-                    <span class="text-2xl font-mono font-bold text-white/80 ml-2">{{ countdown.hours }}:{{ countdown.minutes }}</span>
+                    <span class="text-2xl font-mono font-bold text-white/80 ml-2">{{ countdown.hours }}:{{ countdown.minutes }}:{{ countdown.seconds }}</span>
                 </div>
                 <div class="relative w-full h-2 bg-white/10 rounded-full mt-2">
                     <div class="absolute top-0 left-0 h-full bg-emerald-400 rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }">
@@ -80,8 +71,8 @@
                     </div>
                 </div>
                 <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono">
-                    <span>Now (2/3)</span>
-                    <span>2026.02.25 Go</span>
+                    <span>Now ({{ nowFormatted }})</span>
+                    <span>2026.02.25</span>
                 </div>
             </div>
 
@@ -179,7 +170,7 @@
         <div v-if="currentView === 'info'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho">資訊 Info</h2>
             <div class="glass p-5 relative overflow-hidden text-center">
-                <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">距離出發</div>
+                <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">距離出發 (HK Time)</div>
                 <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
                 <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
             </div>
@@ -238,15 +229,10 @@
         </button>
     </nav>
 
-    <transition name="modal">
     <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#1e293b] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto"><div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div><span class="px-3 py-1 bg-white/10 rounded-lg text-xs font-bold uppercase text-emerald-300">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-emerald-500/10 p-5 rounded-2xl border-l-4 border-emerald-500"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center text-emerald-400"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-emerald-600 text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-blue-600 text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Map</button></div></div>
-    </transition>
-
-    <transition name="modal">
+    
     <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up"><h3 class="font-bold mb-4 text-lg">Add Expense</h3><div class="flex gap-3 mb-4"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-blue-500 border-blue-500 text-white':'bg-pink-500 border-pink-500 text-white'):'border-white/20 text-white/50'">{{ p }}</button></div><input v-model="newItem.name" placeholder="Item Name" class="w-full bg-white/10 p-4 rounded-xl mb-3 font-bold border border-white/10 text-white"><input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-white/10 p-4 rounded-xl mb-6 font-bold border border-white/10 text-white"><div class="flex gap-3"><button @click="showBudgetInput=false" class="flex-1 py-3 font-bold text-white/50">Cancel</button><button @click="addItem" class="flex-1 py-3 bg-white text-slate-900 rounded-xl font-bold">Save</button></div></div></div>
-    </transition>
-
-    <transition name="modal">
+    
     <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
         <div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl animate-slide-up flex flex-col max-h-[85vh]">
@@ -277,7 +263,6 @@
             </div>
         </div>
     </div>
-    </transition>
 
 </div>
 
@@ -381,15 +366,24 @@
                 ]}
             ]);
 
-            // COUNTDOWN: Start Feb 3 (0%) to Feb 25 (100%)
-            const tripStart = new Date(2026, 1, 25, 9, 0, 0); // Feb 25
-            const countdownStart = new Date(2026, 1, 3, 9, 0, 0); // Feb 3
+            // === HKO CLOCK SYNC (Fixed to HK Time UTC+8) ===
+            const tripStart = new Date(2026, 1, 25, 9, 0, 0); // 2026-02-25
+            const countdownStart = new Date(2026, 1, 3, 9, 0, 0); 
             
-            // Simulation
-            const now = ref(new Date(2026, 1, 3, 9, 0, 0));
+            // Initial Sync with HKT
+            const getHKTime = () => {
+                const now = new Date();
+                // Convert current local time to HK Time (UTC+8)
+                // We use offset logic to keep it simple and robust
+                const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+                return new Date(utc + (3600000 * 8)); // UTC + 8 hours
+            };
+
+            const now = ref(getHKTime());
+            const nowFormatted = computed(() => now.value.toLocaleDateString('en-GB', { month: 'numeric', day: 'numeric' }));
 
             setInterval(() => {
-                now.value = new Date(now.value.getTime() + 1000); 
+                now.value = getHKTime();
             }, 1000);
 
             const countdown = computed(() => {
@@ -410,27 +404,42 @@
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
-            // IMAGE COMPRESSION HELPER (Fixes "File Too Large" crash)
+            // IMAGE COMPRESSION HELPER (With Fallback)
             const compressImage = (file, callback) => {
+                // If file is small (< 500KB), just use it directly to avoid canvas issues
+                if(file.size < 500000) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => callback(e.target.result);
+                    reader.readAsDataURL(file);
+                    return;
+                }
+
+                // Otherwise try to compress
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
                 reader.onload = (event) => {
                     const img = new Image();
                     img.src = event.target.result;
                     img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 800; // Limit width to 800px
-                        const scaleSize = MAX_WIDTH / img.width;
-                        if(scaleSize < 1) {
-                            canvas.width = MAX_WIDTH;
-                            canvas.height = img.height * scaleSize;
-                        } else {
-                            canvas.width = img.width;
-                            canvas.height = img.height;
+                        try {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 800; 
+                            const scaleSize = MAX_WIDTH / img.width;
+                            if(scaleSize < 1) {
+                                canvas.width = MAX_WIDTH;
+                                canvas.height = img.height * scaleSize;
+                            } else {
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                            }
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            callback(canvas.toDataURL('image/jpeg', 0.6)); 
+                        } catch (e) {
+                            // Fallback if canvas fails (e.g. strict security settings)
+                            alert("Compression failed, using raw image. Might be slow.");
+                            callback(event.target.result);
                         }
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        callback(canvas.toDataURL('image/jpeg', 0.7)); // Compress to 70% quality JPEG
                     }
                 }
             };
@@ -438,36 +447,23 @@
             const handleImageUpload = (event) => { 
                 const file = event.target.files[0]; 
                 if(file) { 
-                    // Use compression instead of raw file
-                    compressImage(file, (compressedResult) => {
-                        newWishItem.value.image = compressedResult; 
+                    compressImage(file, (result) => {
+                        newWishItem.value.image = result; 
                     });
                 } 
             };
 
             onMounted(() => { 
-                const c = document.getElementById('snow-container');
-                if(c) {
-                    for(let i=0; i<30; i++) { 
-                        const f = document.createElement('div'); 
-                        f.className = 'snowflake fas fa-snowflake'; 
-                        f.style.left = Math.random()*100+'vw'; 
-                        f.style.animationDuration = (Math.random()*5+5)+'s'; 
-                        f.style.fontSize = (Math.random()*10+5)+'px'; 
-                        c.appendChild(f); 
-                    }
-                }
-                
                 try {
-                    const b = localStorage.getItem('jp_v48_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v48_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v48_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v49_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v49_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v49_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            watch(budgetList, v => localStorage.setItem('jp_v48_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v48_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v48_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v49_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v49_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v49_p', JSON.stringify(v)), {deep:true});
 
             const getTypeColor = (t) => ({food:'border-orange-400 bg-orange-500', transport:'border-blue-400 bg-blue-500', stay:'border-purple-400 bg-purple-500', spot:'border-emerald-400 bg-emerald-500'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
@@ -493,7 +489,7 @@
 
             const tabs = [ { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, { id: 'info', label: 'Info', icon: 'fas fa-info-circle' } ];
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currencyCalc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress };
+            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currencyCalc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted };
         }
     }).mount('#app');
 </script>
