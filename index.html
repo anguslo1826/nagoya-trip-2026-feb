@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v60</title>
+    <title>梓樂Nagoya Trip v61</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
+
+    <script>
+        window.onerror = function(msg, url, line, col, error) {
+            var errBox = document.getElementById('error-box');
+            if(!errBox) {
+                errBox = document.createElement('div');
+                errBox.id = 'error-box';
+                errBox.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:red;color:white;padding:20px;z-index:99999;font-size:14px;';
+                document.body.appendChild(errBox);
+            }
+            errBox.innerHTML += '⚠️ Error: ' + msg + ' (Line: ' + line + ')<br>';
+        };
+    </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -14,14 +27,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* THEME: "蒼灰の地層" (Pale Blue & Sand) */
+        /* THEME: "蒼灰の地層" */
         :root {
-            --bg-main: #70808f;       /* Slate Blue */
-            --bg-card: #c5b59d;       /* Sand Beige */
-            --text-dark: #4a4238;     /* Dark Brown (High Contrast) */
-            --text-light: #f3f0eb;    /* Off White */
-            --accent: #726251;        /* Misty Umber */
-            --input-bg: #ffffff;      /* Pure White for Inputs */
+            --bg-main: #70808f;     /* Slate Blue */
+            --bg-card: #c5b59d;     /* Sand Beige */
+            --text-dark: #4a4238;   /* Dark Brown */
+            --text-light: #f3f0eb;  /* Off White */
+            --accent: #726251;      /* Misty Umber */
         }
 
         body { 
@@ -36,7 +48,7 @@
         
         .font-mincho { font-family: 'Shippori Mincho', serif; }
         
-        /* SOLID CARD STYLE (No Transparency = No Glitches) */
+        /* SOLID CARD STYLE */
         .glass { 
             background-color: var(--bg-card); 
             color: var(--text-dark);
@@ -45,17 +57,19 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
         
+        /* UTILS */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
         .safe-bottom { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
         
-        /* Prevent text selection on UI elements to stop "Copy" menu */
+        /* PREVENT COPY MENU ON UI */
         .no-select { user-select: none; -webkit-user-select: none; }
         
-        /* Ensure Inputs are selectable */
-        input { user-select: text; -webkit-user-select: text; }
+        /* ALLOW INPUTS */
+        input { user-select: text; -webkit-user-select: text; -webkit-appearance: none; appearance: none; }
 
+        /* HIDE UNTIL LOADED */
         [v-cloak] { display: none !important; }
     </style>
 </head>
@@ -91,6 +105,10 @@
                 <div class="relative w-full h-2 bg-[#4a4238]/10 rounded-full mt-2">
                     <div class="absolute top-0 left-0 h-full bg-[#726251] rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }"></div>
                 </div>
+                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono">
+                    <span>Now ({{ nowFormatted }})</span>
+                    <span>2026.02.25 Go</span>
+                </div>
             </div>
 
             <div class="bg-[#70808f] sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-[#c5b59d]/30 shadow-lg no-select">
@@ -121,7 +139,7 @@
             <div class="relative pl-2">
                 <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-[#c5b59d]/30 rounded-full"></div>
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
-                    <div class="absolute left-0 top-0 w-4 h-4 bg-[#c5b59d] border-[3px] border-[#70808f] rounded-full z-10"></div>
+                    <div class="absolute left-0 top-0 w-4 h-4 bg-[#c5b59d] border-[3px] border-[#70808f] rounded-full z-10" :class="getTypeColor(place.type)"></div>
                     <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer hover:bg-[#d6c9b5] z-10">
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-[#70808f] text-white px-2 py-1 rounded">{{ place.time }}</span>
@@ -137,7 +155,7 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'wallet'" class="space-y-6 pt-4 animate-fade">
+        <div v-if="currentView === 'wallet'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">Spend & Buyyyyy</h2>
             <div class="flex bg-white/10 p-1 rounded-xl no-select">
                 <button @click="walletMode='expense'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-[#c5b59d] text-[#4a4238] shadow-sm':'text-white/60'">記帳 Expenses</button>
@@ -193,7 +211,7 @@
                     <label v-for="(item, idx) in group" :key="idx" class="flex items-center p-3 hover:bg-[#726251]/5 rounded-xl cursor-pointer check-box transition-colors">
                         <input type="checkbox" v-model="item.checked" class="hidden">
                         <div class="w-5 h-5 rounded border-2 border-[#4a4238]/30 flex items-center justify-center mr-3 transition-colors bg-white/50"><i class="fas fa-check text-[#4a4238] text-[10px] opacity-0"></i></div>
-                        <span class="text-sm font-bold transition-opacity" :class="{'line-through opacity-40': item.checked}">{{ item.name }}</span>
+                        <span class="text-sm font-bold transition-opacity text-[#4a4238]" :class="{'line-through opacity-40': item.checked}">{{ item.name }}</span>
                     </label>
                 </div>
             </div>
@@ -222,7 +240,7 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'add_expense_page'" class="bg-[#c5b59d] fixed inset-0 z-50 flex flex-col p-6 animate-slide-up h-full w-full">
+        <div v-if="currentView === 'add_expense_page'" class="bg-[#c5b59d] fixed inset-0 z-50 flex flex-col p-6 h-full w-full">
             <h3 class="font-bold mb-6 text-2xl text-[#4a4238]">Add Expense</h3>
             <div class="flex-1 overflow-y-auto pb-32 no-scrollbar"> 
                 <div class="flex gap-3 mb-6">
@@ -245,7 +263,7 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'add_wishlist_page'" class="bg-[#c5b59d] fixed inset-0 z-50 flex flex-col p-6 animate-slide-up h-full w-full">
+        <div v-if="currentView === 'add_wishlist_page'" class="bg-[#c5b59d] fixed inset-0 z-50 flex flex-col p-6 h-full w-full">
             <h3 class="font-bold mb-6 text-2xl text-[#4a4238]">Add to Wishlist</h3>
             
             <div class="flex-1 overflow-y-auto pb-32 no-scrollbar"> 
@@ -328,7 +346,6 @@
             const wishlist = ref([]);
             const currencyCalc = ref({ jpy: '', rate: 0.052 });
 
-            // Weather & Itinerary Data (Omitted for brevity, assume same structure)
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -351,7 +368,7 @@
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
                     { time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達", highlights: ["綠茶"], strategy: "出關後跟著「名鐵電車」指標走。\n去自動售票機或櫃檯購票。\n買一瓶綠茶 (伊右衛門)。" },
                     { time: "15:30", name: "前往市區", type: "transport", typeLabel: "移動", desc: "名鐵→名古屋站→櫻通線→久屋大通。", highlights: ["櫻通線"], strategy: "抵達名古屋站後，不要出站到地面，直接找「櫻通線 (紅線)」地鐵指標。\n往「德重」方向，下車站：久屋大通。" },
-                    { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B 出口。", bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810", highlights: ["大浴場"], strategy: "走 4B 或 1A 出口（有電扶梯）。\nC/I 後先去大浴場洗澡或在房間休息。\n飯店對面有 7-11。" },
+                    { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B 出口。", bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810&token=XF5C1EA228E5100852402D0049339DF1962AD9B0C92EE50378311047DCFF0DBE&source=1&tripsignature=AAEAAQAHb3JkZXJpZPCgrtqAPnfjMBlMTZS7pUwyyMtXS1n0jzhz3GZ7Y-Md-tripsign&allianceid=&ouid=&sid=&locale=zh-HK", highlights: ["大浴場"], strategy: "走 4B 或 1A 出口（有電扶梯）。\nC/I 後先去大浴場洗澡或在房間休息。\n飯店對面有 7-11。" },
                     { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "尼泊爾咖哩。起司烤餅份量巨大。", highlights: ["Cheese Naan"], strategy: "這是尼泊爾人開的店。\n必點：Cheese Naan (起司烤餅)、Butter Chicken Curry、Mango Lassi。\n兩人點一份烤餅分食即可。" },
                     { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水之宇宙船。", highlights: ["電視塔倒影"], strategy: "搭電梯上頂層玻璃地面。\n走到水池正中央，拍攝電視塔倒影。" },
                     { time: "21:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "7-11 買宵夜。", highlights: ["焦糖冰淇淋"], strategy: "買宵夜和明天的水。\nOhayo 焦糖烤布蕾冰淇淋 (敲碎表面焦糖吃)。" }
@@ -376,7 +393,7 @@
                 ]},
                 { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [
                     { time: "09:00", name: "JR Hida 特急", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["指定席"], strategy: "劃位時指名 'Luggage Seat' (最後一排)。\n火車美食：千壽炸蝦飯糰、松浦商店飛驒牛便當。" },
-                    { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" },
+                    { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445&locale=zh-HK&operate=OrderDetail&token=XB4CE8B65E4C1A9B51F4AB74B9B804819FE7D64930B951A2DB518044478D50D7&sign=AAEAAQAHb3JkZXJpZOyudZQ4DEJes1FdTePw_JT10SQJmS9FYEtZeLDRenkH-tripsign&requestid=10f6a615-a991-4765-86e8-fa746cf77a6c&source=1&allianceid=&ouid=&sid=", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" },
                     { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", highlights: ["飛驒牛壽司"], strategy: "邊走邊吃。\n必吃：飛驒牛握壽司 (坂口屋)、飛驒牛包子 (喜八郎)。\n去船坂酒造投幣試喝清酒。" },
                     { time: "15:00", name: "Check-in", type: "stay", typeLabel: "休息", desc: "換上作務衣。", highlights: ["頂樓風景"], strategy: "1. 在大廳 Pillow Bar 搶枕頭。\n2. 換上作務衣 (Samue)。\n3. 去頂樓看風景。" },
                     { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", highlights: ["A5飛驒牛"], strategy: "務必預約。若無預約，16:30 去排隊。\n必點：味藏盛拼盤 (Ajikura Mori)。\nA5 和牛油脂多，沾芥末或鹽最好吃。" },
@@ -442,16 +459,12 @@
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
-            // IMAGE COMPRESSION HELPER (With Fallback)
             const compressImage = (file, callback) => {
-                if(file.size < 500000) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => callback(e.target.result);
-                    reader.readAsDataURL(file);
+                if(file.size > 5000000) {
+                    alert('Image too large (>5MB). Please pick a smaller one.');
                     return;
                 }
                 const reader = new FileReader();
-                reader.readAsDataURL(file);
                 reader.onload = (event) => {
                     const img = new Image();
                     img.src = event.target.result;
@@ -476,6 +489,7 @@
                         }
                     }
                 }
+                reader.readAsDataURL(file);
             };
 
             const handleImageUpload = (event) => { 
@@ -489,16 +503,16 @@
 
             onMounted(() => { 
                 try {
-                    const b = localStorage.getItem('jp_v60_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v60_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v60_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v61_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v61_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v61_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
             // Watchers with error handling
-            watch(budgetList, v => { try { localStorage.setItem('jp_v60_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
-            watch(wishlist, v => { try { localStorage.setItem('jp_v60_w', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
-            watch(packingList, v => { try { localStorage.setItem('jp_v60_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
+            watch(budgetList, v => { try { localStorage.setItem('jp_v61_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
+            watch(wishlist, v => { try { localStorage.setItem('jp_v61_w', JSON.stringify(v)); } catch(e) { alert("Storage full! Image too big."); } }, {deep:true});
+            watch(packingList, v => { try { localStorage.setItem('jp_v61_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
 
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
@@ -508,7 +522,7 @@
                 if(newItem.value.name && newItem.value.price){ 
                     budgetList.value.unshift({...newItem.value}); 
                     newItem.value={name:'',price:'',payer:'TszLok'}; 
-                    currentView.value = 'wallet'; // Return to wallet
+                    currentView.value = 'wallet'; 
                 }
             };
             
@@ -521,7 +535,7 @@
                     try {
                         wishlist.value.unshift({...newWishItem.value}); 
                         newWishItem.value = { name: '', price: '', image: null }; 
-                        currentView.value = 'wallet'; // Return to wallet
+                        currentView.value = 'wallet';
                     } catch(e) {
                         alert("Storage full! Try removing some items.");
                     }
