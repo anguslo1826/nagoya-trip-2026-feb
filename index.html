@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v57</title>
+    <title>梓樂Nagoya Trip v58</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -47,14 +47,15 @@
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
         [v-cloak] { display: none !important; }
         
-        /* Utility */
-        .bg-main { background-color: var(--bg-main); }
-        .text-main { color: var(--text-on-card); }
+        /* FIX: Ensure modals are always on top and interactive */
+        .modal-layer { z-index: 9999 !important; pointer-events: auto !important; }
+        .modal-content { pointer-events: auto !important; position: relative; z-index: 10000; }
+        .interactive-input { pointer-events: auto !important; user-select: text !important; -webkit-user-select: text !important; }
     </style>
 </head>
 <body>
 
-<div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-main">
+<div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#70808f]">
     
     <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
         
@@ -172,7 +173,7 @@
                 </div>
                 
                 <div class="fixed bottom-24 right-6 z-40">
-                    <button @click="showBudgetInput=true" class="w-14 h-14 bg-[#c5b59d] text-[#4a4238] rounded-full shadow-xl flex items-center justify-center text-xl border-2 border-white/20"><i class="fas fa-plus"></i></button>
+                    <button @click="showBudgetInput=true" class="w-14 h-14 bg-[#c5b59d] text-[#4a4238] rounded-full shadow-xl flex items-center justify-center text-xl border-2 border-white/20 active:scale-90 transition-transform"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
 
@@ -239,24 +240,25 @@
         </button>
     </nav>
 
-    <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center">
+    <div v-if="showBudgetInput" class="fixed inset-0 z-[9999] flex items-end justify-center modal-layer">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div>
-        <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238]">
+        <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop>
             <div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Expense</div>
-            <div class="flex-1 overflow-y-auto p-6 pb-40"> <div class="flex gap-3 mb-6">
+            <div class="flex-1 overflow-y-auto p-6 pb-40"> 
+                <div class="flex gap-3 mb-6">
                     <button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-4 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button>
                 </div>
-                <div class="space-y-4">
-                    <div>
+                <div class="space-y-6">
+                    <div class="relative z-[10001]">
                         <label class="block text-xs font-bold opacity-60 mb-2">Item Name</label>
-                        <input v-model="newItem.name" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none">
+                        <input v-model="newItem.name" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none interactive-input">
                     </div>
-                    <div>
+                    <div class="relative z-[10001]">
                         <label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label>
-                        <input v-model.number="newItem.price" type="number" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none">
+                        <input v-model.number="newItem.price" type="number" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none interactive-input">
                     </div>
                 </div>
-                <div class="flex gap-3 mt-8">
+                <div class="flex gap-3 mt-10">
                     <button @click="showBudgetInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-xl">Cancel</button>
                     <button @click="addItem" class="flex-1 py-4 bg-[#70808f] text-white rounded-xl font-bold shadow-lg">Save</button>
                 </div>
@@ -264,12 +266,13 @@
         </div>
     </div>
     
-    <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center">
+    <div v-if="showWishlistInput" class="fixed inset-0 z-[9999] flex items-end justify-center modal-layer">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
-        <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238]">
+        <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop>
             <div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add to Wishlist</div>
             
-            <div class="flex-1 overflow-y-auto p-6 pb-40"> <div class="mb-6 relative group w-full">
+            <div class="flex-1 overflow-y-auto p-6 pb-40"> 
+                <div class="mb-6 relative group w-full">
                     <div v-if="!newWishItem.image" class="w-full h-48 bg-white/50 border-2 border-dashed border-[#4a4238]/30 rounded-xl flex flex-col items-center justify-center text-[#4a4238]/40 relative hover:bg-white/70 transition-colors">
                         <i class="fas fa-camera text-3xl mb-2"></i><span class="text-sm font-bold">Upload Photo</span>
                         <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
@@ -283,18 +286,18 @@
                     </div>
                 </div>
                 
-                <div class="space-y-4">
-                    <div>
+                <div class="space-y-6">
+                    <div class="relative z-[10001]">
                         <label class="block text-xs font-bold opacity-60 mb-2">Product Name</label>
-                        <input v-model="newWishItem.name" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251]">
+                        <input v-model="newWishItem.name" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] interactive-input">
                     </div>
-                    <div>
+                    <div class="relative z-[10001]">
                         <label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label>
-                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251]">
+                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] interactive-input">
                     </div>
                 </div>
 
-                <div class="flex gap-3 mt-8">
+                <div class="flex gap-3 mt-10">
                     <button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-xl">Cancel</button>
                     <button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-xl font-bold shadow-lg">Add Item</button>
                 </div>
@@ -302,8 +305,8 @@
         </div>
     </div>
 
-    <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
-        <div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238]">
+    <div v-if="detailModal.show" class="fixed inset-0 z-[9999] flex items-end justify-center modal-layer"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
+        <div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop>
             <div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div>
             <span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span>
             <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
@@ -342,6 +345,7 @@
             const wishlist = ref([]);
             const currencyCalc = ref({ jpy: '', rate: 0.052 });
 
+            // ... (Data omitted for brevity, logic maintained) ...
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -421,15 +425,13 @@
                 ]}
             ]);
 
-            // COUNTDOWN: HKO TIME (UTC+8)
-            const tripStart = new Date(2026, 1, 25, 9, 0, 0); // 2026-02-25
+            const tripStart = new Date(2026, 1, 25, 9, 0, 0); 
             const countdownStart = new Date(2026, 1, 3, 9, 0, 0); 
             
-            // Sync with HK Time
             const getHKTime = () => {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-                return new Date(utc + (3600000 * 8)); // UTC+8
+                return new Date(utc + (3600000 * 8)); 
             };
 
             const now = ref(getHKTime());
@@ -457,7 +459,6 @@
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
-            // IMAGE COMPRESSION HELPER (With Fallback)
             const compressImage = (file, callback) => {
                 if(file.size < 500000) {
                     const reader = new FileReader();
@@ -473,7 +474,7 @@
                     img.onload = () => {
                         try {
                             const canvas = document.createElement('canvas');
-                            const MAX_WIDTH = 600; // Even more aggressive compression
+                            const MAX_WIDTH = 600; 
                             const scaleSize = MAX_WIDTH / img.width;
                             if(scaleSize < 1) {
                                 canvas.width = MAX_WIDTH;
@@ -484,7 +485,7 @@
                             }
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            callback(canvas.toDataURL('image/jpeg', 0.5)); // 50% quality
+                            callback(canvas.toDataURL('image/jpeg', 0.5)); 
                         } catch (e) {
                             alert("Compression failed, using raw image.");
                             callback(event.target.result);
@@ -504,16 +505,15 @@
 
             onMounted(() => { 
                 try {
-                    const b = localStorage.getItem('jp_v57_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v57_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v57_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v58_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v58_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v58_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            // Watchers with error handling for quota
-            watch(budgetList, v => { try { localStorage.setItem('jp_v57_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
-            watch(wishlist, v => { try { localStorage.setItem('jp_v57_w', JSON.stringify(v)); } catch(e) { alert("Storage full! Image too big."); } }, {deep:true});
-            watch(packingList, v => { try { localStorage.setItem('jp_v57_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
+            watch(budgetList, v => { try { localStorage.setItem('jp_v58_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
+            watch(wishlist, v => { try { localStorage.setItem('jp_v58_w', JSON.stringify(v)); } catch(e) { alert("Storage full! Image too big."); } }, {deep:true});
+            watch(packingList, v => { try { localStorage.setItem('jp_v58_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
 
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
