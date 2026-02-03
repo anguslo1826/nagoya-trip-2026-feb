@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>JP.TRIP 2026 v24</title>
+    <title>JP.TRIP 2026 v25</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -40,7 +40,7 @@
 
         /* GLASS CARD */
         .glass {
-            background: rgba(30, 41, 59, 0.75);
+            background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -76,14 +76,14 @@
             <div class="flex justify-between items-center mb-2">
                 <div>
                     <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">JP.TRIP 2026</div>
-                    <h1 class="text-3xl font-black font-mincho text-white">名古屋旅</h1>
+                    <h1 class="text-3xl font-black font-mincho text-white">名古屋・高山</h1>
                 </div>
                 <div class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-lg">
                     <img src="icon.jpg" class="w-full h-full object-cover">
                 </div>
             </div>
 
-            <div class="bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-white/10">
+            <div class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-white/10">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar mask-linear">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
                             class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer"
@@ -135,11 +135,11 @@
                             </div>
                         </div>
 
-                        <a v-if="place.bookingType === 'ticket'" :href="place.ticketLink" target="_blank" class="mt-3 block bg-emerald-600 p-3 rounded-xl text-center shadow-lg relative z-20" @click.stop>
+                        <a v-if="place.bookingType === 'ticket'" :href="place.ticketLink" target="_blank" class="mt-3 block bg-emerald-600 p-3 rounded-xl text-center shadow-lg relative z-20 transition-transform active:scale-95" @click.stop>
                             <span class="text-xs font-bold text-white flex items-center justify-center gap-2"><i class="fas fa-qrcode"></i> View Ticket</span>
                         </a>
 
-                        <a v-if="place.bookingType === 'hotel'" :href="place.hotelLink" target="_blank" class="mt-3 block bg-blue-600 p-3 rounded-xl text-center shadow-lg relative z-20" @click.stop>
+                        <a v-if="place.bookingType === 'hotel'" :href="place.hotelLink" target="_blank" class="mt-3 block bg-blue-600 p-3 rounded-xl text-center shadow-lg relative z-20 transition-transform active:scale-95" @click.stop>
                             <span class="text-xs font-bold text-white flex items-center justify-center gap-2"><i class="fas fa-bed"></i> View Booking</span>
                         </a>
                         <div class="flex flex-wrap gap-2 mt-2 relative z-10">
@@ -170,8 +170,8 @@
                         <span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span>
                         <span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span>
                     </div>
-                    <div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-2xl">
-                        <i class="fas" :class="budgetFilter==='TszLok'?'fa-male text-blue-400':budgetFilter==='TszTung'?'fa-female text-pink-400':'fa-coins text-yellow-400'"></i>
+                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-blue-500/20 text-blue-400':'bg-pink-500/20 text-pink-400'">
+                        <i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i>
                     </div>
                 </div>
 
@@ -200,7 +200,10 @@
                 <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
                     <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button>
                     <img :src="item.image" class="w-full aspect-square object-cover">
-                    <div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold text-emerald-400">¥{{ item.price }}</div></div>
+                    <div class="p-3">
+                        <div class="font-bold text-sm truncate">{{ item.name }}</div>
+                        <div class="font-mono text-xs font-bold text-emerald-400">¥{{ item.price }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -209,7 +212,7 @@
             <h2 class="text-2xl font-black font-mincho">行李清單</h2>
             <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden">
                 <div class="bg-white/5 px-5 py-3 flex items-center gap-3 border-b border-white/5">
-                    <i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male text-blue-400':key==='tszTung'?'fa-female text-pink-400':'fa-water'"></i>
+                    <i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-mars text-blue-400':key==='tszTung'?'fa-venus text-pink-400':'fa-water'"></i>
                     <span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span>
                 </div>
                 <div class="p-2 grid gap-1">
@@ -222,7 +225,7 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'info'" class="space-y-6 pt-4 animate-fade-in">
+        <div v-if="currentView === 'tools'" class="space-y-6 pt-4 animate-fade-in">
             <h2 class="text-2xl font-black font-mincho">工具 & 資訊</h2>
             
             <div class="glass p-5 relative overflow-hidden">
@@ -270,7 +273,7 @@
             </div>
 
             <div class="h-6"></div>
-            <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Google Maps</button>
+            <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Map</button>
         </div>
     </div>
 
@@ -285,7 +288,7 @@
 
     createApp({
         setup() {
-            const currentView = ref('itinerary'); // DEFAULT HOME = PLAN
+            const currentView = ref('itinerary'); // DEFAULT HOME IS ITINERARY
             const dayIndex = ref(0);
             const detailModal = ref({ show: false, data: {} });
             
@@ -321,14 +324,14 @@
                 shared: [{name: 'Kayak: 泳衣', checked: false}, {name: 'Kayak: 防水袋', checked: false}, {name: 'Kayak: Aqua Shoes', checked: false}, {name: 'Kayak: 毛巾/沖涼液', checked: false}]
             });
 
-            // ITINERARY
+            // ITINERARY (DATA RESTORED)
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
                     { time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", strategy: "1. 購買『μ-Sky』特急券。\n2. 全車指定席。", highlights: ["綠茶"], bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達" },
                     { time: "15:30", name: "前往市區", type: "transport", typeLabel: "移動", desc: "搭乘名鐵 → 名古屋站。", strategy: "轉乘櫻通線至『久屋大通站』。\n找 4B 或 1A 出口。", highlights: ["4B/1A出口"] },
                     { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "放好行李。", strategy: "Check-in 後去大浴場。", highlights: ["大浴場"], bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810&token=XF5C1EA228E5100852402D0049339DF1962AD9B0C92EE50378311047DCFF0DBE&source=1&tripsignature=AAEAAQAHb3JkZXJpZPCgrtqAPnfjMBlMTZS7pUwyyMtXS1n0jzhz3GZ7Y-Md-tripsign&allianceid=&ouid=&sid=&locale=zh-HK" },
                     { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "步行5分鐘。印度料理。", strategy: "● 飲品：Mango Lassi (解辣)。\n● 主食：兩人點一份 Cheese Naan 就夠(超大)。\n● 咖哩：Butter Chicken (不辣) 或 Mutton Masala。\n● 秘技：吃不完喊 'Take out please' 當早餐。", highlights: ["Cheese Naan"] },
-                    { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水的宇宙船。", strategy: "搭電梯上頂層玻璃地面。\n走到水池正中央，拍攝電視塔倒影。", highlights: ["拍照"] },
+                    { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水的宇宙船。", strategy: "拍攝電視塔倒影。", highlights: ["拍照"] },
                     { time: "21:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "7-11。", strategy: "必買：焦糖烤布蕾冰淇淋。", highlights: ["焦糖冰淇淋"] }
                 ]},
                 { day: 2, date_short: "2/26", date_en: "Thu", location: "Nagoya", places: [
@@ -349,7 +352,7 @@
                     { time: "09:00", name: "JR Hida", type: "transport", typeLabel: "移動", desc: "前往高山。", strategy: "坐最後一排 Luggage Seat。", highlights: ["指定席"] },
                     { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", strategy: "大廳寄放行李。", highlights: [], bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445&locale=zh-HK&operate=OrderDetail&token=XB4CE8B65E4C1A9B51F4AB74B9B804819FE7D64930B951A2DB518044478D50D7&sign=AAEAAQAHb3JkZXJpZOyudZQ4DEJes1FdTePw_JT10SQJmS9FYEtZeLDRenkH-tripsign&requestid=10f6a615-a991-4765-86e8-fa746cf77a6c&source=1&allianceid=&ouid=&sid=" },
                     { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", strategy: "吃飛驒牛握壽司。", highlights: ["壽司"] },
-                    { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", strategy: "● 務必預約 (若無，16:30去排隊)。\n● 點 'Ajikura Mori' 拼盤。\n● 這裡的握壽司比老街好吃，必點。", highlights: ["特選飛驒牛"], booking: "需預約" },
+                    { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", strategy: "● 必點：Ajikura Mori 拼盤。\n● 握壽司必點。", highlights: ["飛驒牛"], booking: "需預約" },
                     { time: "22:00", name: "夜鳴拉麵", type: "food", typeLabel: "宵夜", desc: "飯店免費。", strategy: "不要錯過。", highlights: ["免費"] }
                 ]},
                 { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa-go", places: [
@@ -384,18 +387,24 @@
                     minutes: Math.floor((diff%(1000*60*60))/(1000*60)).toString().padStart(2,'0')
                 };
             });
+            const tripProgress = computed(() => {
+                const booking = new Date('2025-02-25T10:00:00+09:00');
+                const total = tripStart - booking;
+                const elapsed = now.value - booking;
+                return Math.min(Math.max((elapsed/total)*100, 0), 100);
+            });
             setInterval(() => now.value = new Date(), 60000);
 
             // PERSISTENCE
             onMounted(() => { 
                 initSnow();
-                const b = localStorage.getItem('jp_v24_b'); if(b) budgetList.value = JSON.parse(b); 
-                const w = localStorage.getItem('jp_v24_w'); if(w) wishlist.value = JSON.parse(w); 
-                const p = localStorage.getItem('jp_v24_p'); if(p) packingList.value = JSON.parse(p);
+                const b = localStorage.getItem('jp_v25_b'); if(b) budgetList.value = JSON.parse(b); 
+                const w = localStorage.getItem('jp_v25_w'); if(w) wishlist.value = JSON.parse(w); 
+                const p = localStorage.getItem('jp_v25_p'); if(p) packingList.value = JSON.parse(p);
             });
-            watch(budgetList, v => localStorage.setItem('jp_v24_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v24_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v24_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v25_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v25_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v25_p', JSON.stringify(v)), {deep:true});
 
             const initSnow = () => {
                 const c = document.getElementById('snow-container');
@@ -436,7 +445,7 @@
             
             const calc = ref({ jpy: '', rate: 0.052 });
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, calc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal };
+            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, tripProgress, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, calc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal };
         }
     }).mount('#app');
 </script>
