@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>JP.TRIP 2026 v26</title>
+    <title>JP.TRIP 2026 v27</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -18,50 +18,29 @@
         :root {
             --navy-bg: #0f172a; 
             --text-light: #f8fafc;
-            --accent: #10b981;
+            --accent: #10b981; /* Emerald */
         }
 
         body { 
             font-family: 'Zen Maru Gothic', sans-serif; 
             background-color: var(--navy-bg); 
             color: var(--text-light);
-            margin: 0; padding: 0;
-            overflow: hidden; /* Prevent body scroll */
+            height: 100dvh; 
+            width: 100vw;
+            overflow: hidden; 
+            margin: 0;
         }
         
         .font-mincho { font-family: 'Shippori Mincho', serif; }
         
-        /* APP CONTAINER - FIXED FULL SCREEN */
-        #app {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--navy-bg);
-            z-index: 1;
-        }
-
-        /* BACKGROUND SNOW */
+        /* SNOW EFFECT */
         .snow-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .snowflake { position: absolute; top: -10px; color: white; opacity: 0.3; animation: fall linear infinite; }
         @keyframes fall { to { transform: translateY(110vh); } }
 
-        /* SCROLLABLE CONTENT AREA */
-        #main-content {
-            flex: 1;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            padding-top: max(20px, env(safe-area-inset-top));
-            padding-bottom: 100px; /* Space for Nav */
-            padding-left: 20px;
-            padding-right: 20px;
-            position: relative;
-            z-index: 10;
-        }
-
         /* GLASS CARD */
         .glass {
-            background: rgba(30, 41, 59, 0.8);
+            background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -72,6 +51,10 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* SAFE AREA */
+        .safe-top { padding-top: max(env(safe-area-inset-top), 20px); }
+        .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 20px); }
+
         /* CHECKBOX */
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
         
@@ -82,15 +65,15 @@
 </head>
 <body>
 
-<div id="app">
+<div id="app" class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#0f172a]">
     
     <div class="snow-container" id="snow-container"></div>
 
-    <div id="main-content" class="no-scrollbar">
+    <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-6 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
         
-        <div v-if="currentView === 'itinerary'" class="space-y-6 animate-fade-in">
+        <div v-if="currentView === 'itinerary'" class="space-y-5 animate-fade-in pb-4">
             
-            <div class="flex justify-between items-center mt-2">
+            <div class="flex justify-between items-center mb-2">
                 <div>
                     <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">JP.TRIP 2026</div>
                     <h1 class="text-3xl font-black font-mincho text-white">名古屋旅</h1>
@@ -100,7 +83,7 @@
                 </div>
             </div>
 
-            <div class="sticky top-0 z-30 bg-[#0f172a]/95 backdrop-blur-md py-3 -mx-5 px-5 border-b border-white/10 shadow-lg">
+            <div class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-white/10">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar mask-linear">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
                             class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer"
@@ -111,28 +94,29 @@
                 </div>
             </div>
 
-            <div class="glass p-4 border-l-4 border-emerald-500">
-                <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-[10px] font-bold text-white/50 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</h3>
-                    <span class="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded">{{ itinerary[dayIndex].location }}</span>
+            <div class="glass p-3 border-l-4 border-emerald-500 flex items-center justify-between">
+                <div class="flex flex-col">
+                    <span class="text-[10px] font-bold text-white/50 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span>
+                    <span class="text-xs font-bold text-emerald-400">{{ itinerary[dayIndex].location }}</span>
                 </div>
-                <div class="flex gap-4 overflow-x-auto no-scrollbar">
-                    <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[3rem]">
-                        <span class="text-[9px] text-white/40 font-mono mb-1">{{ h.time }}</span>
-                        <i :class="h.icon" class="text-lg mb-1" :class="h.icon.includes('sun')?'text-yellow-400':h.icon.includes('snow')?'text-blue-300':'text-gray-400'"></i>
-                        <span class="text-xs font-bold">{{ h.temp }}</span>
+                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%]">
+                    <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[2.5rem]">
+                        <span class="text-[9px] text-white/40 font-mono">{{ h.time }}</span>
+                        <i :class="h.icon" class="text-sm my-0.5" :class="h.icon.includes('sun')?'text-yellow-400':h.icon.includes('snow')?'text-blue-300':'text-gray-400'"></i>
+                        <span class="text-[10px] font-bold">{{ h.temp }}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="relative pl-2 pb-6">
+            <div class="relative pl-2">
                 <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-white/10 rounded-full"></div>
                 
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
                     <div class="absolute left-0 top-0 w-4 h-4 bg-[#0f172a] border-[3px] rounded-full z-10" :class="getTypeColor(place.type)"></div>
                     
-                    <div @click="openDetail(place)" class="glass p-5 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border border-white/5 hover:border-white/20 z-10">
+                    <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border border-white/5 hover:border-white/20 z-10">
                         <i v-if="pIdx % 3 === 0" class="fas fa-cat absolute right-2 top-2 text-4xl opacity-5 rotate-12 sticker-float"></i>
+                        <i v-if="pIdx % 3 === 1" class="fas fa-leaf absolute right-2 bottom-2 text-4xl opacity-5 -rotate-12 sticker-float"></i>
 
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-white/10 px-2 py-1 rounded">{{ place.time }}</span>
@@ -158,6 +142,7 @@
                         <a v-if="place.bookingType === 'hotel'" :href="place.hotelLink" target="_blank" class="mt-3 block bg-blue-600 p-3 rounded-xl text-center shadow-lg relative z-20 transition-transform active:scale-95" @click.stop>
                             <span class="text-xs font-bold text-white flex items-center justify-center gap-2"><i class="fas fa-bed"></i> View Booking</span>
                         </a>
+
                         <div class="flex flex-wrap gap-2 mt-2 relative z-10">
                             <span v-for="tag in place.highlights" class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] font-bold text-emerald-300">{{ tag }}</span>
                         </div>
@@ -168,7 +153,6 @@
 
         <div v-if="currentView === 'wallet'" class="space-y-6 pt-4 animate-fade-in">
             <h2 class="text-2xl font-black font-mincho">錢包 & 購物</h2>
-            
             <div class="flex bg-white/10 p-1 rounded-xl">
                 <button @click="walletMode='expense'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-white text-slate-900 shadow-sm':'text-white/50'">記帳 Expenses</button>
                 <button @click="walletMode='wishlist'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='wishlist'?'bg-white text-slate-900 shadow-sm':'text-white/50'">購物清單 Wishlist</button>
@@ -180,88 +164,46 @@
                     <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-blue-500 text-white border-blue-500':'bg-transparent text-blue-300 border-blue-500/30'">👦 TszLok</button>
                     <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-pink-500 text-white border-pink-500':'bg-transparent text-pink-300 border-pink-500/30'">👧 TszTung</button>
                 </div>
-
                 <div class="glass p-5 flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900">
-                    <div class="flex flex-col">
-                        <span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span>
-                        <span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span>
-                    </div>
-                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-blue-500/20 text-blue-400':'bg-pink-500/20 text-pink-400'">
-                        <i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i>
-                    </div>
+                    <div class="flex flex-col"><span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
+                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-blue-500/20 text-blue-400':'bg-pink-500/20 text-pink-400'"><i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i></div>
                 </div>
-
                 <div class="space-y-3 pb-20">
                     <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm bg-white shadow-sm border-2" :class="item.payer==='TszLok'?'border-blue-500 text-blue-500':'border-pink-500 text-pink-500'">
-                                <i class="fas" :class="item.payer==='TszLok'?'fa-male':'fa-female'"></i>
-                            </div>
-                            <span class="text-sm font-bold">{{ item.name }}</span>
-                        </div>
+                        <div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full flex items-center justify-center text-sm bg-white shadow-sm border-2" :class="item.payer==='TszLok'?'border-blue-500 text-blue-500':'border-pink-500 text-pink-500'"><i class="fas" :class="item.payer==='TszLok'?'fa-male':'fa-female'"></i></div><span class="text-sm font-bold">{{ item.name }}</span></div>
                         <div class="flex items-center gap-3"><span class="font-mono font-bold opacity-80">¥{{ item.price }}</span><button @click="deleteBudget(item)" class="text-white/20 hover:text-red-400"><i class="fas fa-times text-xs"></i></button></div>
                     </div>
-                    <div v-if="filteredBudgetList.length === 0" class="text-center text-white/30 text-sm py-8">No records</div>
                 </div>
-                
-                <div class="fixed bottom-24 right-6 z-40">
-                    <button @click="showBudgetInput=true" class="w-14 h-14 bg-emerald-500 text-white rounded-full shadow-xl flex items-center justify-center text-xl"><i class="fas fa-plus"></i></button>
-                </div>
+                <div class="fixed bottom-24 right-6 z-40"><button @click="showBudgetInput=true" class="w-14 h-14 bg-emerald-500 text-white rounded-full shadow-xl flex items-center justify-center text-xl"><i class="fas fa-plus"></i></button></div>
             </div>
 
             <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 pb-20">
-                <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-white/20 hover:bg-white/5 cursor-pointer">
-                    <i class="fas fa-camera text-2xl mb-2 text-white/50"></i><span class="text-xs font-bold text-white/50">Add Item</span>
-                </div>
-                <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
-                    <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button>
-                    <img :src="item.image" class="w-full aspect-square object-cover">
-                    <div class="p-3">
-                        <div class="font-bold text-sm truncate">{{ item.name }}</div>
-                        <div class="font-mono text-xs font-bold text-emerald-400">¥{{ item.price }}</div>
-                    </div>
-                </div>
+                <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-white/20 hover:bg-white/5 cursor-pointer"><i class="fas fa-camera text-2xl mb-2 text-white/50"></i><span class="text-xs font-bold text-white/50">Add Item</span></div>
+                <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group"><button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button><img :src="item.image" class="w-full aspect-square object-cover"><div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold text-emerald-400">¥{{ item.price }}</div></div></div>
             </div>
         </div>
 
         <div v-if="currentView === 'packing'" class="space-y-6 pt-4 animate-fade-in">
             <h2 class="text-2xl font-black font-mincho">行李清單</h2>
             <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden">
-                <div class="bg-white/5 px-5 py-3 flex items-center gap-3 border-b border-white/5">
-                    <i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-mars text-blue-400':key==='tszTung'?'fa-venus text-pink-400':'fa-water'"></i>
-                    <span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span>
-                </div>
-                <div class="p-2 grid gap-1">
-                    <label v-for="(item, idx) in group" :key="idx" class="flex items-center p-3 hover:bg-white/5 rounded-xl cursor-pointer check-box transition-colors">
-                        <input type="checkbox" v-model="item.checked" class="hidden">
-                        <div class="w-5 h-5 rounded border-2 border-white/30 flex items-center justify-center mr-3 transition-colors bg-white/5"><i class="fas fa-check text-white text-[10px] opacity-0"></i></div>
-                        <span class="text-sm font-bold transition-opacity" :class="{'line-through opacity-30': item.checked}">{{ item.name }}</span>
-                    </label>
-                </div>
+                <div class="bg-white/5 px-5 py-3 flex items-center gap-3 border-b border-white/5"><i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male text-blue-400':key==='tszTung'?'fa-female text-pink-400':'fa-water'"></i><span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span></div>
+                <div class="p-2 grid gap-1"><label v-for="(item, idx) in group" :key="idx" class="flex items-center p-3 hover:bg-white/5 rounded-xl cursor-pointer check-box transition-colors"><input type="checkbox" v-model="item.checked" class="hidden"><div class="w-5 h-5 rounded border-2 border-white/30 flex items-center justify-center mr-3 transition-colors bg-white/5"><i class="fas fa-check text-white text-[10px] opacity-0"></i></div><span class="text-sm font-bold transition-opacity" :class="{'line-through opacity-30': item.checked}">{{ item.name }}</span></label></div>
             </div>
         </div>
 
         <div v-if="currentView === 'tools'" class="space-y-6 pt-4 animate-fade-in">
-            <h2 class="text-2xl font-black font-mincho">資訊 Info</h2>
-            
-            <div class="glass p-5 relative overflow-hidden">
-                <img src="icon.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20">
-                <div class="relative z-10 text-center">
-                    <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">距離出發</div>
-                    <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
-                    <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
-                </div>
+            <h2 class="text-2xl font-black font-mincho">工具 & 資訊</h2>
+            <div class="glass p-5 relative overflow-hidden text-center">
+                <div class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">距離出發</div>
+                <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
+                <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
             </div>
-
-            <div class="glass p-5">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3">Currency</h3>
-                <div class="flex items-center gap-4"><div class="flex-1 bg-white/10 rounded-xl p-2"><label class="text-[9px] font-bold opacity-50 block">JPY</label><input type="number" v-model="calc.jpy" class="w-full font-mono font-bold bg-transparent outline-none"></div><i class="fas fa-arrow-right opacity-30"></i><div class="flex-1 bg-white/10 rounded-xl p-2"><label class="text-[9px] font-bold opacity-50 block">HKD</label><div class="font-mono font-bold">{{ (calc.jpy * calc.rate).toFixed(1) }}</div></div></div>
-            </div>
+            <div class="glass p-5"><h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3">Currency</h3><div class="flex items-center gap-4"><div class="flex-1 bg-white/10 rounded-xl p-2"><label class="text-[9px] font-bold opacity-50 block">JPY</label><input type="number" v-model="calc.jpy" class="w-full font-mono font-bold bg-transparent outline-none"></div><i class="fas fa-arrow-right opacity-30"></i><div class="flex-1 bg-white/10 rounded-xl p-2"><label class="text-[9px] font-bold opacity-50 block">HKD</label><div class="font-mono font-bold">{{ (calc.jpy * calc.rate).toFixed(1) }}</div></div></div></div>
         </div>
 
-    </div>
+    </main>
 
-    <nav class="bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-2 pb-safe-bottom h-[85px] z-50 fixed bottom-0 w-full">
+    <nav class="bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 flex justify-around items-center px-2 pb-safe-bottom h-[85px] shrink-0 z-50 fixed bottom-0 w-full">
         <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" 
                 class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer"
                 :class="currentView === tab.id ? 'text-emerald-400 scale-110' : 'text-white/40'">
@@ -270,31 +212,8 @@
         </button>
     </nav>
 
-    <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
-        <div class="bg-[#1e293b] w-full max-w-md rounded-t-3xl p-6 relative border-t border-white/20 animate-slide-up max-h-[85vh] overflow-y-auto">
-            <div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div>
-            <span class="px-3 py-1 bg-white/10 rounded-lg text-xs font-bold uppercase text-emerald-300">{{ detailModal.data.typeLabel }}</span>
-            <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
-            <div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div>
-            
-            <div class="space-y-6 text-sm leading-relaxed">
-                <div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold">{{ detailModal.data.desc }}</p></div>
-                <div v-if="detailModal.data.strategy" class="bg-emerald-500/10 p-5 rounded-2xl border-l-4 border-emerald-500"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center text-emerald-400"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div>
-            </div>
-            
-            <div class="mt-6 space-y-3">
-                <a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-emerald-600 text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a>
-                <a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-blue-600 text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a>
-            </div>
-
-            <div class="h-6"></div>
-            <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Map</button>
-        </div>
-    </div>
-
+    <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#1e293b] w-full max-w-md rounded-t-3xl p-6 relative border-t border-white/20 animate-slide-up max-h-[85vh] overflow-y-auto"><div class="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6"></div><span class="px-3 py-1 bg-white/10 rounded-lg text-xs font-bold uppercase text-emerald-300">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-emerald-500/10 p-5 rounded-2xl border-l-4 border-emerald-500"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center text-emerald-400"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-emerald-600 text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-blue-600 text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Map</button></div></div>
     <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl border-t border-white/20 animate-slide-up"><h3 class="font-bold mb-4 text-lg">Add Expense</h3><div class="flex gap-3 mb-4"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-blue-500 border-blue-500 text-white':'bg-pink-500 border-pink-500 text-white'):'border-white/20 text-white/50'">{{ p }}</button></div><input v-model="newItem.name" placeholder="Item Name" class="w-full bg-white/10 p-4 rounded-xl mb-3 font-bold border border-white/10 text-white"><input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-white/10 p-4 rounded-xl mb-6 font-bold border border-white/10 text-white"><div class="flex gap-3"><button @click="showBudgetInput=false" class="flex-1 py-3 font-bold text-white/50">Cancel</button><button @click="addItem" class="flex-1 py-3 bg-white text-slate-900 rounded-xl font-bold">Save</button></div></div></div>
-
     <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div><div class="bg-[#1e293b] w-full max-w-md p-6 rounded-t-3xl border-t border-white/20 animate-slide-up"><h3 class="font-bold mb-4 text-lg">Add to Wishlist</h3><div class="mb-4 relative group"><input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-10"><div v-if="!newWishItem.image" class="w-full h-32 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center text-white/30"><i class="fas fa-camera text-2xl mb-1"></i><span class="text-xs">Upload Photo</span></div><img v-else :src="newWishItem.image" class="w-full h-32 object-cover rounded-xl"></div><input v-model="newWishItem.name" placeholder="Product Name" class="w-full bg-white/10 p-4 rounded-xl mb-3 font-bold border border-white/10 text-white"><input v-model.number="newWishItem.price" type="number" placeholder="¥ Price" class="w-full bg-white/10 p-4 rounded-xl mb-6 font-bold border border-white/10 text-white"><div class="flex gap-3"><button @click="showWishlistInput=false" class="flex-1 py-3 font-bold text-white/50">Cancel</button><button @click="addWishlist" class="flex-1 py-3 bg-white text-slate-900 rounded-xl font-bold">Add</button></div></div></div>
 
 </div>
@@ -307,8 +226,6 @@
             const currentView = ref('itinerary');
             const dayIndex = ref(0);
             const detailModal = ref({ show: false, data: {} });
-            
-            // Wallet State
             const walletMode = ref('expense');
             const budgetFilter = ref('All'); 
             const showBudgetInput = ref(false);
@@ -318,8 +235,8 @@
             const newWishItem = ref({ name: '', price: '', image: null });
             const budgetList = ref([]);
             const wishlist = ref([]);
+            const calc = ref({ jpy: '', rate: 0.052 });
 
-            // WEATHER DATABASE
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -331,67 +248,55 @@
             ];
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
 
-            // Packing
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)', shared: 'Kayak / Shared' };
             const packingList = ref({
-                handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包 (日幣/港幣/卡)', checked: false}, {name: 'SIM卡 & 針', checked: false}, {name: '手機 & 充電 & 尿袋', checked: false}, {name: '耳機 & 相機', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}, {name: '空水樽 & 原子筆', checked: false}, {name: '潤唇膏', checked: false}, {name: '眼罩/頸枕 & 牙刷', checked: false}, {name: '屋企Key', checked: false}],
-                tszLok: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '男士剃鬚', checked: false}, {name: '轉插 & 拖板', checked: false}, {name: '雨傘/雨衣', checked: false}, {name: '拖鞋', checked: false}, {name: '備用膠袋', checked: false}],
-                tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮/護髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}],
-                shared: [{name: 'Kayak: 泳衣', checked: false}, {name: 'Kayak: 防水袋', checked: false}, {name: 'Kayak: Aqua Shoes', checked: false}, {name: 'Kayak: 毛巾/沖涼液', checked: false}]
+                handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包', checked: false}, {name: 'SIM卡', checked: false}, {name: '手機 & 充電', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}],
+                tszLok: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '男士剃鬚', checked: false}, {name: '轉插 & 拖板', checked: false}, {name: '雨傘/雨衣', checked: false}, {name: '拖鞋', checked: false}],
+                tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '公仔', checked: false}],
+                shared: [{name: 'Kayak: 泳衣', checked: false}, {name: 'Kayak: 防水袋', checked: false}, {name: 'Kayak: Aqua Shoes', checked: false}]
             });
 
-            // ITINERARY
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
                     { time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", strategy: "1. 購買『μ-Sky』特急券。\n2. 全車指定席。", highlights: ["綠茶"], bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達" },
-                    { time: "15:30", name: "前往市區", type: "transport", typeLabel: "移動", desc: "搭乘名鐵 → 名古屋站。", strategy: "轉乘櫻通線至『久屋大通站』。\n找 4B 或 1A 出口。", highlights: ["4B/1A出口"] },
-                    { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "放好行李。", strategy: "Check-in 後去大浴場。", highlights: ["大浴場"], bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810&token=XF5C1EA228E5100852402D0049339DF1962AD9B0C92EE50378311047DCFF0DBE&source=1&tripsignature=AAEAAQAHb3JkZXJpZPCgrtqAPnfjMBlMTZS7pUwyyMtXS1n0jzhz3GZ7Y-Md-tripsign&allianceid=&ouid=&sid=&locale=zh-HK" },
-                    { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "步行5分鐘。印度料理。", strategy: "● 飲品：Mango Lassi (解辣)。\n● 主食：兩人點一份 Cheese Naan 就夠(超大)。\n● 咖哩：Butter Chicken (不辣) 或 Mutton Masala。\n● 秘技：吃不完喊 'Take out please' 當早餐。", highlights: ["Cheese Naan"] },
-                    { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水的宇宙船。", strategy: "拍攝電視塔倒影。", highlights: ["拍照"] },
-                    { time: "21:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "7-11。", strategy: "必買：焦糖烤布蕾冰淇淋。", highlights: ["焦糖冰淇淋"] }
+                    { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B/1A 出口。", strategy: "Check-in 後去大浴場。", highlights: ["大浴場"], bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810&token=XF5C1EA228E5100852402D0049339DF1962AD9B0C92EE50378311047DCFF0DBE&source=1&tripsignature=AAEAAQAHb3JkZXJpZPCgrtqAPnfjMBlMTZS7pUwyyMtXS1n0jzhz3GZ7Y-Md-tripsign&allianceid=&ouid=&sid=&locale=zh-HK" },
+                    { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "步行5分鐘。印度料理。", strategy: "● 飲品：Mango Lassi。\n● 主食：起司烤餅。", highlights: ["Cheese Naan"] },
+                    { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水的宇宙船。", strategy: "拍攝電視塔倒影。", highlights: ["拍照"] }
                 ]},
                 { day: 2, date_short: "2/26", date_en: "Thu", location: "Nagoya", places: [
-                    { time: "09:00", name: "Konparu 榮店", type: "food", typeLabel: "早餐", desc: "榮地下街。", strategy: "⚠️ 戰略：直接跟店員說 'Take out please'，帶去吉卜力當午餐，省下園區排隊時間！\n❌ 不要切邊，烤過的邊很好吃。", highlights: ["炸蝦三明治"] },
-                    { time: "10:30", name: "前往吉卜力", type: "transport", typeLabel: "移動", desc: "地鐵東山線(榮) → 藤之丘 → Linimo。", strategy: "在藤之丘轉 Linimo 磁浮列車。\n可以去便利商店買個果昔 (Smoothie)。", highlights: ["Linimo"] },
-                    { time: "12:00", name: "吉卜力大倉庫", type: "spot", typeLabel: "重點", desc: "愛・地球博紀念公園。", strategy: "⚠️ TszLok 請務必帶護照！\n● 12:00 準時入場 (持QR Code)。\n● 動線：先排『名場面展』(找無臉男) → 獵戶座電影院 → 吃三明治 → 逛商店。\n● 必買：湯婆婆戒指、無臉男周邊。", highlights: ["名場面展"], bookingType: "ticket", ticketLink: "https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f" },
-                    { time: "18:30", name: "熱田蓬萊軒", type: "food", typeLabel: "晚餐", desc: "松坂屋南館 10F。", strategy: "🔥 吃法四部曲：\n1. 原味。\n2. 加佐料。\n3. 茶泡飯。\n4. 自選。", highlights: ["必吃"], booking: "#8823" },
-                    { time: "20:00", name: "HARBS", type: "food", typeLabel: "甜點", desc: "電視塔旁。", strategy: "外帶水果千層回飯店。", highlights: ["水果千層"] }
+                    { time: "09:00", name: "Konparu 榮店", type: "food", typeLabel: "早餐", desc: "榮地下街。", strategy: "⚠️ 外帶炸蝦三明治去吉卜力吃！\n❌ 不要切邊。", highlights: ["炸蝦三明治"] },
+                    { time: "12:00", name: "吉卜力大倉庫", type: "spot", typeLabel: "重點", desc: "愛・地球博紀念公園。", strategy: "⚠️ TszLok 帶護照！\n● 12:00 準時入場。", highlights: ["名場面展"], bookingType: "ticket", ticketLink: "https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f" },
+                    { time: "18:30", name: "熱田蓬萊軒", type: "food", typeLabel: "晚餐", desc: "松坂屋南館 10F。", strategy: "🔥 吃法四部曲。", highlights: ["必吃"], booking: "#8823" }
                 ]},
                 { day: 3, date_short: "2/27", date_en: "Fri", location: "Nagoya", places: [
-                    { time: "09:00", name: "Komeda's Coffee", type: "food", typeLabel: "早餐", desc: "點飲料送吐司。", strategy: "選 C餐 (紅豆泥)。", highlights: ["紅豆吐司"] },
                     { time: "10:00", name: "名古屋港水族館", type: "spot", typeLabel: "景點", desc: "北館看虎鯨。", strategy: "海豚秀坐前4排會濕。", highlights: ["虎鯨"] },
-                    { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "大須店。", strategy: "點鐵板味噌豬排。穿圍兜。", highlights: ["鐵板"] },
-                    { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "逛街", desc: "散策。", strategy: "三輪神社摸兔子。", highlights: ["三輪神社"] },
-                    { time: "20:30", name: "Piyorin", type: "food", typeLabel: "挑戰", desc: "小雞蛋糕。", strategy: "小心拿回飯店不倒。", highlights: ["Piyorin"] }
+                    { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "大須店。", strategy: "點鐵板味噌豬排。", highlights: ["鐵板"] },
+                    { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "逛街", desc: "三輪神社摸兔子。", highlights: ["三輪神社"] }
                 ]},
                 { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [
                     { time: "09:00", name: "JR Hida", type: "transport", typeLabel: "移動", desc: "前往高山。", strategy: "坐最後一排 Luggage Seat。", highlights: ["指定席"] },
                     { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", strategy: "大廳寄放行李。", highlights: [], bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445&locale=zh-HK&operate=OrderDetail&token=XB4CE8B65E4C1A9B51F4AB74B9B804819FE7D64930B951A2DB518044478D50D7&sign=AAEAAQAHb3JkZXJpZOyudZQ4DEJes1FdTePw_JT10SQJmS9FYEtZeLDRenkH-tripsign&requestid=10f6a615-a991-4765-86e8-fa746cf77a6c&source=1&allianceid=&ouid=&sid=" },
                     { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", strategy: "吃飛驒牛握壽司。", highlights: ["壽司"] },
-                    { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", strategy: "● 務必預約 (若無，16:30去排隊)。\n● 點 'Ajikura Mori' 拼盤。\n● 這裡的握壽司比老街好吃，必點。", highlights: ["特選飛驒牛"], booking: "需預約" },
-                    { time: "22:00", name: "夜鳴拉麵", type: "food", typeLabel: "宵夜", desc: "飯店免費。", strategy: "不要錯過。", highlights: ["免費"] }
+                    { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", strategy: "● 必點：Ajikura Mori。", highlights: ["飛驒牛"] }
                 ]},
                 { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa-go", places: [
-                    { time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", highlights: ["暈車藥"], booking: "Bus Ticket" },
+                    { time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", strategy: "會暈車請先吃藥。", highlights: ["暈車藥"] },
                     { time: "10:00", name: "白川鄉", type: "spot", typeLabel: "世界遺產", desc: "合掌村。", strategy: "上展望台。", highlights: ["展望台"] },
                     { time: "12:00", name: "喫茶落人", type: "food", typeLabel: "午餐", desc: "Ochiudo。", strategy: "咖哩飯 + 無限紅豆湯。", highlights: ["紅豆湯"] },
-                    { time: "16:00", name: "貸切風呂", type: "spot", typeLabel: "溫泉", desc: "飯店頂樓。", strategy: "私人湯屋。", highlights: ["私人湯屋"] },
-                    { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "壽喜燒。", strategy: "肉沾蛋液吃。", highlights: ["壽喜燒"], booking: "" }
+                    { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "壽喜燒。", strategy: "肉沾蛋液吃。", highlights: ["壽喜燒"] }
                 ]},
                 { day: 6, date_short: "3/2", date_en: "Mon", location: "Okuhida", places: [
                     { time: "10:30", name: "新穗高纜車", type: "spot", typeLabel: "絕景", desc: "雙層纜車。", strategy: "搶2樓窗邊。", highlights: ["雪景"] },
                     { time: "14:00", name: "平湯之森", type: "spot", typeLabel: "溫泉", desc: "日歸溫泉。", strategy: "露天雪見溫泉。", highlights: ["日歸"] },
-                    { time: "18:00", name: "Center4", type: "food", typeLabel: "晚餐", desc: "飛驒牛漢堡。", strategy: "若無位去吃京ya。", highlights: ["漢堡"], booking: "" }
+                    { time: "18:00", name: "Center4", type: "food", typeLabel: "晚餐", desc: "飛驒牛漢堡。", strategy: "若無位去吃京ya。", highlights: ["漢堡"] }
                 ]},
                 { day: 7, date_short: "3/3", date_en: "Tue", location: "Airport", places: [
                     { time: "08:00", name: "宮川朝市", type: "spot", typeLabel: "市集", desc: "買伴手禮。", highlights: ["朝市"] },
                     { time: "13:30", name: "前往機場", type: "transport", typeLabel: "移動", desc: "濃飛巴士直達。", highlights: ["預約"] },
-                    { time: "17:00", name: "Flight of Dreams", type: "spot", typeLabel: "機場", desc: "波音787。", highlights: ["蝦餅"] },
                     { time: "21:00", name: "起飛返港", type: "transport", typeLabel: "離境", desc: "UO685。", highlights: [], bookingType: "flight", flightNo: "UO685", terminal: "T2" }
                 ]}
             ]);
 
-            // COUNTDOWN
             const now = ref(new Date());
             const tripStart = new Date('2026-02-25T10:00:00+09:00');
             const countdown = computed(() => {
@@ -405,16 +310,15 @@
             });
             setInterval(() => now.value = new Date(), 60000);
 
-            // PERSISTENCE
             onMounted(() => { 
                 initSnow();
-                const b = localStorage.getItem('jp_v26_b'); if(b) budgetList.value = JSON.parse(b); 
-                const w = localStorage.getItem('jp_v26_w'); if(w) wishlist.value = JSON.parse(w); 
-                const p = localStorage.getItem('jp_v26_p'); if(p) packingList.value = JSON.parse(p);
+                const b = localStorage.getItem('jp_v27_b'); if(b) budgetList.value = JSON.parse(b); 
+                const w = localStorage.getItem('jp_v27_w'); if(w) wishlist.value = JSON.parse(w); 
+                const p = localStorage.getItem('jp_v27_p'); if(p) packingList.value = JSON.parse(p);
             });
-            watch(budgetList, v => localStorage.setItem('jp_v26_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v26_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v26_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v27_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v27_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v27_p', JSON.stringify(v)), {deep:true});
 
             const initSnow = () => {
                 const c = document.getElementById('snow-container');
@@ -435,7 +339,6 @@
             const addItem = () => { if(newItem.value.name&&newItem.value.price){ budgetList.value.unshift({...newItem.value}); showBudgetInput.value=false; newItem.value={name:'',price:'',payer:'TszLok'}; }};
             const deleteBudget = (item) => { const idx = budgetList.value.indexOf(item); if(idx>-1) budgetList.value.splice(idx,1); };
             
-            // WALLET SPLIT LOGIC
             const filteredBudgetList = computed(() => {
                 if(budgetFilter.value === 'All') return budgetList.value;
                 return budgetList.value.filter(i => i.payer === budgetFilter.value);
@@ -453,8 +356,6 @@
                 { id: 'tools', label: 'Info', icon: 'fas fa-info-circle' }
             ];
             
-            const calc = ref({ jpy: '', rate: 0.052 });
-
             return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, calc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal };
         }
     }).mount('#app');
