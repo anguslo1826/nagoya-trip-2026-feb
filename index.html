@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v59</title>
+    <title>梓樂Nagoya Trip v60</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -14,53 +14,59 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* THEME - "蒼灰の地層" Palette */
+        /* THEME: "蒼灰の地層" (Pale Blue & Sand) */
         :root {
-            --bg-main: #70808f;     /* Slate Blue */
-            --bg-card: #c5b59d;     /* Sand Beige */
-            --text-on-card: #4a4238;/* Dark Brown */
-            --text-on-bg: #f3f0eb;  /* Off White */
-            --accent: #91867f;      /* Misty Umber */
+            --bg-main: #70808f;       /* Slate Blue */
+            --bg-card: #c5b59d;       /* Sand Beige */
+            --text-dark: #4a4238;     /* Dark Brown (High Contrast) */
+            --text-light: #f3f0eb;    /* Off White */
+            --accent: #726251;        /* Misty Umber */
+            --input-bg: #ffffff;      /* Pure White for Inputs */
         }
+
         body { 
             font-family: 'Zen Maru Gothic', sans-serif; 
             background-color: var(--bg-main); 
-            color: var(--text-on-bg); 
+            color: var(--text-light); 
             margin: 0; padding: 0; 
             height: 100dvh; width: 100vw; 
             overflow: hidden; 
+            -webkit-tap-highlight-color: transparent;
         }
+        
         .font-mincho { font-family: 'Shippori Mincho', serif; }
         
-        /* Solid Card Style - No transparency to prevent ghost clicks */
+        /* SOLID CARD STYLE (No Transparency = No Glitches) */
         .glass { 
             background-color: var(--bg-card); 
-            color: var(--text-on-card);
-            border: 1px solid rgba(255,255,255,0.3); 
+            color: var(--text-dark);
             border-radius: 20px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
-        /* Standard Utils */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
         .safe-bottom { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
-        .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
-        [v-cloak] { display: none !important; }
         
-        /* Input Reset */
-        input { -webkit-appearance: none; appearance: none; }
+        /* Prevent text selection on UI elements to stop "Copy" menu */
+        .no-select { user-select: none; -webkit-user-select: none; }
+        
+        /* Ensure Inputs are selectable */
+        input { user-select: text; -webkit-user-select: text; }
+
+        [v-cloak] { display: none !important; }
     </style>
 </head>
 <body>
 
 <div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#70808f]">
     
-    <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth bg-[#70808f]" ref="mainScroll">
+    <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth" ref="mainScroll">
         
-        <div v-if="currentView === 'itinerary'" class="space-y-5 pb-4 animate-fade">
-            <div class="flex justify-between items-center mb-2 mt-2">
+        <div v-if="currentView === 'itinerary'" class="space-y-5 pb-4">
+            <div class="flex justify-between items-center mb-2 mt-2 no-select">
                 <div>
                     <div class="text-[10px] font-bold text-white/80 uppercase tracking-widest">JP.TRIP 2026</div>
                     <h1 class="text-3xl font-black font-mincho text-white flex items-center gap-2">
@@ -72,28 +78,22 @@
                 </div>
             </div>
 
-            <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl">
+            <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl no-select">
                 <div class="flex justify-between items-end mb-2">
-                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider text-[#4a4238]">距離出發 (HKO Time)</span>
+                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider">距離出發 (HKO Time)</span>
                     <i class="fas fa-plane text-[#726251] animate-pulse"></i>
                 </div>
-                <div class="flex items-baseline gap-2 mb-4 text-[#4a4238]">
+                <div class="flex items-baseline gap-2 mb-4">
                     <span class="text-6xl font-black font-mono tracking-tighter">{{ countdown.days }}</span>
                     <span class="text-sm font-bold opacity-80">Days</span>
                     <span class="text-2xl font-mono font-bold ml-2">{{ countdown.hours }}:{{ countdown.minutes }}:{{ countdown.seconds }}</span>
                 </div>
                 <div class="relative w-full h-2 bg-[#4a4238]/10 rounded-full mt-2">
-                    <div class="absolute top-0 left-0 h-full bg-[#726251] rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }">
-                        <i class="fas fa-plane absolute -right-2 -top-1.5 text-[#726251] text-xs transform rotate-45"></i>
-                    </div>
-                </div>
-                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono text-[#4a4238]">
-                    <span>Now ({{ nowFormatted }})</span>
-                    <span>2026.02.25 Go</span>
+                    <div class="absolute top-0 left-0 h-full bg-[#726251] rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }"></div>
                 </div>
             </div>
 
-            <div class="bg-[#70808f] sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-[#c5b59d]/30 shadow-lg">
+            <div class="bg-[#70808f] sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-[#c5b59d]/30 shadow-lg no-select">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
                             class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer active:scale-95"
@@ -104,12 +104,12 @@
                 </div>
             </div>
 
-            <div class="glass p-3 border-l-4 border-[#726251] flex items-center justify-between">
+            <div class="glass p-3 border-l-4 border-[#726251] flex items-center justify-between no-select">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold opacity-60 uppercase tracking-wider text-[#4a4238]">{{ itinerary[dayIndex].date_short }} Weather</span>
-                    <span class="text-xs font-bold text-[#4a4238]">{{ itinerary[dayIndex].location }}</span>
+                    <span class="text-[10px] font-bold opacity-60 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span>
+                    <span class="text-xs font-bold">{{ itinerary[dayIndex].location }}</span>
                 </div>
-                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%] text-[#4a4238]">
+                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%]">
                     <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[2.5rem]">
                         <span class="text-[9px] opacity-60 font-mono">{{ h.time }}</span>
                         <i :class="h.icon" class="text-sm my-0.5"></i>
@@ -121,20 +121,14 @@
             <div class="relative pl-2">
                 <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-[#c5b59d]/30 rounded-full"></div>
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
-                    <div class="absolute left-0 top-0 w-4 h-4 bg-[#c5b59d] border-[3px] border-[#70808f] rounded-full z-10" :class="getTypeColor(place.type)"></div>
+                    <div class="absolute left-0 top-0 w-4 h-4 bg-[#c5b59d] border-[3px] border-[#70808f] rounded-full z-10"></div>
                     <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer hover:bg-[#d6c9b5] z-10">
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-[#70808f] text-white px-2 py-1 rounded">{{ place.time }}</span>
-                            <span class="text-[10px] font-bold opacity-60 uppercase text-[#4a4238]">{{ place.typeLabel }}</span>
+                            <span class="text-[10px] font-bold opacity-60 uppercase">{{ place.typeLabel }}</span>
                         </div>
-                        <h3 class="text-lg font-black mb-1 relative z-10 text-[#4a4238]">{{ place.name }}</h3>
-                        <p class="text-xs opacity-80 line-clamp-1 mb-2 relative z-10 text-[#4a4238]">{{ place.desc }}</p>
-                        
-                        <div v-if="place.bookingType === 'flight'" class="mt-3 bg-[#70808f]/10 p-3 rounded-xl border border-[#70808f]/20 flex justify-between items-center relative z-20 text-[#4a4238]">
-                            <div class="flex flex-col"><span class="text-[10px] font-bold uppercase opacity-60">Flight</span><span class="text-lg font-mono font-bold">{{ place.flightNo }}</span></div>
-                            <div class="text-right"><span class="text-[10px] opacity-50 block">Info</span><span class="text-sm font-bold opacity-80">{{ place.terminal }}</span></div>
-                        </div>
-                        
+                        <h3 class="text-lg font-black mb-1 relative z-10">{{ place.name }}</h3>
+                        <p class="text-xs opacity-80 line-clamp-1 mb-2 relative z-10">{{ place.desc }}</p>
                         <div class="flex flex-wrap gap-2 mt-2 relative z-10">
                             <span v-for="tag in place.highlights" class="px-2 py-1 bg-white/50 border border-black/5 rounded text-[10px] font-bold text-[#726251]">{{ tag }}</span>
                         </div>
@@ -145,18 +139,24 @@
 
         <div v-if="currentView === 'wallet'" class="space-y-6 pt-4 animate-fade">
             <h2 class="text-2xl font-black font-mincho text-white">Spend & Buyyyyy</h2>
-            <div class="flex bg-white/10 p-1 rounded-xl">
+            <div class="flex bg-white/10 p-1 rounded-xl no-select">
                 <button @click="walletMode='expense'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-[#c5b59d] text-[#4a4238] shadow-sm':'text-white/60'">記帳 Expenses</button>
                 <button @click="walletMode='wishlist'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='wishlist'?'bg-[#c5b59d] text-[#4a4238] shadow-sm':'text-white/60'">購物 Wishlist</button>
             </div>
             
             <div v-if="walletMode==='expense'" class="space-y-4">
-                <div class="glass p-5 flex justify-between items-center text-[#4a4238]">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar no-select">
+                    <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-[#c5b59d] text-[#4a4238] border-[#c5b59d]':'bg-transparent text-white/60 border-white/20'">All</button>
+                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-[#91867f] text-white border-[#91867f]':'bg-transparent text-[#91867f] border-[#91867f]'">👦 TszLok</button>
+                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-[#726251] text-white border-[#726251]':'bg-transparent text-[#726251] border-[#726251]'">👧 TszTung</button>
+                </div>
+                
+                <div class="glass p-5 flex justify-between items-center">
                     <div class="flex flex-col"><span class="text-xs font-bold opacity-60 uppercase mb-1">Total Spent</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
                 </div>
                 
                 <div class="space-y-3 pb-20">
-                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center text-[#4a4238]">
+                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs text-white shadow-sm" :class="item.payer==='TszLok'?'bg-[#91867f]':'bg-[#726251]'">{{ item.payer[0] }}</div>
                             <span class="text-sm font-bold">{{ item.name }}</span>
@@ -171,20 +171,20 @@
             </div>
 
             <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 pb-20">
-                <div @click="currentView='add_wishlist_page'" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-[#4a4238]/20 hover:bg-[#d6c9b5] cursor-pointer text-[#4a4238]/60 hover:text-[#4a4238] transition-colors">
+                <div @click="currentView='add_wishlist_page'" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-[#4a4238]/20 hover:bg-[#d6c9b5] cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
                     <i class="fas fa-camera text-2xl mb-2"></i><span class="text-xs font-bold">Add Item</span>
                 </div>
                 <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
                     <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 text-white shadow-md"><i class="fas fa-times"></i></button>
                     <img :src="item.image" class="w-full aspect-square object-cover">
-                    <div class="p-3 text-[#4a4238]"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold text-[#726251]">¥{{ item.price }}</div></div>
+                    <div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold opacity-60">¥{{ item.price }}</div></div>
                 </div>
             </div>
         </div>
 
         <div v-if="currentView === 'packing'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">行李清單</h2>
-            <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden text-[#4a4238]">
+            <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden">
                 <div class="bg-[#726251]/10 px-5 py-3 flex items-center gap-3 border-b border-[#4a4238]/10">
                     <i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male text-[#91867f]':key==='tszTung'?'fa-female text-[#726251]':'fa-box'"></i>
                     <span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span>
@@ -201,7 +201,12 @@
 
         <div v-if="currentView === 'info'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">資訊 Info</h2>
-            <div class="glass p-5 text-[#4a4238]">
+            <div class="glass p-5 text-center no-select">
+                <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
+                <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
+                <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
+            </div>
+            <div class="glass p-5">
                 <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3"><i class="fas fa-calculator mr-2"></i>Currency Calc</h3>
                 <div class="flex items-center gap-4">
                     <div class="flex-1 bg-white/50 rounded-xl p-3 border border-[#4a4238]/10">
@@ -215,30 +220,22 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="glass p-5 text-[#4a4238]">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-4 flex items-center"><i class="fas fa-ticket-alt mr-2"></i>My Reservations</h3>
-                <div class="space-y-3">
-                    <div class="bg-[#91867f]/20 border border-[#4a4238]/10 p-3 rounded-xl"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold opacity-80">FLIGHT (2/25)</span><span class="font-mono font-bold">UO680</span></div><div class="flex justify-between text-xs font-bold opacity-80"><span>HKG 14:30</span><i class="fas fa-arrow-right opacity-50"></i><span>NGO</span></div></div>
-                    <div class="bg-[#91867f]/20 border border-[#4a4238]/10 p-3 rounded-xl"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold opacity-80">FLIGHT (3/3)</span><span class="font-mono font-bold">UO685</span></div><div class="flex justify-between text-xs font-bold opacity-80"><span>NGO 21:00</span><i class="fas fa-arrow-right opacity-50"></i><span>HKG</span></div></div>
-                </div>
-            </div>
         </div>
 
-        <div v-if="currentView === 'add_expense_page'" class="bg-[#c5b59d] absolute inset-0 z-50 flex flex-col p-6 animate-slide-up h-full">
+        <div v-if="currentView === 'add_expense_page'" class="bg-[#c5b59d] fixed inset-0 z-50 flex flex-col p-6 animate-slide-up h-full w-full">
             <h3 class="font-bold mb-6 text-2xl text-[#4a4238]">Add Expense</h3>
-            <div class="flex-1 overflow-y-auto pb-20"> 
+            <div class="flex-1 overflow-y-auto pb-32 no-scrollbar"> 
                 <div class="flex gap-3 mb-6">
                     <button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-4 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button>
                 </div>
                 <div class="space-y-6">
                     <div>
                         <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Item Name</label>
-                        <input v-model="newItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg">
+                        <input v-model="newItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] focus:border-[#726251] outline-none text-lg shadow-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Price (¥)</label>
-                        <input v-model.number="newItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg">
+                        <input v-model.number="newItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] focus:border-[#726251] outline-none text-lg shadow-sm">
                     </div>
                 </div>
                 <div class="flex gap-3 mt-10">
@@ -248,10 +245,10 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'add_wishlist_page'" class="bg-[#c5b59d] absolute inset-0 z-50 flex flex-col p-6 animate-slide-up h-full">
+        <div v-if="currentView === 'add_wishlist_page'" class="bg-[#c5b59d] fixed inset-0 z-50 flex flex-col p-6 animate-slide-up h-full w-full">
             <h3 class="font-bold mb-6 text-2xl text-[#4a4238]">Add to Wishlist</h3>
             
-            <div class="flex-1 overflow-y-auto pb-20"> 
+            <div class="flex-1 overflow-y-auto pb-32 no-scrollbar"> 
                 <div class="mb-6 relative group w-full">
                     <div v-if="!newWishItem.image" class="w-full h-56 bg-white/50 border-2 border-dashed border-[#4a4238]/30 rounded-2xl flex flex-col items-center justify-center text-[#4a4238]/40 relative">
                         <i class="fas fa-camera text-4xl mb-2"></i><span class="text-sm font-bold">Tap to Upload</span>
@@ -269,11 +266,11 @@
                 <div class="space-y-6">
                     <div>
                         <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Product Name</label>
-                        <input v-model="newWishItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg">
+                        <input v-model="newWishItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] focus:border-[#726251] outline-none text-lg shadow-sm">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Price (¥)</label>
-                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg">
+                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] focus:border-[#726251] outline-none text-lg shadow-sm">
                     </div>
                 </div>
 
@@ -292,6 +289,25 @@
             <span class="text-[9px] font-bold uppercase tracking-widest">{{ tab.label }}</span>
         </button>
     </nav>
+
+    <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
+        <div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238]">
+            <div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div>
+            <span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span>
+            <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
+            <div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div>
+            <div class="space-y-6 text-sm leading-relaxed">
+                <div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div>
+                <div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div>
+            </div>
+            <div class="mt-6 space-y-3">
+                <a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a>
+                <a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a>
+            </div>
+            <div class="h-6"></div>
+            <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button>
+        </div>
+    </div>
 
 </div>
 
@@ -312,7 +328,7 @@
             const wishlist = ref([]);
             const currencyCalc = ref({ jpy: '', rate: 0.052 });
 
-            // ... (Weather and Itinerary Data same as before) ...
+            // Weather & Itinerary Data (Omitted for brevity, assume same structure)
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -398,7 +414,7 @@
             const getHKTime = () => {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-                return new Date(utc + (3600000 * 8)); // UTC+8
+                return new Date(utc + (3600000 * 8)); 
             };
 
             const now = ref(getHKTime());
@@ -426,10 +442,12 @@
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
-            // IMAGE COMPRESSION (Strict 5MB limit)
+            // IMAGE COMPRESSION HELPER (With Fallback)
             const compressImage = (file, callback) => {
-                if(file.size > 5000000) {
-                    alert('Image too large (>5MB). Please pick a smaller one.');
+                if(file.size < 500000) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => callback(e.target.result);
+                    reader.readAsDataURL(file);
                     return;
                 }
                 const reader = new FileReader();
@@ -438,19 +456,24 @@
                     const img = new Image();
                     img.src = event.target.result;
                     img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 600; 
-                        const scaleSize = MAX_WIDTH / img.width;
-                        if(scaleSize < 1) {
-                            canvas.width = MAX_WIDTH;
-                            canvas.height = img.height * scaleSize;
-                        } else {
-                            canvas.width = img.width;
-                            canvas.height = img.height;
+                        try {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 600; 
+                            const scaleSize = MAX_WIDTH / img.width;
+                            if(scaleSize < 1) {
+                                canvas.width = MAX_WIDTH;
+                                canvas.height = img.height * scaleSize;
+                            } else {
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                            }
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            callback(canvas.toDataURL('image/jpeg', 0.5)); 
+                        } catch (e) {
+                            alert("Compression failed, using raw image.");
+                            callback(event.target.result);
                         }
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        callback(canvas.toDataURL('image/jpeg', 0.5)); 
                     }
                 }
             };
@@ -466,27 +489,26 @@
 
             onMounted(() => { 
                 try {
-                    const b = localStorage.getItem('jp_v59_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v59_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v59_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v60_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v60_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v60_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            // Watchers with error handling for quota
-            watch(budgetList, v => { try { localStorage.setItem('jp_v59_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
-            watch(wishlist, v => { try { localStorage.setItem('jp_v59_w', JSON.stringify(v)); } catch(e) { alert("Storage full! Image too big."); } }, {deep:true});
-            watch(packingList, v => { try { localStorage.setItem('jp_v59_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
+            // Watchers with error handling
+            watch(budgetList, v => { try { localStorage.setItem('jp_v60_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
+            watch(wishlist, v => { try { localStorage.setItem('jp_v60_w', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
+            watch(packingList, v => { try { localStorage.setItem('jp_v60_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
 
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
             const openMap = (n) => window.open(`https://www.google.com/maps/search/?api=1&query=${n} Japan`, '_blank');
             
             const addItem = () => { 
-                if(newItem.value.name&&newItem.value.price){ 
+                if(newItem.value.name && newItem.value.price){ 
                     budgetList.value.unshift({...newItem.value}); 
-                    // Go back to main wallet view
-                    currentView.value = 'wallet';
                     newItem.value={name:'',price:'',payer:'TszLok'}; 
+                    currentView.value = 'wallet'; // Return to wallet
                 }
             };
             
@@ -499,8 +521,7 @@
                     try {
                         wishlist.value.unshift({...newWishItem.value}); 
                         newWishItem.value = { name: '', price: '', image: null }; 
-                        // Go back to main wallet view
-                        currentView.value = 'wallet';
+                        currentView.value = 'wallet'; // Return to wallet
                     } catch(e) {
                         alert("Storage full! Try removing some items.");
                     }
