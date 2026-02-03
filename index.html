@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>JP.TRIP 2026 v20</title>
+    <title>JP.TRIP 2026 v22</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -18,7 +18,7 @@
         :root {
             --navy-bg: #0f172a; 
             --text-light: #f8fafc;
-            --accent: #34d399; /* Emerald 400 */
+            --accent: #34d399;
         }
 
         body { 
@@ -26,48 +26,44 @@
             background-color: var(--navy-bg); 
             color: var(--text-light);
             height: 100vh; width: 100vw;
-            overflow: hidden; /* App-like behavior */
+            overflow: hidden; /* App-like container */
         }
         
         .font-mincho { font-family: 'Shippori Mincho', serif; }
         
-        /* SNOW EFFECT */
-        .snow-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+        /* SNOW EFFECT - POINTER EVENTS NONE IS CRITICAL */
+        .snow-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .snowflake { position: absolute; top: -10px; color: white; opacity: 0.3; animation: fall linear infinite; }
         @keyframes fall { to { transform: translateY(110vh); } }
 
-        /* SCROLLBAR HIDING */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* SAFE AREA */
-        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
-        .safe-top { padding-top: env(safe-area-inset-top); }
-        
         /* GLASS CARD */
         .glass {
-            background: rgba(30, 41, 59, 0.7);
+            background: rgba(30, 41, 59, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
         }
 
-        /* LAYOUT FIXES - FLEXBOX IS SAFER */
-        #app { display: flex; flex-direction: column; height: 100%; }
-        main { flex: 1; overflow-y: auto; overflow-x: hidden; position: relative; z-index: 10; padding-bottom: 100px; } /* Space for nav */
+        /* HIDE SCROLLBAR */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* SAFE AREA */
+        .safe-top { padding-top: env(safe-area-inset-top); }
+        .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+
         /* CHECKBOX */
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
     </style>
 </head>
 <body>
 
-<div id="app">
+<div id="app" class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#0f172a]">
     
     <div class="snow-container" id="snow-container"></div>
 
-    <main class="no-scrollbar pt-safe-top px-5" ref="mainScroll">
+    <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
         
         <div v-if="currentView === 'dashboard'" class="space-y-6 animate-fade-in pt-4">
             <div class="flex justify-between items-center">
@@ -80,7 +76,7 @@
                 </div>
             </div>
 
-            <div class="relative w-full aspect-[16/10] rounded-[32px] overflow-hidden shadow-2xl group">
+            <div class="relative w-full aspect-[16/10] rounded-[32px] overflow-hidden shadow-2xl group bg-slate-800">
                 <img src="icon.jpg" class="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-105">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent"></div>
                 <div class="absolute bottom-5 left-5 right-5">
@@ -93,34 +89,34 @@
                     <div class="w-full">
                         <div class="flex justify-between text-[9px] font-bold text-white/50 mb-1"><span>Now</span><span>2026.02.25</span></div>
                         <div class="h-1.5 bg-white/20 rounded-full overflow-hidden">
-                            <div class="h-full bg-emerald-400 rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }"></div>
+                            <div class="h-full bg-emerald-400 rounded-full" :style="{ width: tripProgress + '%' }"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <button @click="currentView='itinerary'" class="glass p-4 flex flex-col items-center justify-center aspect-[4/3] hover:bg-white/5 transition-colors border border-emerald-500/30">
+                <button @click="currentView='itinerary'" class="glass p-4 flex flex-col items-center justify-center aspect-[4/3] hover:bg-white/5 transition-colors border border-emerald-500/30 cursor-pointer z-20 relative">
                     <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg mb-2"><i class="fas fa-map-marked-alt"></i></div>
                     <span class="font-bold text-sm">行程 Plan</span>
                 </button>
-                <button @click="currentView='packing'" class="glass p-4 flex flex-col items-center justify-center aspect-[4/3] hover:bg-white/5 transition-colors">
-                    <div class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg mb-2"><i class="fas fa-suitcase"></i></div>
-                    <span class="font-bold text-sm">行李 List</span>
+                <button @click="currentView='wallet'" class="glass p-4 flex flex-col items-center justify-center aspect-[4/3] hover:bg-white/5 transition-colors cursor-pointer z-20 relative">
+                    <div class="w-10 h-10 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center text-lg mb-2"><i class="fas fa-wallet"></i></div>
+                    <span class="font-bold text-sm">記帳 Wallet</span>
                 </button>
             </div>
         </div>
 
-        <div v-if="currentView === 'itinerary'" class="space-y-6 pt-2">
+        <div v-if="currentView === 'itinerary'" class="space-y-6 pt-2 h-full">
             
             <div class="sticky top-0 z-30 bg-[#0f172a]/95 backdrop-blur-md pb-4 pt-2 -mx-5 px-5 border-b border-white/10">
                 <div class="flex justify-between items-end mb-4">
                     <h2 class="text-2xl font-black font-mincho">{{ itinerary[dayIndex].date_short }}</h2>
-                    <span class="text-xs font-bold bg-white/10 px-2 py-1 rounded flex items-center"><i class="fas fa-map-marker-alt mr-1 text-emerald-400"></i>{{ itinerary[dayIndex].location }}</span>
+                    <span class="text-xs font-bold bg-white/10 px-2 py-1 rounded">{{ itinerary[dayIndex].location }}</span>
                 </div>
                 <div class="flex gap-3 overflow-x-auto no-scrollbar mask-linear">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
-                            class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all"
+                            class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer z-40"
                             :class="dayIndex === idx ? 'bg-white text-slate-900 border-white shadow-lg scale-105' : 'bg-white/5 border-white/10 text-white/40'">
                         <span class="text-[9px] font-bold uppercase">{{ day.date_en.substr(0,3) }}</span>
                         <span class="text-lg font-black">{{ day.day }}</span>
@@ -128,9 +124,9 @@
                 </div>
             </div>
 
-            <div class="glass p-4 -mt-2">
+            <div class="glass p-4 -mt-2 border-l-4 border-emerald-500">
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-[10px] font-bold text-white/50 uppercase tracking-wider">Weather · {{ itinerary[dayIndex].date_short }}</h3>
+                    <h3 class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider">Weather · {{ itinerary[dayIndex].date_short }}</h3>
                     <span class="text-[9px] bg-white/10 px-1.5 py-0.5 rounded text-white/60">Hourly</span>
                 </div>
                 <div class="flex gap-4 overflow-x-auto no-scrollbar">
@@ -144,11 +140,10 @@
 
             <div class="relative pl-2 pb-10">
                 <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-white/10 rounded-full"></div>
-                
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
                     <div class="absolute left-0 top-0 w-4 h-4 bg-[#0f172a] border-[3px] rounded-full z-10" :class="getTypeColor(place.type)"></div>
                     
-                    <div @click="openDetail(place)" class="glass p-5 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border border-white/5 hover:border-white/20">
+                    <div @click="openDetail(place)" class="glass p-5 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer border border-white/5 hover:border-white/20 z-10">
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-white/10 px-2 py-1 rounded">{{ place.time }}</span>
                             <span class="text-[10px] font-bold opacity-60">{{ place.typeLabel }}</span>
@@ -161,12 +156,9 @@
                                 <div class="text-white/60">{{ place.terminal }}</div>
                             </div>
                         </div>
-                        <a v-if="place.bookingType === 'ticket'" :href="place.ticketLink" target="_blank" class="mt-3 block bg-emerald-600/20 p-3 rounded-xl border border-emerald-500/50 text-center" @click.stop>
-                            <span class="text-xs font-bold text-emerald-400 flex items-center justify-center gap-2"><i class="fas fa-ticket-alt"></i> View Ticket</span>
-                        </a>
-                        <a v-if="place.bookingType === 'hotel'" :href="place.hotelLink" target="_blank" class="mt-3 block bg-blue-600/20 p-3 rounded-xl border border-blue-500/50 text-center" @click.stop>
-                            <span class="text-xs font-bold text-blue-400 flex items-center justify-center gap-2"><i class="fas fa-bed"></i> View Booking</span>
-                        </a>
+                        <div v-if="place.bookingType === 'ticket' || place.bookingType === 'hotel'" class="mt-3 flex items-center gap-2 text-xs font-bold text-emerald-400">
+                            <i class="fas fa-check-circle"></i> Booking Info Available
+                        </div>
 
                         <div class="flex flex-wrap gap-2 mt-2 relative z-10">
                             <span v-for="tag in place.highlights" class="px-2 py-1 bg-white/5 border border-white/10 rounded text-[10px] font-bold text-emerald-300">{{ tag }}</span>
@@ -185,28 +177,42 @@
             </div>
 
             <div v-if="walletMode==='expense'" class="space-y-4 animate-fade-in">
-                <div class="glass p-4 flex justify-between items-center bg-gradient-to-r from-indigo-600/40 to-purple-600/40">
-                    <span class="text-xs font-bold uppercase">Total Spent</span>
-                    <span class="text-2xl font-mono font-black">¥{{ totalBudget.toLocaleString() }}</span>
+                
+                <div class="flex gap-2 overflow-x-auto no-scrollbar">
+                    <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-white text-slate-900 border-white':'bg-transparent text-white/50 border-white/20'">全部 All</button>
+                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-blue-500 text-white border-blue-500':'bg-transparent text-blue-300 border-blue-500/30'">👦 TszLok</button>
+                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-pink-500 text-white border-pink-500':'bg-transparent text-pink-300 border-pink-500/30'">👧 TszTung</button>
                 </div>
-                <div class="space-y-3">
-                    <div v-for="(item, idx) in budgetList" :key="idx" class="glass p-4 flex justify-between items-center">
+
+                <div class="glass p-5 flex justify-between items-center bg-gradient-to-r from-slate-800 to-slate-900">
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span>
+                        <span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span>
+                    </div>
+                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-blue-500/20 text-blue-400':'bg-pink-500/20 text-pink-400'">
+                        <i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i>
+                    </div>
+                </div>
+
+                <div class="space-y-3 pb-20">
+                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm" :class="item.payer==='TszLok'?'bg-blue-500':'bg-pink-500'">{{ item.payer==='TszLok'?'TL':'TT' }}</div>
                             <span class="text-sm font-bold">{{ item.name }}</span>
                         </div>
-                        <div class="flex items-center gap-3"><span class="font-mono font-bold opacity-80">¥{{ item.price }}</span><button @click="deleteBudget(idx)" class="text-white/20 hover:text-red-400"><i class="fas fa-times text-xs"></i></button></div>
+                        <div class="flex items-center gap-3"><span class="font-mono font-bold opacity-80">¥{{ item.price }}</span><button @click="deleteBudget(item)" class="text-white/20 hover:text-red-400"><i class="fas fa-times text-xs"></i></button></div>
                     </div>
+                    <div v-if="filteredBudgetList.length === 0" class="text-center text-white/30 text-sm py-10">No records found</div>
                 </div>
             </div>
 
-            <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 animate-fade-in">
+            <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 animate-fade-in pb-20">
                 <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-white/20 hover:bg-white/5 cursor-pointer">
                     <i class="fas fa-camera text-2xl mb-2 text-white/50"></i>
                     <span class="text-xs font-bold text-white/50">Add Item</span>
                 </div>
                 <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
-                    <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10"><i class="fas fa-times"></i></button>
+                    <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fas fa-times"></i></button>
                     <img :src="item.image" class="w-full aspect-square object-cover">
                     <div class="p-3">
                         <div class="font-bold text-sm truncate">{{ item.name }}</div>
@@ -247,14 +253,14 @@
 
     </main>
 
-    <nav class="fixed bottom-0 left-0 w-full h-[85px] bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 z-50 flex justify-around items-center px-2 pb-safe-bottom">
+    <div class="fixed bottom-0 w-full h-[85px] bg-[#0f172a]/95 backdrop-blur-xl border-t border-white/10 z-[9999] flex justify-around items-center px-2 pb-safe-bottom">
         <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" 
-                class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all"
+                class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer"
                 :class="currentView === tab.id ? 'text-emerald-400 scale-110' : 'text-white/40'">
             <i :class="tab.icon" class="text-xl"></i>
             <span class="text-[9px] font-bold uppercase tracking-widest">{{ tab.label }}</span>
         </button>
-    </nav>
+    </div>
 
     <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
@@ -266,6 +272,8 @@
             <div class="space-y-6 text-sm leading-relaxed">
                 <div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold">{{ detailModal.data.desc }}</p></div>
                 <div v-if="detailModal.data.strategy" class="bg-emerald-500/10 p-5 rounded-2xl border-l-4 border-emerald-500"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center text-emerald-400"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div>
+                <a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-emerald-600 text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a>
+                <a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-blue-600 text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a>
             </div>
             <div class="h-20"></div>
             <div class="absolute bottom-6 left-6 right-6"><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-slate-900 rounded-2xl font-bold shadow-lg">Open Map</button></div>
@@ -289,6 +297,7 @@
             
             // Wallet State
             const walletMode = ref('expense');
+            const budgetFilter = ref('All'); // 'All', 'TszLok', 'TszTung'
             const showBudgetInput = ref(false);
             const showWishlistInput = ref(false);
             const payers = ['TszLok', 'TszTung'];
@@ -312,7 +321,7 @@
             // Packing
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)', shared: 'Kayak / Shared' };
             const packingList = ref({
-                handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包 (日幣/港幣/卡)', checked: false}, {name: 'SIM卡', checked: false}, {name: '手機 & 充電 & 尿袋', checked: false}, {name: '耳機 & 相機', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}, {name: '空水樽 & 原子筆', checked: false}, {name: '潤唇膏', checked: false}, {name: '眼罩/頸枕', checked: false}, {name: '屋企Key', checked: false}],
+                handCarry: [{name: '個人證件 (身分證/護照/簽證)', checked: false}, {name: '登機證', checked: false}, {name: '銀包 (日幣/港幣/卡)', checked: false}, {name: 'SIM卡 & 針', checked: false}, {name: '手機 & 充電 & 尿袋', checked: false}, {name: '耳機 & 相機', checked: false}, {name: '預約證明', checked: false}, {name: '口罩/消毒', checked: false}, {name: '空水樽 & 原子筆', checked: false}, {name: '潤唇膏', checked: false}, {name: '眼罩/頸枕', checked: false}, {name: '屋企Key', checked: false}],
                 tszLok: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '男士剃鬚', checked: false}, {name: '轉插 & 拖板', checked: false}, {name: '雨傘/雨衣', checked: false}, {name: '拖鞋', checked: false}, {name: '備用膠袋', checked: false}],
                 tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮/護髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}],
                 shared: [{name: 'Kayak: 泳衣', checked: false}, {name: 'Kayak: 防水袋', checked: false}, {name: 'Kayak: Aqua Shoes', checked: false}, {name: 'Kayak: 毛巾/沖涼液', checked: false}]
@@ -392,13 +401,13 @@
             // PERSISTENCE
             onMounted(() => { 
                 initSnow();
-                const b = localStorage.getItem('jp_v20_b'); if(b) budgetList.value = JSON.parse(b); 
-                const w = localStorage.getItem('jp_v20_w'); if(w) wishlist.value = JSON.parse(w); 
-                const p = localStorage.getItem('jp_v20_p'); if(p) packingList.value = JSON.parse(p);
+                const b = localStorage.getItem('jp_v22_b'); if(b) budgetList.value = JSON.parse(b); 
+                const w = localStorage.getItem('jp_v22_w'); if(w) wishlist.value = JSON.parse(w); 
+                const p = localStorage.getItem('jp_v22_p'); if(p) packingList.value = JSON.parse(p);
             });
-            watch(budgetList, v => localStorage.setItem('jp_v20_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v20_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v20_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v22_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v22_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v22_p', JSON.stringify(v)), {deep:true});
 
             const initSnow = () => {
                 const c = document.getElementById('snow-container');
@@ -417,10 +426,15 @@
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
             const openMap = (n) => window.open(`https://www.google.com/maps/search/?api=1&query=${n} Japan`, '_blank');
             const addItem = () => { if(newItem.value.name&&newItem.value.price){ budgetList.value.unshift({...newItem.value}); showBudgetInput.value=false; newItem.value={name:'',price:'',payer:'TszLok'}; }};
-            const deleteBudget = (i) => budgetList.value.splice(i,1);
-            const totalBudget = computed(() => budgetList.value.reduce((s,i)=>s+i.price,0));
-            const calcPayerTotal = (p) => budgetList.value.filter(i=>i.payer===p).reduce((s,i)=>s+i.price,0);
+            const deleteBudget = (item) => { const idx = budgetList.value.indexOf(item); if(idx>-1) budgetList.value.splice(idx,1); };
             
+            // WALLET SPLIT LOGIC
+            const filteredBudgetList = computed(() => {
+                if(budgetFilter.value === 'All') return budgetList.value;
+                return budgetList.value.filter(i => i.payer === budgetFilter.value);
+            });
+            const filteredTotal = computed(() => filteredBudgetList.value.reduce((s,i)=>s+i.price,0));
+
             const handleImageUpload = (event) => { const file = event.target.files[0]; if(file) { const reader = new FileReader(); reader.onload = (e) => { newWishItem.value.image = e.target.result; }; reader.readAsDataURL(file); } };
             const addWishlist = () => { if(newWishItem.value.name) { wishlist.value.unshift({...newWishItem.value}); newWishItem.value = { name: '', price: '', image: null }; showWishlistInput.value = false; } };
             const deleteWishlist = (idx) => wishlist.value.splice(idx, 1);
@@ -435,7 +449,7 @@
             
             const calc = ref({ jpy: '', rate: 0.052 });
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, tripProgress, openDetail, openMap, addItem, deleteBudget, totalBudget, calcPayerTotal, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, calc, currentDayWeather };
+            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, tripProgress, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, calc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal };
         }
     }).mount('#app');
 </script>
