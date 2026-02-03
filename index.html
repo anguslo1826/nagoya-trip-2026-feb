@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v53</title>
+    <title>梓樂Nagoya Trip v54</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -14,15 +14,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&family=Shippori+Mincho:wght@600;800&display=swap" rel="stylesheet">
     
     <style>
-        /* THEME - Updated with "蒼灰の地層" Color Palette */
+        /* THEME - "蒼灰の地層" Palette */
         :root {
             --main-bg: #70808f;     /* Slate Blue */
-            --secondary-bg: #91867f; /* Medium Taupe/Gray */
+            --secondary-bg: #91867f; /* Medium Taupe */
             --text-light: #c5b59d;  /* Sand Beige */
             --text-dark: #726251;   /* Misty Umber */
             --accent: #726251;      /* Misty Umber */
-            --glass-bg: rgba(112, 128, 143, 0.85); /* Slate Blue with opacity */
-            --glass-border: rgba(197, 181, 157, 0.2); /* Sand Beige with opacity */
+            --glass-bg: rgba(112, 128, 143, 0.85); 
+            --glass-border: rgba(197, 181, 157, 0.2); 
         }
         body { font-family: 'Zen Maru Gothic', sans-serif; background-color: var(--main-bg); color: var(--text-light); margin: 0; padding: 0; height: 100dvh; width: 100vw; overflow: hidden; }
         .font-mincho { font-family: 'Shippori Mincho', serif; }
@@ -34,7 +34,7 @@
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
         [v-cloak] { display: none !important; }
 
-        /* Utility classes for new colors */
+        /* Utility classes */
         .bg-main { background-color: var(--main-bg); }
         .bg-secondary { background-color: var(--secondary-bg); }
         .text-light { color: var(--text-light); }
@@ -239,16 +239,29 @@
 
     <div v-if="detailModal.show" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-secondary w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-light"><div class="w-12 h-1 bg-light/30 rounded-full mx-auto mb-6"></div><span class="px-3 py-1 bg-black/20 rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-accent/20 p-5 rounded-2xl border-l-4 border-accent"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-accent text-light text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-secondary/80 text-light text-center rounded-2xl font-bold shadow-lg border border-light/20">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-light text-dark rounded-2xl font-bold shadow-lg">Open Map</button></div></div>
     
-    <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-secondary w-full max-w-md p-6 rounded-t-3xl animate-slide-up text-light"><h3 class="font-bold mb-4 text-lg">Add Expense</h3><div class="flex gap-3 mb-4"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-secondary border-secondary text-light':'bg-accent border-accent text-light'):'border-light/20 text-light/50'">{{ p }}</button></div><input v-model="newItem.name" placeholder="Item Name" class="w-full bg-black/20 p-4 rounded-xl mb-3 font-bold border border-light/10 text-light placeholder-light/40"><input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-black/20 p-4 rounded-xl mb-6 font-bold border border-light/10 text-light placeholder-light/40"><div class="flex gap-3"><button @click="showBudgetInput=false" class="flex-1 py-3 font-bold text-light/50">Cancel</button><button @click="addItem" class="flex-1 py-3 bg-light text-dark rounded-xl font-bold">Save</button></div></div></div>
+    <div v-if="showBudgetInput" class="fixed inset-0 z-[60] flex items-end justify-center">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div>
+        <div class="bg-secondary w-full max-w-md p-6 rounded-t-3xl animate-slide-up max-h-[90vh] flex flex-col text-light overflow-y-auto">
+            <h3 class="font-bold mb-6 text-lg flex-shrink-0">Add Expense</h3>
+            <div class="flex-1 flex flex-col pb-20"> <div class="flex gap-3 mb-4">
+                    <button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-3 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-secondary border-secondary text-light':'bg-accent border-accent text-light'):'border-light/20 text-light/50'">{{ p }}</button>
+                </div>
+                <input v-model="newItem.name" placeholder="Item Name" class="w-full bg-black/20 p-4 rounded-xl mb-4 font-bold border border-light/10 text-light placeholder-light/40">
+                <input v-model.number="newItem.price" type="number" placeholder="¥ Amount" class="w-full bg-black/20 p-4 rounded-xl mb-8 font-bold border border-light/10 text-light placeholder-light/40">
+                <div class="flex gap-3 mt-4">
+                    <button @click="showBudgetInput=false" class="flex-1 py-4 font-bold text-light/50">Cancel</button>
+                    <button @click="addItem" class="flex-1 py-4 bg-light text-dark rounded-xl font-bold shadow-lg">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <div v-if="showWishlistInput" class="fixed inset-0 z-[60] flex items-end justify-center">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
         <div class="bg-secondary w-full max-w-md p-6 rounded-t-3xl animate-slide-up max-h-[90vh] flex flex-col text-light overflow-y-auto">
-            
             <h3 class="font-bold mb-6 text-lg flex-shrink-0">Add to Wishlist</h3>
             
-            <div class="flex-1 flex flex-col">
-                <div class="mb-6 relative group w-full flex-shrink-0">
+            <div class="flex-1 flex flex-col pb-20"> <div class="mb-6 relative group w-full flex-shrink-0">
                     <div v-if="!newWishItem.image" class="w-full h-40 bg-black/20 border-2 border-dashed border-light/30 rounded-xl flex flex-col items-center justify-center text-light/40 relative hover:bg-black/30 transition-colors">
                         <i class="fas fa-camera text-3xl mb-2"></i><span class="text-sm font-bold">Upload Photo</span>
                         <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
@@ -465,15 +478,15 @@
 
             onMounted(() => { 
                 try {
-                    const b = localStorage.getItem('jp_v53_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v53_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v53_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v54_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v54_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v54_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            watch(budgetList, v => localStorage.setItem('jp_v53_b', JSON.stringify(v)), {deep:true});
-            watch(wishlist, v => localStorage.setItem('jp_v53_w', JSON.stringify(v)), {deep:true});
-            watch(packingList, v => localStorage.setItem('jp_v53_p', JSON.stringify(v)), {deep:true});
+            watch(budgetList, v => localStorage.setItem('jp_v54_b', JSON.stringify(v)), {deep:true});
+            watch(wishlist, v => localStorage.setItem('jp_v54_w', JSON.stringify(v)), {deep:true});
+            watch(packingList, v => localStorage.setItem('jp_v54_p', JSON.stringify(v)), {deep:true});
 
             const getTypeColor = (t) => ({food:'border-orange-400 bg-orange-500', transport:'border-blue-400 bg-blue-500', stay:'border-purple-400 bg-purple-500', spot:'border-emerald-400 bg-emerald-500'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
