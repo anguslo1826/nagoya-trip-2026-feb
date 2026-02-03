@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v59</title>
+    <title>梓樂Nagoya Trip v58</title>
     
     <link rel="apple-touch-icon" sizes="180x180" href="icon.jpg">
     <link rel="icon" type="image/jpeg" href="icon.jpg">
@@ -21,6 +21,8 @@
             --text-on-card: #4a4238;/* Dark Brown */
             --text-on-bg: #f3f0eb;  /* Off White */
             --accent: #91867f;      /* Misty Umber */
+            --glass-bg: rgba(112, 128, 143, 0.95); 
+            --glass-border: rgba(197, 181, 157, 0.2); 
         }
         body { 
             font-family: 'Zen Maru Gothic', sans-serif; 
@@ -31,17 +33,13 @@
             overflow: hidden; 
         }
         .font-mincho { font-family: 'Shippori Mincho', serif; }
-        
-        /* Solid Card Style - No transparency to prevent ghost clicks */
         .glass { 
-            background-color: var(--bg-card); 
+            background: var(--bg-card); 
             color: var(--text-on-card);
             border: 1px solid rgba(255,255,255,0.3); 
             border-radius: 20px; 
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        
-        /* Standard Utils */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
@@ -49,17 +47,19 @@
         .check-box input:checked + div { background-color: var(--accent); border-color: var(--accent); }
         [v-cloak] { display: none !important; }
         
-        /* Input Reset */
-        input { -webkit-appearance: none; appearance: none; }
+        /* FIX: Ensure modals are always on top and interactive */
+        .modal-layer { z-index: 9999 !important; pointer-events: auto !important; }
+        .modal-content { pointer-events: auto !important; position: relative; z-index: 10000; }
+        .interactive-input { pointer-events: auto !important; user-select: text !important; -webkit-user-select: text !important; }
     </style>
 </head>
 <body>
 
 <div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#70808f]">
     
-    <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth bg-[#70808f]" ref="mainScroll">
+    <main class="flex-1 overflow-y-auto overflow-x-hidden no-scrollbar z-10 pb-28 pt-safe-top px-5 scroll-smooth relative" ref="mainScroll">
         
-        <div v-if="currentView === 'itinerary'" class="space-y-5 pb-4 animate-fade">
+        <div v-if="currentView === 'itinerary'" class="space-y-5 pb-4">
             <div class="flex justify-between items-center mb-2 mt-2">
                 <div>
                     <div class="text-[10px] font-bold text-white/80 uppercase tracking-widest">JP.TRIP 2026</div>
@@ -74,10 +74,10 @@
 
             <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl">
                 <div class="flex justify-between items-end mb-2">
-                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider text-[#4a4238]">距離出發 (HKO Time)</span>
+                    <span class="text-xs font-bold opacity-60 uppercase tracking-wider">距離出發 (HKO Time)</span>
                     <i class="fas fa-plane text-[#726251] animate-pulse"></i>
                 </div>
-                <div class="flex items-baseline gap-2 mb-4 text-[#4a4238]">
+                <div class="flex items-baseline gap-2 mb-4">
                     <span class="text-6xl font-black font-mono tracking-tighter">{{ countdown.days }}</span>
                     <span class="text-sm font-bold opacity-80">Days</span>
                     <span class="text-2xl font-mono font-bold ml-2">{{ countdown.hours }}:{{ countdown.minutes }}:{{ countdown.seconds }}</span>
@@ -87,13 +87,13 @@
                         <i class="fas fa-plane absolute -right-2 -top-1.5 text-[#726251] text-xs transform rotate-45"></i>
                     </div>
                 </div>
-                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono text-[#4a4238]">
+                <div class="flex justify-between mt-2 text-[10px] font-bold opacity-50 font-mono">
                     <span>Now ({{ nowFormatted }})</span>
                     <span>2026.02.25 Go</span>
                 </div>
             </div>
 
-            <div class="bg-[#70808f] sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-[#c5b59d]/30 shadow-lg">
+            <div class="bg-[#70808f]/95 backdrop-blur-md sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-[#c5b59d]/30 shadow-lg">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar">
                     <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx"
                             class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer active:scale-95"
@@ -106,10 +106,10 @@
 
             <div class="glass p-3 border-l-4 border-[#726251] flex items-center justify-between">
                 <div class="flex flex-col">
-                    <span class="text-[10px] font-bold opacity-60 uppercase tracking-wider text-[#4a4238]">{{ itinerary[dayIndex].date_short }} Weather</span>
-                    <span class="text-xs font-bold text-[#4a4238]">{{ itinerary[dayIndex].location }}</span>
+                    <span class="text-[10px] font-bold opacity-60 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span>
+                    <span class="text-xs font-bold">{{ itinerary[dayIndex].location }}</span>
                 </div>
-                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%] text-[#4a4238]">
+                <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%]">
                     <div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[2.5rem]">
                         <span class="text-[9px] opacity-60 font-mono">{{ h.time }}</span>
                         <i :class="h.icon" class="text-sm my-0.5"></i>
@@ -121,16 +121,16 @@
             <div class="relative pl-2">
                 <div class="absolute left-[7px] top-2 bottom-0 w-[2px] bg-[#c5b59d]/30 rounded-full"></div>
                 <div v-for="(place, pIdx) in itinerary[dayIndex].places" :key="pIdx" class="relative pl-8 mb-6 group">
-                    <div class="absolute left-0 top-0 w-4 h-4 bg-[#c5b59d] border-[3px] border-[#70808f] rounded-full z-10" :class="getTypeColor(place.type)"></div>
+                    <div class="absolute left-0 top-0 w-4 h-4 bg-[#c5b59d] border-[3px] border-[#70808f] rounded-full z-10"></div>
                     <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer hover:bg-[#d6c9b5] z-10">
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-[#70808f] text-white px-2 py-1 rounded">{{ place.time }}</span>
-                            <span class="text-[10px] font-bold opacity-60 uppercase text-[#4a4238]">{{ place.typeLabel }}</span>
+                            <span class="text-[10px] font-bold opacity-60 uppercase">{{ place.typeLabel }}</span>
                         </div>
-                        <h3 class="text-lg font-black mb-1 relative z-10 text-[#4a4238]">{{ place.name }}</h3>
-                        <p class="text-xs opacity-80 line-clamp-1 mb-2 relative z-10 text-[#4a4238]">{{ place.desc }}</p>
+                        <h3 class="text-lg font-black mb-1 relative z-10">{{ place.name }}</h3>
+                        <p class="text-xs opacity-80 line-clamp-1 mb-2 relative z-10">{{ place.desc }}</p>
                         
-                        <div v-if="place.bookingType === 'flight'" class="mt-3 bg-[#70808f]/10 p-3 rounded-xl border border-[#70808f]/20 flex justify-between items-center relative z-20 text-[#4a4238]">
+                        <div v-if="place.bookingType === 'flight'" class="mt-3 bg-[#70808f]/10 p-3 rounded-xl border border-[#70808f]/20 flex justify-between items-center relative z-20">
                             <div class="flex flex-col"><span class="text-[10px] font-bold uppercase opacity-60">Flight</span><span class="text-lg font-mono font-bold">{{ place.flightNo }}</span></div>
                             <div class="text-right"><span class="text-[10px] opacity-50 block">Info</span><span class="text-sm font-bold opacity-80">{{ place.terminal }}</span></div>
                         </div>
@@ -143,7 +143,7 @@
             </div>
         </div>
 
-        <div v-if="currentView === 'wallet'" class="space-y-6 pt-4 animate-fade">
+        <div v-if="currentView === 'wallet'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">Spend & Buyyyyy</h2>
             <div class="flex bg-white/10 p-1 rounded-xl">
                 <button @click="walletMode='expense'" class="flex-1 py-3 rounded-lg text-xs font-bold transition-all" :class="walletMode==='expense'?'bg-[#c5b59d] text-[#4a4238] shadow-sm':'text-white/60'">記帳 Expenses</button>
@@ -151,12 +151,19 @@
             </div>
             
             <div v-if="walletMode==='expense'" class="space-y-4">
-                <div class="glass p-5 flex justify-between items-center text-[#4a4238]">
-                    <div class="flex flex-col"><span class="text-xs font-bold opacity-60 uppercase mb-1">Total Spent</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
+                <div class="flex gap-2 overflow-x-auto no-scrollbar">
+                    <button @click="budgetFilter='All'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='All'?'bg-[#c5b59d] text-[#4a4238] border-[#c5b59d]':'bg-transparent text-white/60 border-white/20'">All</button>
+                    <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-[#91867f] text-white border-[#91867f]':'bg-transparent text-[#91867f] border-[#91867f]'">👦 TszLok</button>
+                    <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-[#726251] text-white border-[#726251]':'bg-transparent text-[#726251] border-[#726251]'">👧 TszTung</button>
+                </div>
+                
+                <div class="glass p-5 flex justify-between items-center">
+                    <div class="flex flex-col"><span class="text-xs font-bold opacity-60 uppercase mb-1">{{ budgetFilter }} Total</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
+                    <div v-if="budgetFilter!=='All'" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl" :class="budgetFilter==='TszLok'?'bg-[#91867f] text-white':'bg-[#726251] text-white'"><i class="fas" :class="budgetFilter==='TszLok'?'fa-male':'fa-female'"></i></div>
                 </div>
                 
                 <div class="space-y-3 pb-20">
-                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center text-[#4a4238]">
+                    <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs text-white shadow-sm" :class="item.payer==='TszLok'?'bg-[#91867f]':'bg-[#726251]'">{{ item.payer[0] }}</div>
                             <span class="text-sm font-bold">{{ item.name }}</span>
@@ -166,25 +173,25 @@
                 </div>
                 
                 <div class="fixed bottom-24 right-6 z-40">
-                    <button @click="currentView='add_expense_page'" class="w-14 h-14 bg-[#c5b59d] text-[#4a4238] rounded-full shadow-xl flex items-center justify-center text-xl border-2 border-white/20 active:scale-90 transition-transform"><i class="fas fa-plus"></i></button>
+                    <button @click="showBudgetInput=true" class="w-14 h-14 bg-[#c5b59d] text-[#4a4238] rounded-full shadow-xl flex items-center justify-center text-xl border-2 border-white/20 active:scale-90 transition-transform"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
 
             <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 pb-20">
-                <div @click="currentView='add_wishlist_page'" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-[#4a4238]/20 hover:bg-[#d6c9b5] cursor-pointer text-[#4a4238]/60 hover:text-[#4a4238] transition-colors">
+                <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-[#4a4238]/20 hover:bg-[#d6c9b5] cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
                     <i class="fas fa-camera text-2xl mb-2"></i><span class="text-xs font-bold">Add Item</span>
                 </div>
                 <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
-                    <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 text-white shadow-md"><i class="fas fa-times"></i></button>
+                    <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 text-white"><i class="fas fa-times"></i></button>
                     <img :src="item.image" class="w-full aspect-square object-cover">
-                    <div class="p-3 text-[#4a4238]"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold text-[#726251]">¥{{ item.price }}</div></div>
+                    <div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold opacity-60">¥{{ item.price }}</div></div>
                 </div>
             </div>
         </div>
 
         <div v-if="currentView === 'packing'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">行李清單</h2>
-            <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden text-[#4a4238]">
+            <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden">
                 <div class="bg-[#726251]/10 px-5 py-3 flex items-center gap-3 border-b border-[#4a4238]/10">
                     <i class="fas" :class="key==='handCarry'?'fa-briefcase':key==='tszLok'?'fa-male text-[#91867f]':key==='tszTung'?'fa-female text-[#726251]':'fa-box'"></i>
                     <span class="font-bold text-sm uppercase tracking-wide">{{ keyLabels[key] }}</span>
@@ -201,7 +208,14 @@
 
         <div v-if="currentView === 'info'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">資訊 Info</h2>
-            <div class="glass p-5 text-[#4a4238]">
+            
+            <div class="glass p-5 text-center">
+                <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
+                <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
+                <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
+            </div>
+
+            <div class="glass p-5">
                 <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3"><i class="fas fa-calculator mr-2"></i>Currency Calc</h3>
                 <div class="flex items-center gap-4">
                     <div class="flex-1 bg-white/50 rounded-xl p-3 border border-[#4a4238]/10">
@@ -215,83 +229,100 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="glass p-5 text-[#4a4238]">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-4 flex items-center"><i class="fas fa-ticket-alt mr-2"></i>My Reservations</h3>
-                <div class="space-y-3">
-                    <div class="bg-[#91867f]/20 border border-[#4a4238]/10 p-3 rounded-xl"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold opacity-80">FLIGHT (2/25)</span><span class="font-mono font-bold">UO680</span></div><div class="flex justify-between text-xs font-bold opacity-80"><span>HKG 14:30</span><i class="fas fa-arrow-right opacity-50"></i><span>NGO</span></div></div>
-                    <div class="bg-[#91867f]/20 border border-[#4a4238]/10 p-3 rounded-xl"><div class="flex justify-between items-center mb-1"><span class="text-[10px] font-bold opacity-80">FLIGHT (3/3)</span><span class="font-mono font-bold">UO685</span></div><div class="flex justify-between text-xs font-bold opacity-80"><span>NGO 21:00</span><i class="fas fa-arrow-right opacity-50"></i><span>HKG</span></div></div>
-                </div>
-            </div>
-        </div>
-
-        <div v-if="currentView === 'add_expense_page'" class="bg-[#c5b59d] absolute inset-0 z-50 flex flex-col p-6 animate-slide-up h-full">
-            <h3 class="font-bold mb-6 text-2xl text-[#4a4238]">Add Expense</h3>
-            <div class="flex-1 overflow-y-auto pb-20"> 
-                <div class="flex gap-3 mb-6">
-                    <button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-4 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button>
-                </div>
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Item Name</label>
-                        <input v-model="newItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Price (¥)</label>
-                        <input v-model.number="newItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg">
-                    </div>
-                </div>
-                <div class="flex gap-3 mt-10">
-                    <button @click="currentView='wallet'" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button>
-                    <button @click="addItem" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Save</button>
-                </div>
-            </div>
-        </div>
-
-        <div v-if="currentView === 'add_wishlist_page'" class="bg-[#c5b59d] absolute inset-0 z-50 flex flex-col p-6 animate-slide-up h-full">
-            <h3 class="font-bold mb-6 text-2xl text-[#4a4238]">Add to Wishlist</h3>
-            
-            <div class="flex-1 overflow-y-auto pb-20"> 
-                <div class="mb-6 relative group w-full">
-                    <div v-if="!newWishItem.image" class="w-full h-56 bg-white/50 border-2 border-dashed border-[#4a4238]/30 rounded-2xl flex flex-col items-center justify-center text-[#4a4238]/40 relative">
-                        <i class="fas fa-camera text-4xl mb-2"></i><span class="text-sm font-bold">Tap to Upload</span>
-                        <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
-                    </div>
-                    <div v-else class="relative w-full">
-                        <img :src="newWishItem.image" class="w-full max-h-72 object-contain rounded-2xl bg-black/10">
-                        <div class="flex gap-3 mt-3">
-                            <label class="flex-1 py-3 bg-white/50 rounded-xl text-sm font-bold text-center cursor-pointer hover:bg-white/80 text-[#4a4238]">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
-                            <button @click="newWishItem.image = null" class="flex-1 py-3 bg-red-100 text-red-500 rounded-xl text-sm font-bold hover:bg-red-200">Remove</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Product Name</label>
-                        <input v-model="newWishItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-[#4a4238]/60 mb-2">Price (¥)</label>
-                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg">
-                    </div>
-                </div>
-
-                <div class="flex gap-3 mt-10">
-                    <button @click="currentView='wallet'" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button>
-                    <button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Add Item</button>
-                </div>
-            </div>
         </div>
 
     </main>
 
-    <nav v-if="!currentView.includes('add_')" class="fixed bottom-0 w-full h-[85px] bg-[#70808f]/95 backdrop-blur-xl border-t border-[#c5b59d]/20 z-40 flex justify-around items-center px-2 pb-safe-bottom">
+    <nav class="fixed bottom-0 w-full h-[85px] bg-[#70808f]/95 backdrop-blur-xl border-t border-[#c5b59d]/20 z-50 flex justify-around items-center px-2 pb-safe-bottom">
         <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer active:scale-95" :class="currentView === tab.id ? 'text-[#c5b59d] scale-110' : 'text-white/40'">
             <i :class="tab.icon" class="text-xl"></i>
             <span class="text-[9px] font-bold uppercase tracking-widest">{{ tab.label }}</span>
         </button>
     </nav>
+
+    <div v-if="showBudgetInput" class="fixed inset-0 z-[9999] flex items-end justify-center modal-layer">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div>
+        <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop>
+            <div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Expense</div>
+            <div class="flex-1 overflow-y-auto p-6 pb-40"> 
+                <div class="flex gap-3 mb-6">
+                    <button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-4 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button>
+                </div>
+                <div class="space-y-6">
+                    <div class="relative z-[10001]">
+                        <label class="block text-xs font-bold opacity-60 mb-2">Item Name</label>
+                        <input v-model="newItem.name" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none interactive-input">
+                    </div>
+                    <div class="relative z-[10001]">
+                        <label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label>
+                        <input v-model.number="newItem.price" type="number" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none interactive-input">
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-10">
+                    <button @click="showBudgetInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-xl">Cancel</button>
+                    <button @click="addItem" class="flex-1 py-4 bg-[#70808f] text-white rounded-xl font-bold shadow-lg">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div v-if="showWishlistInput" class="fixed inset-0 z-[9999] flex items-end justify-center modal-layer">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
+        <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop>
+            <div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add to Wishlist</div>
+            
+            <div class="flex-1 overflow-y-auto p-6 pb-40"> 
+                <div class="mb-6 relative group w-full">
+                    <div v-if="!newWishItem.image" class="w-full h-48 bg-white/50 border-2 border-dashed border-[#4a4238]/30 rounded-xl flex flex-col items-center justify-center text-[#4a4238]/40 relative hover:bg-white/70 transition-colors">
+                        <i class="fas fa-camera text-3xl mb-2"></i><span class="text-sm font-bold">Upload Photo</span>
+                        <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer">
+                    </div>
+                    <div v-else class="relative w-full">
+                        <img :src="newWishItem.image" class="w-full max-h-64 object-contain rounded-xl bg-black/10">
+                        <div class="flex gap-3 mt-3">
+                            <label class="flex-1 py-3 bg-white/50 rounded-xl text-sm font-bold text-center cursor-pointer hover:bg-white/80 text-[#4a4238]">Change<input type="file" accept="image/*" @change="handleImageUpload" class="hidden"></label>
+                            <button @click="newWishItem.image = null" class="flex-1 py-3 bg-red-100 text-red-500 rounded-xl text-sm font-bold">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="relative z-[10001]">
+                        <label class="block text-xs font-bold opacity-60 mb-2">Product Name</label>
+                        <input v-model="newWishItem.name" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] interactive-input">
+                    </div>
+                    <div class="relative z-[10001]">
+                        <label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label>
+                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-4 rounded-xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] interactive-input">
+                    </div>
+                </div>
+
+                <div class="flex gap-3 mt-10">
+                    <button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-xl">Cancel</button>
+                    <button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-xl font-bold shadow-lg">Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div v-if="detailModal.show" class="fixed inset-0 z-[9999] flex items-end justify-center modal-layer"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
+        <div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop>
+            <div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div>
+            <span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span>
+            <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
+            <div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div>
+            <div class="space-y-6 text-sm leading-relaxed">
+                <div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div>
+                <div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div>
+            </div>
+            <div class="mt-6 space-y-3">
+                <a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a>
+                <a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a>
+            </div>
+            <div class="h-6"></div>
+            <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button>
+        </div>
+    </div>
 
 </div>
 
@@ -305,6 +336,8 @@
             const detailModal = ref({ show: false, data: {} });
             const walletMode = ref('expense');
             const budgetFilter = ref('All'); 
+            const showBudgetInput = ref(false);
+            const showWishlistInput = ref(false);
             const payers = ['TszLok', 'TszTung'];
             const newItem = ref({ name: '', price: '', payer: 'TszLok' });
             const newWishItem = ref({ name: '', price: '', image: null });
@@ -312,7 +345,7 @@
             const wishlist = ref([]);
             const currencyCalc = ref({ jpy: '', rate: 0.052 });
 
-            // ... (Weather and Itinerary Data same as before) ...
+            // ... (Data omitted for brevity, logic maintained) ...
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -335,7 +368,7 @@
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
                     { time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達", highlights: ["綠茶"], strategy: "出關後跟著「名鐵電車」指標走。\n去自動售票機或櫃檯購票。\n買一瓶綠茶 (伊右衛門)。" },
                     { time: "15:30", name: "前往市區", type: "transport", typeLabel: "移動", desc: "名鐵→名古屋站→櫻通線→久屋大通。", highlights: ["櫻通線"], strategy: "抵達名古屋站後，不要出站到地面，直接找「櫻通線 (紅線)」地鐵指標。\n往「德重」方向，下車站：久屋大通。" },
-                    { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B 出口。", bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810", highlights: ["大浴場"], strategy: "走 4B 或 1A 出口（有電扶梯）。\nC/I 後先去大浴場洗澡或在房間休息。\n飯店對面有 7-11。" },
+                    { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B 出口。", bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810&token=XF5C1EA228E5100852402D0049339DF1962AD9B0C92EE50378311047DCFF0DBE&source=1&tripsignature=AAEAAQAHb3JkZXJpZPCgrtqAPnfjMBlMTZS7pUwyyMtXS1n0jzhz3GZ7Y-Md-tripsign&allianceid=&ouid=&sid=&locale=zh-HK", highlights: ["大浴場"], strategy: "走 4B 或 1A 出口（有電扶梯）。\nC/I 後先去大浴場洗澡或在房間休息。\n飯店對面有 7-11。" },
                     { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "尼泊爾咖哩。起司烤餅份量巨大。", highlights: ["Cheese Naan"], strategy: "這是尼泊爾人開的店。\n必點：Cheese Naan (起司烤餅)、Butter Chicken Curry、Mango Lassi。\n兩人點一份烤餅分食即可。" },
                     { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水之宇宙船。", highlights: ["電視塔倒影"], strategy: "搭電梯上頂層玻璃地面。\n走到水池正中央，拍攝電視塔倒影。" },
                     { time: "21:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "7-11 買宵夜。", highlights: ["焦糖冰淇淋"], strategy: "買宵夜和明天的水。\nOhayo 焦糖烤布蕾冰淇淋 (敲碎表面焦糖吃)。" }
@@ -360,7 +393,7 @@
                 ]},
                 { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [
                     { time: "09:00", name: "JR Hida 特急", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["指定席"], strategy: "劃位時指名 'Luggage Seat' (最後一排)。\n火車美食：千壽炸蝦飯糰、松浦商店飛驒牛便當。" },
-                    { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" },
+                    { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445&locale=zh-HK&operate=OrderDetail&token=XB4CE8B65E4C1A9B51F4AB74B9B804819FE7D64930B951A2DB518044478D50D7&sign=AAEAAQAHb3JkZXJpZOyudZQ4DEJes1FdTePw_JT10SQJmS9FYEtZeLDRenkH-tripsign&requestid=10f6a615-a991-4765-86e8-fa746cf77a6c&source=1&allianceid=&ouid=&sid=", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" },
                     { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", highlights: ["飛驒牛壽司"], strategy: "邊走邊吃。\n必吃：飛驒牛握壽司 (坂口屋)、飛驒牛包子 (喜八郎)。\n去船坂酒造投幣試喝清酒。" },
                     { time: "15:00", name: "Check-in", type: "stay", typeLabel: "休息", desc: "換上作務衣。", highlights: ["頂樓風景"], strategy: "1. 在大廳 Pillow Bar 搶枕頭。\n2. 換上作務衣 (Samue)。\n3. 去頂樓看風景。" },
                     { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", highlights: ["A5飛驒牛"], strategy: "務必預約。若無預約，16:30 去排隊。\n必點：味藏盛拼盤 (Ajikura Mori)。\nA5 和牛油脂多，沾芥末或鹽最好吃。" },
@@ -392,13 +425,13 @@
                 ]}
             ]);
 
-            // COUNTDOWN: HKO TIME (UTC+8)
             const tripStart = new Date(2026, 1, 25, 9, 0, 0); 
+            const countdownStart = new Date(2026, 1, 3, 9, 0, 0); 
             
             const getHKTime = () => {
                 const now = new Date();
                 const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-                return new Date(utc + (3600000 * 8)); // UTC+8
+                return new Date(utc + (3600000 * 8)); 
             };
 
             const now = ref(getHKTime());
@@ -420,16 +453,17 @@
             });
             
             const tripProgress = computed(() => {
-                const totalDuration = tripStart - new Date(2026, 1, 3, 9, 0, 0); 
-                const timePassed = now.value - new Date(2026, 1, 3, 9, 0, 0);
+                const totalDuration = tripStart - countdownStart; 
+                const timePassed = now.value - countdownStart;
                 const percentage = (timePassed / totalDuration) * 100;
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
-            // IMAGE COMPRESSION (Strict 5MB limit)
             const compressImage = (file, callback) => {
-                if(file.size > 5000000) {
-                    alert('Image too large (>5MB). Please pick a smaller one.');
+                if(file.size < 500000) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => callback(e.target.result);
+                    reader.readAsDataURL(file);
                     return;
                 }
                 const reader = new FileReader();
@@ -438,19 +472,24 @@
                     const img = new Image();
                     img.src = event.target.result;
                     img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 600; 
-                        const scaleSize = MAX_WIDTH / img.width;
-                        if(scaleSize < 1) {
-                            canvas.width = MAX_WIDTH;
-                            canvas.height = img.height * scaleSize;
-                        } else {
-                            canvas.width = img.width;
-                            canvas.height = img.height;
+                        try {
+                            const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 600; 
+                            const scaleSize = MAX_WIDTH / img.width;
+                            if(scaleSize < 1) {
+                                canvas.width = MAX_WIDTH;
+                                canvas.height = img.height * scaleSize;
+                            } else {
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                            }
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                            callback(canvas.toDataURL('image/jpeg', 0.5)); 
+                        } catch (e) {
+                            alert("Compression failed, using raw image.");
+                            callback(event.target.result);
                         }
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        callback(canvas.toDataURL('image/jpeg', 0.5)); 
                     }
                 }
             };
@@ -466,30 +505,20 @@
 
             onMounted(() => { 
                 try {
-                    const b = localStorage.getItem('jp_v59_b'); if(b) budgetList.value = JSON.parse(b); 
-                    const w = localStorage.getItem('jp_v59_w'); if(w) wishlist.value = JSON.parse(w); 
-                    const p = localStorage.getItem('jp_v59_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v58_b'); if(b) budgetList.value = JSON.parse(b); 
+                    const w = localStorage.getItem('jp_v58_w'); if(w) wishlist.value = JSON.parse(w); 
+                    const p = localStorage.getItem('jp_v58_p'); if(p) packingList.value = JSON.parse(p);
                 } catch(e) { console.error("Storage error", e); }
             });
             
-            // Watchers with error handling for quota
-            watch(budgetList, v => { try { localStorage.setItem('jp_v59_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
-            watch(wishlist, v => { try { localStorage.setItem('jp_v59_w', JSON.stringify(v)); } catch(e) { alert("Storage full! Image too big."); } }, {deep:true});
-            watch(packingList, v => { try { localStorage.setItem('jp_v59_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
+            watch(budgetList, v => { try { localStorage.setItem('jp_v58_b', JSON.stringify(v)); } catch(e) { alert("Storage full!"); } }, {deep:true});
+            watch(wishlist, v => { try { localStorage.setItem('jp_v58_w', JSON.stringify(v)); } catch(e) { alert("Storage full! Image too big."); } }, {deep:true});
+            watch(packingList, v => { try { localStorage.setItem('jp_v58_p', JSON.stringify(v)); } catch(e) { console.error(e); } }, {deep:true});
 
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
             const openMap = (n) => window.open(`https://www.google.com/maps/search/?api=1&query=${n} Japan`, '_blank');
-            
-            const addItem = () => { 
-                if(newItem.value.name&&newItem.value.price){ 
-                    budgetList.value.unshift({...newItem.value}); 
-                    // Go back to main wallet view
-                    currentView.value = 'wallet';
-                    newItem.value={name:'',price:'',payer:'TszLok'}; 
-                }
-            };
-            
+            const addItem = () => { if(newItem.value.name&&newItem.value.price){ budgetList.value.unshift({...newItem.value}); showBudgetInput.value=false; newItem.value={name:'',price:'',payer:'TszLok'}; }};
             const deleteBudget = (item) => { const idx = budgetList.value.indexOf(item); if(idx>-1) budgetList.value.splice(idx,1); };
             const filteredBudgetList = computed(() => budgetFilter.value === 'All' ? budgetList.value : budgetList.value.filter(i => i.payer === budgetFilter.value));
             const filteredTotal = computed(() => filteredBudgetList.value.reduce((s,i)=>s+i.price,0));
@@ -499,8 +528,7 @@
                     try {
                         wishlist.value.unshift({...newWishItem.value}); 
                         newWishItem.value = { name: '', price: '', image: null }; 
-                        // Go back to main wallet view
-                        currentView.value = 'wallet';
+                        showWishlistInput.value = false; 
                     } catch(e) {
                         alert("Storage full! Try removing some items.");
                     }
