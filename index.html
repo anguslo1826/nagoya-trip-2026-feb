@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v59.5 (Final Fix)</title>
+    <title>梓樂Nagoya v60.0 (Ultimate Fix)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,6 +28,9 @@
         .calc-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.95); }
         .ticket-stub { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 70%, 5% 65%, 0% 60%, 0% 0%); cursor: pointer; transition: transform 0.1s; }
         .ticket-stub:active { transform: scale(0.98); }
+        .method-online { background: #e6f4ea; color: #1e4620; border-left: 4px solid #34a853; }
+        .method-onsite { background: #fef7e0; color: #5f370e; border-left: 4px solid #fbbc04; }
+        .method-mobile { background: #f1f3f4; color: #3c4043; border-left: 4px solid #9aa0a6; }
         .sync-status { position: fixed; top: 10px; right: 10px; z-index: 9999; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 20px; background: rgba(0,0,0,0.5); color: white; display: flex; items-center; gap: 5px; }
         #app-error { display: none; padding: 20px; color: white; text-align: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #70808f; z-index: 999999; }
         [v-cloak] { display: none !important; }
@@ -110,9 +113,9 @@
                 <div class="glass p-0 overflow-hidden relative border-l-4 border-[#726251]"><div class="bg-[#726251]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10"><span class="text-xs font-bold uppercase tracking-widest text-[#726251]">Inbound</span><span class="text-xs font-bold text-[#4a4238]">3/3 (Tue)</span></div><div class="p-4 flex justify-between items-center"><div class="text-center"><div class="text-2xl font-black font-mono">NGO</div></div><div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#726251] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO685</div></div><div class="text-center"><div class="text-2xl font-black font-mono">HKG</div></div></div></div>
             </div>
             
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]" :class="getMethodClass('online')"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]" :class="getMethodClass('onsite')"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]" :class="getMethodClass('mobile')"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
 
             <div class="glass p-5 border-t-4 border-red-400 mb-20"><h3 class="font-bold text-sm mb-3 flex items-center"><i class="fas fa-clipboard-check mr-2"></i>最終確認清單</h3><div class="space-y-2"><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">實體信用卡 (Day 4 領票必備)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">JR 認證碼 (PIN: <span class="font-black text-red-600">1226</span>)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">現金 ¥15,000 (Day 6 買票)</span></label></div></div>
         </div>
@@ -168,7 +171,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-    // *** CONFIG FROM YOUR SCREENSHOT ***
+    // FIREBASE CONFIG (Your correct keys)
     const firebaseConfig = {
         apiKey: "AIzaSyCDOiAGPDY7Jd7ysg1fapFnCdidwGE66q8",
         authDomain: "nagoya-2026-361a0.firebaseapp.com",
@@ -179,7 +182,7 @@
         measurementId: "G-Z0NV8048TJ"
     };
 
-    // Error Catcher
+    // Error Catcher (Prevents Gray Screen)
     window.onerror = function(msg, url, line) {
         document.getElementById('app-error').style.display = 'block';
         document.getElementById('error-msg').innerText = msg;
@@ -208,6 +211,8 @@
             const payers = ['TszLok', 'TszTung'];
             const newItem = ref({ name: '', price: '', payer: 'TszLok' });
             const newWishItem = ref({ name: '', price: '', image: null });
+            
+            // Data
             const budgetList = ref([]);
             const wishlist = ref([]);
             const packingList = ref({
@@ -220,23 +225,30 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v59_final"; 
 
-            // --- FUNCTIONS (RESTORED) ---
+            // --- FUNCTIONS RESTORED (FIXING GRAY SCREEN) ---
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
+            const getMethodClass = (m) => ({ 'method-online': m==='online', 'method-onsite': m==='onsite', 'method-mobile': m==='mobile' }[m]);
+            const getMethodBadge = (m) => ({ 'bg-[#e6f4ea] text-[#1e4620]': m==='online', 'bg-[#fef7e0] text-[#5f370e]': m==='onsite', 'bg-[#f1f3f4] text-[#3c4043]': m==='mobile' }[m]);
+            const getMethodLabel = (m) => ({ online:'線上預約', onsite:'現場購買', mobile:'數位支付' }[m]);
 
             // --- SYNC ---
-            onSnapshot(doc(db, "trips", tripDocId), (doc) => {
-                syncStatus.value = "Live"; syncColor.value = "bg-green-400";
-                if (doc.exists()) {
-                    const data = doc.data();
-                    if(data.budgetList) budgetList.value = data.budgetList;
-                    if(data.wishlist) wishlist.value = data.wishlist;
-                    if(data.packingList) packingList.value = data.packingList;
+            const tripDocId = "nagoya_v60_final"; 
+            
+            onSnapshot(doc(db, "trips", tripDocId), 
+                (doc) => {
+                    syncStatus.value = "Live"; syncColor.value = "bg-green-400";
+                    if (doc.exists()) {
+                        const data = doc.data();
+                        if(data.budgetList) budgetList.value = data.budgetList;
+                        if(data.wishlist) wishlist.value = data.wishlist;
+                        if(data.packingList) packingList.value = data.packingList;
+                    }
+                },
+                (error) => {
+                    console.error(error); syncStatus.value = "Offline"; syncColor.value = "bg-red-500";
                 }
-            }, (error) => {
-                console.error(error); syncStatus.value = "Offline"; syncColor.value = "bg-red-500";
-            });
+            );
 
             const saveData = async () => {
                 syncStatus.value = "Saving..."; syncColor.value = "bg-blue-400 animate-pulse";
@@ -283,8 +295,6 @@
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
             const openTicketDetail = (t) => { detailModal.value = { show:true, data: { ...t, isTicket: true } }; };
             const getTicketsByMethod = (m) => ticketList.value.filter(t => t.method === m);
-            const getMethodBadge = (m) => ({ 'bg-[#e6f4ea] text-[#1e4620]': m==='online', 'bg-[#fef7e0] text-[#5f370e]': m==='onsite', 'bg-[#f1f3f4] text-[#3c4043]': m==='mobile' }[m]);
-            const getMethodLabel = (m) => ({ online:'線上預約', onsite:'現場購買', mobile:'數位支付' }[m]);
             const openMap = (n) => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(n + ' Japan'), '_blank');
             const isModalOpen = computed(() => showBudgetInput.value || showWishlistInput.value || detailModal.value.show);
             const now = ref(new Date());
@@ -342,7 +352,7 @@
             return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openTicketDetail, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
                 // Calc exports
                 currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
-                // Resv
+                // Resv & Utils (RESTORED HERE)
                 ticketList, openTicketDetail, getMethodClass, getMethodBadge, getMethodLabel, getTicketsByMethod,
                 // Cloud Status
                 syncStatus, syncColor, saveData, syncPacking
