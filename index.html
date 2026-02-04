@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v58.4</title>
+    <title>梓樂Nagoya Trip v58.5</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -84,16 +84,21 @@
 
         /* Ticket Styles */
         .ticket-stub {
-            background: #f3f0eb;
-            color: #4a4238;
             position: relative;
             clip-path: polygon(
                 0% 0%, 100% 0%, 100% 100%, 0% 100%, 
                 0% 70%, 5% 65%, 0% 60%, /* Left notch */
                 0% 0%
             );
-            border-left: 4px solid #726251;
+            cursor: pointer;
+            transition: transform 0.1s;
         }
+        .ticket-stub:active { transform: scale(0.98); }
+
+        /* Method Colors */
+        .method-online { background: #e6f4ea; color: #1e4620; border-left: 4px solid #34a853; } /* Green */
+        .method-onsite { background: #fef7e0; color: #5f370e; border-left: 4px solid #fbbc04; } /* Yellow */
+        .method-mobile { background: #f1f3f4; color: #3c4043; border-left: 4px solid #9aa0a6; } /* Grey */
 
         [v-cloak] { display: none !important; }
     </style>
@@ -262,36 +267,50 @@
                 </div>
             </div>
 
-            <div class="glass relative overflow-hidden bg-[#f3f0eb] border-dashed border-2 border-[#726251]/30">
-                <div class="absolute -left-3 top-1/2 w-6 h-6 rounded-full bg-[#70808f]"></div>
-                <div class="absolute -right-3 top-1/2 w-6 h-6 rounded-full bg-[#70808f]"></div>
-                <div class="p-5 flex justify-between items-center">
-                    <div>
-                        <div class="text-[10px] font-bold opacity-60 uppercase mb-1">Day 2 • 2/26 (Thu)</div>
-                        <div class="text-xl font-black font-mincho text-[#4a4238] mb-1">吉卜力大倉庫</div>
-                        <div class="text-xs font-bold text-[#726251]"><i class="fas fa-ticket-alt mr-1"></i>Admission Ticket</div>
+            <div class="space-y-3">
+                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-1 text-white">點擊查看購票教學</h3>
+                <div class="grid gap-2">
+                    <div class="flex gap-2 mb-1">
+                        <span class="text-[10px] font-bold px-2 py-1 bg-[#e6f4ea] text-[#1e4620] rounded-full border border-[#34a853]">🟢 線上</span>
+                        <span class="text-[10px] font-bold px-2 py-1 bg-[#fef7e0] text-[#5f370e] rounded-full border border-[#fbbc04]">🟡 現場</span>
+                        <span class="text-[10px] font-bold px-2 py-1 bg-[#f1f3f4] text-[#3c4043] rounded-full border border-[#9aa0a6]">⚪ 數位</span>
                     </div>
-                    <div class="text-center opacity-80">
-                        <i class="fas fa-qrcode text-4xl text-[#4a4238]"></i>
+                    
+                    <div v-for="(item, i) in ticketList" :key="i" 
+                         @click="openTicketDetail(item)"
+                         class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white"
+                         :class="getMethodClass(item.method)">
+                        <div class="flex flex-col">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span>
+                                <span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span>
+                            </div>
+                            <div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div>
+                            <div class="text-[10px] opacity-60 mt-0.5">{{ item.route }}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-mono font-black text-lg opacity-80">{{ item.price }}</div>
+                            <i class="fas fa-chevron-right text-xs opacity-30"></i>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-3 pb-20">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-1 text-white">交通票券 Transport</h3>
-                <div v-for="(item, i) in transportPlan" :key="i" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md">
-                    <div class="flex flex-col">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="bg-[#4a4238] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{{ item.date }}</span>
-                            <span class="text-[10px] font-bold opacity-50 uppercase">{{ item.day }}</span>
-                        </div>
-                        <div class="font-bold text-sm text-[#4a4238] leading-tight">{{ item.route }}</div>
-                        <div class="text-[10px] text-[#726251] mt-1 font-bold"><i class="fas fa-map-marker-alt mr-1"></i>{{ item.note }}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="font-mono font-black text-lg text-[#4a4238]">{{ item.price }}</div>
-                        <i class="fas opacity-20 text-[#4a4238]" :class="item.icon"></i>
-                    </div>
+            <div class="glass p-5 border-t-4 border-red-400 mb-20">
+                <h3 class="font-bold text-sm mb-3 flex items-center"><i class="fas fa-clipboard-check mr-2"></i>最終確認清單</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[#726251]">
+                        <span class="text-xs font-bold">實體信用卡 (Day 4 領票必備)</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[#726251]">
+                        <span class="text-xs font-bold">JR 認證碼 (4位數 PIN)</span>
+                    </label>
+                    <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg cursor-pointer">
+                        <input type="checkbox" class="w-4 h-4 accent-[#726251]">
+                        <span class="text-xs font-bold">現金 ¥15,000 (Day 6 買票)</span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -494,19 +513,46 @@
     <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
         <div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop>
             <div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div>
-            <span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span>
-            <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
-            <div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div>
-            <div class="space-y-6 text-sm leading-relaxed">
-                <div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div>
-                <div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div>
+            
+            <div v-if="detailModal.data.isTicket">
+                <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span>
+                <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2>
+                
+                <div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm">
+                    <div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">購票地點 / 網址</div>
+                    <div class="font-bold">{{ detailModal.data.location }}</div>
+                </div>
+
+                <div class="space-y-4">
+                    <div v-if="detailModal.data.guide.steps">
+                         <h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4>
+                         <ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90">
+                             <li v-for="step in detailModal.data.guide.steps">{{ step }}</li>
+                         </ul>
+                    </div>
+                    
+                    <div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}
+                    </div>
+                </div>
             </div>
-            <div class="mt-6 space-y-3">
-                <a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a>
-                <a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a>
+
+            <div v-else>
+                <span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span>
+                <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
+                <div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div>
+                <div class="space-y-6 text-sm leading-relaxed">
+                    <div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div>
+                    <div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div>
+                </div>
+                <div class="mt-6 space-y-3">
+                    <a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a>
+                    <a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a>
+                </div>
+                <div class="h-6"></div>
+                <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button>
             </div>
-            <div class="h-6"></div>
-            <button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button>
+
         </div>
     </div>
 
@@ -556,15 +602,50 @@
             });
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
 
-            // NEW TRANSPORT DATA
-            const transportPlan = ref([
-                { date: "2/25", day: "Day 1", route: "機場 → 市區", price: "¥1,430", note: "機場名鐵櫃檯", icon: "fa-train" },
-                { date: "2/26", day: "Day 2", route: "吉卜力往返", price: "約 ¥1,340", note: "地鐵+Linimo (IC卡)", icon: "fa-subway" },
-                { date: "2/27", day: "Day 3", route: "市區觀光", price: "¥760", note: "24小時券 (販賣機)", icon: "fa-ticket-alt" },
-                { date: "2/28", day: "Day 4", route: "名古屋 → 高山", price: "¥6,140", note: "JR Hida 5號 (名站)", icon: "fa-train" },
-                { date: "3/1", day: "Day 5", route: "高山 ↔ 白川鄉", price: "¥5,200", note: "濃飛巴士 (電子票)", icon: "fa-bus" },
-                { date: "3/2", day: "Day 6", route: "奧飛驒套票", price: "¥6,300", note: "高山巴士總站", icon: "fa-mountain" },
-                { date: "3/3", day: "Day 7", route: "高山 → 機場", price: "¥7,570", note: "Hida + μ-Sky", icon: "fa-plane" }
+            // ENRICHED TICKET DATA (Method: online, onsite, mobile)
+            const ticketList = ref([
+                { 
+                    date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站 售票機",
+                    guide: {
+                        steps: ["去售票機選 'Nagoya' 或 'Central Japan Int'l Airport'。", "除了基本運費 (¥980)，務必加購 'μ-ticket' (¥450) 才有指定座位。", "付款：現金或信用卡。"],
+                        reminder: "一定要拿兩張票（乘車券+座位券）才能進站！"
+                    }
+                },
+                { 
+                    date: "2/26", day: "Day 2", title: "吉卜力交通 (Linimo)", route: "市區 ↔ 吉卜力公園", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet",
+                    guide: {
+                        steps: ["iPhone 打開 Apple Wallet。", "新增交通卡 (Suica 或 ICOCA)。", "用 Apple Pay 加值約 ¥3,000。", "進出站時手機直接感應閘門。"],
+                        reminder: "確認手機有電！"
+                    }
+                },
+                { 
+                    date: "2/27", day: "Day 3", title: "地鐵 24 小時券", route: "市區觀光", price: "¥760", method: "onsite", location: "地鐵站 黃色售票機",
+                    guide: {
+                        steps: ["找黃色售票機。", "點選螢幕 'お得なチケット (Value Tickets)'。", "平日選 '24-hour Pass' (¥760)。", "週末選 'Donichi Eco Ticket' (¥620)。"],
+                        reminder: "第一次進站會印上時間，可使用至隔天同時間。"
+                    }
+                },
+                { 
+                    date: "2/28 & 3/3", day: "Day 4, 7", title: "JR 特急 Hida 號", route: "名古屋 ↔ 高山", price: "¥6,140", method: "online", location: "JR 西日本預約官網",
+                    guide: {
+                        steps: ["進入官網，搜尋 'Nagoya' 到 'Takayama'。", "鎖定 09:39 發車的 Hida 5 號。", "選位：去程 D 側，回程 A 側。", "付款：必須使用『實體信用卡』。"],
+                        reminder: "2/28 當天請帶這張『實體信用卡』去綠色機器領票！不可用 Apple Pay。"
+                    }
+                },
+                { 
+                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,200", method: "online", location: "Japan Bus Online",
+                    guide: {
+                        steps: ["進入網站 Japan Bus Online。", "預約 08:50 前的班次。", "線上刷卡付款。", "收到 E-ticket Email。"],
+                        reminder: "不用領實體票，上車出示手機 QR Code 即可。"
+                    }
+                },
+                { 
+                    date: "3/2", day: "Day 6", title: "奧飛驒 2 日套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心",
+                    guide: {
+                        steps: ["去 JR 高山站旁的巴士中心櫃檯。", "說 'Okuhida Value Ticket, 2 Days'。", "建議準備現金付款。"],
+                        reminder: "這本票包含來回巴士和新穗高纜車券，弄丟不補發。"
+                    }
+                }
             ]);
 
             const itinerary = ref([
@@ -720,7 +801,11 @@
 
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
-            
+            const openTicketDetail = (t) => { detailModal.value = { show:true, data: { ...t, isTicket: true } }; };
+            const getMethodClass = (m) => ({ 'method-online': m==='online', 'method-onsite': m==='onsite', 'method-mobile': m==='mobile' }[m]);
+            const getMethodBadge = (m) => ({ 'bg-[#e6f4ea] text-[#1e4620] border-[#34a853]': m==='online', 'bg-[#fef7e0] text-[#5f370e] border-[#fbbc04]': m==='onsite', 'bg-[#f1f3f4] text-[#3c4043] border-[#9aa0a6]': m==='mobile' }[m]);
+            const getMethodLabel = (m) => ({ online:'線上預約', onsite:'現場購買', mobile:'數位支付' }[m]);
+
             // FIXED GOOGLE MAPS LINK
             const openMap = (n) => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(n + ' Japan'), '_blank');
             
@@ -786,10 +871,11 @@
                 // Calc exports
                 currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
                 // Resv
-                transportPlan
+                ticketList, openTicketDetail, getMethodClass, getMethodBadge, getMethodLabel
             };
         }
     }).mount('#app');
 </script>
 </body>
+</html>
 </html>
