@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v58.5</title>
+    <title>梓樂Nagoya Trip v58.6</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -267,30 +267,66 @@
                 </div>
             </div>
 
-            <div class="space-y-3">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-1 text-white">點擊查看購票教學</h3>
-                <div class="grid gap-2">
-                    <div class="flex gap-2 mb-1">
-                        <span class="text-[10px] font-bold px-2 py-1 bg-[#e6f4ea] text-[#1e4620] rounded-full border border-[#34a853]">🟢 線上</span>
-                        <span class="text-[10px] font-bold px-2 py-1 bg-[#fef7e0] text-[#5f370e] rounded-full border border-[#fbbc04]">🟡 現場</span>
-                        <span class="text-[10px] font-bold px-2 py-1 bg-[#f1f3f4] text-[#3c4043] rounded-full border border-[#9aa0a6]">⚪ 數位</span>
+            <div class="space-y-6">
+                <div>
+                    <div class="flex items-center gap-2 mb-2 text-white/80">
+                        <span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3>
                     </div>
-                    
-                    <div v-for="(item, i) in ticketList" :key="i" 
-                         @click="openTicketDetail(item)"
-                         class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white"
-                         :class="getMethodClass(item.method)">
-                        <div class="flex flex-col">
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span>
-                                <span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span>
+                    <div class="space-y-2">
+                        <div v-for="(item, i) in getTicketsByMethod('online')" :key="i" 
+                             @click="openTicketDetail(item)"
+                             class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]">
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span>
+                                    <span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span>
+                                </div>
+                                <div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div>
                             </div>
-                            <div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div>
-                            <div class="text-[10px] opacity-60 mt-0.5">{{ item.route }}</div>
+                            <div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div>
                         </div>
-                        <div class="text-right">
-                            <div class="font-mono font-black text-lg opacity-80">{{ item.price }}</div>
-                            <i class="fas fa-chevron-right text-xs opacity-30"></i>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-2 mb-2 text-white/80">
+                        <span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" 
+                             @click="openTicketDetail(item)"
+                             class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]">
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span>
+                                    <span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span>
+                                </div>
+                                <div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div>
+                            </div>
+                            <div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-2 mb-2 text-white/80">
+                        <span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span>
+                        <h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3>
+                    </div>
+                    <div class="space-y-2">
+                        <div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" 
+                             @click="openTicketDetail(item)"
+                             class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]">
+                            <div class="flex flex-col">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span>
+                                    <span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span>
+                                </div>
+                                <div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div>
+                            </div>
+                            <div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div>
                         </div>
                     </div>
                 </div>
@@ -305,7 +341,7 @@
                     </label>
                     <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg cursor-pointer">
                         <input type="checkbox" class="w-4 h-4 accent-[#726251]">
-                        <span class="text-xs font-bold">JR 認證碼 (4位數 PIN)</span>
+                        <span class="text-xs font-bold">JR 認證碼 (PIN: <span class="font-black text-red-600">1226</span>)</span>
                     </label>
                     <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg cursor-pointer">
                         <input type="checkbox" class="w-4 h-4 accent-[#726251]">
@@ -520,7 +556,13 @@
                 
                 <div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm">
                     <div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">購票地點 / 網址</div>
-                    <div class="font-bold">{{ detailModal.data.location }}</div>
+                    <div class="font-bold mb-3">{{ detailModal.data.location }}</div>
+                    
+                    <a v-if="detailModal.data.method === 'online' && detailModal.data.url" 
+                       :href="detailModal.data.url" target="_blank"
+                       class="block w-full py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform">
+                       <i class="fas fa-external-link-alt mr-2"></i>前往預約網站
+                    </a>
                 </div>
 
                 <div class="space-y-4">
@@ -626,14 +668,14 @@
                     }
                 },
                 { 
-                    date: "2/28 & 3/3", day: "Day 4, 7", title: "JR 特急 Hida 號", route: "名古屋 ↔ 高山", price: "¥6,140", method: "online", location: "JR 西日本預約官網",
+                    date: "2/28 & 3/3", day: "Day 4, 7", title: "JR 特急 Hida 號", route: "名古屋 ↔ 高山", price: "¥6,140", method: "online", location: "JR 西日本預約官網", url: "https://www.westjr.co.jp/global/tc/ticket/",
                     guide: {
                         steps: ["進入官網，搜尋 'Nagoya' 到 'Takayama'。", "鎖定 09:39 發車的 Hida 5 號。", "選位：去程 D 側，回程 A 側。", "付款：必須使用『實體信用卡』。"],
                         reminder: "2/28 當天請帶這張『實體信用卡』去綠色機器領票！不可用 Apple Pay。"
                     }
                 },
                 { 
-                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,200", method: "online", location: "Japan Bus Online",
+                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,200", method: "online", location: "Japan Bus Online", url: "https://japanbusonline.com/zh-tw",
                     guide: {
                         steps: ["進入網站 Japan Bus Online。", "預約 08:50 前的班次。", "線上刷卡付款。", "收到 E-ticket Email。"],
                         reminder: "不用領實體票，上車出示手機 QR Code 即可。"
@@ -647,6 +689,8 @@
                     }
                 }
             ]);
+
+            const getTicketsByMethod = (m) => ticketList.value.filter(t => t.method === m);
 
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
@@ -871,11 +915,10 @@
                 // Calc exports
                 currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
                 // Resv
-                ticketList, openTicketDetail, getMethodClass, getMethodBadge, getMethodLabel
+                ticketList, openTicketDetail, getMethodClass, getMethodBadge, getMethodLabel, getTicketsByMethod
             };
         }
     }).mount('#app');
 </script>
 </body>
-</html>
 </html>
