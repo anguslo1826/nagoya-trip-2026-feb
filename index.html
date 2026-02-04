@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.1</title>
+    <title>梓樂Nagoya v60.0 (Final)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,21 +41,25 @@
         .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
         .safe-bottom { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
         
+        /* FIX: Force Inputs to be interactable */
         input { 
             user-select: text !important; 
             -webkit-user-select: text !important;
             pointer-events: auto !important;
         }
 
+        /* Modal Z-Index Fixes */
         .modal-layer { position: fixed; inset: 0; z-index: 99999; }
         .modal-content { position: relative; z-index: 100000; }
         
+        /* Animation */
         @keyframes slide-up {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
+        /* Calculator Grid */
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .calc-btn {
             background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(74, 66, 56, 0.1);
@@ -66,6 +70,7 @@
         .calc-btn.op { background: rgba(114, 98, 81, 0.2); color: #726251; }
         .calc-btn.eq { background: #726251; color: white; }
 
+        /* Ticket Styles */
         .ticket-stub {
             position: relative;
             clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 70%, 5% 65%, 0% 60%, 0% 0%);
@@ -76,6 +81,7 @@
         .method-onsite { background: #fef7e0; color: #5f370e; border-left: 4px solid #fbbc04; }
         .method-mobile { background: #f1f3f4; color: #3c4043; border-left: 4px solid #9aa0a6; }
 
+        /* Sync Indicator */
         .sync-status { position: fixed; top: 10px; right: 10px; z-index: 9999; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 20px; background: rgba(0,0,0,0.5); color: white; display: flex; items-center; gap: 5px; }
 
         [v-cloak] { display: none !important; }
@@ -281,6 +287,7 @@
         
         <div v-if="currentView === 'info'" class="space-y-6 pt-4 h-full flex flex-col">
             <h2 class="text-2xl font-black font-mincho text-white">匯率計算機</h2>
+            
             <div class="glass p-4 text-center">
                 <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
                 <div class="flex justify-center items-baseline gap-2">
@@ -288,6 +295,7 @@
                     <span class="text-xl font-black font-mono">{{ countdown.hours }}</span><span class="text-xs font-bold">Hrs</span>
                 </div>
             </div>
+
             <div class="glass flex-1 p-5 flex flex-col">
                 <div class="bg-[#f3f0eb] rounded-xl p-4 mb-4 flex-1 flex flex-col justify-end items-end shadow-inner relative overflow-hidden"><div class="text-[#4a4238]/40 font-bold font-mono text-sm mb-1 break-all text-right">{{ calcExpression || '0' }}</div><div class="text-[#4a4238] font-black font-mono text-4xl mb-1 break-all text-right">¥{{ displayValue }}</div><div class="w-full h-[1px] bg-[#4a4238]/10 my-2"></div><div class="text-[#726251] font-bold font-mono text-2xl flex items-center justify-end w-full"><span class="text-xs mr-2 opacity-50">HKD</span> ${{ (parseFloat(displayValue.replace(/,/g,'')) * currencyRate).toFixed(1) }}</div><div class="absolute top-2 left-2 flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity"><span class="text-[9px] font-bold">Rate:</span><input type="number" v-model="currencyRate" class="w-12 bg-transparent border-b border-[#4a4238]/30 text-[10px] font-mono text-right outline-none"></div></div>
                 <div class="calc-grid"><button @click="clearCalc" class="calc-btn op">C</button><button @click="appendCalc('(')" class="calc-btn op">(</button><button @click="appendCalc(')')" class="calc-btn op">)</button><button @click="appendCalc('/')" class="calc-btn op">÷</button><button @click="appendCalc('7')" class="calc-btn">7</button><button @click="appendCalc('8')" class="calc-btn">8</button><button @click="appendCalc('9')" class="calc-btn">9</button><button @click="appendCalc('*')" class="calc-btn op">×</button><button @click="appendCalc('4')" class="calc-btn">4</button><button @click="appendCalc('5')" class="calc-btn">5</button><button @click="appendCalc('6')" class="calc-btn">6</button><button @click="appendCalc('-')" class="calc-btn op">-</button><button @click="appendCalc('1')" class="calc-btn">1</button><button @click="appendCalc('2')" class="calc-btn">2</button><button @click="appendCalc('3')" class="calc-btn">3</button><button @click="appendCalc('+')" class="calc-btn op">+</button><button @click="backspace" class="calc-btn op"><i class="fas fa-backspace text-sm"></i></button><button @click="appendCalc('0')" class="calc-btn">0</button><button @click="appendCalc('.')" class="calc-btn">.</button><button @click="calculate" class="calc-btn eq">=</button></div>
@@ -310,12 +318,6 @@
         <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop>
             <div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Wishlist Item</div>
             <div class="flex-1 overflow-y-auto p-6 pb-40">
-                
-                <div v-if="newWishItem.image" class="mb-4 relative rounded-2xl overflow-hidden shadow-md">
-                    <img :src="newWishItem.image" class="w-full max-h-48 object-cover">
-                    <button @click="newWishItem.image = null" class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"><i class="fas fa-times"></i></button>
-                </div>
-
                 <div class="space-y-6">
                     <div>
                         <label class="block text-xs font-bold opacity-60 mb-2">Item Name</label>
@@ -325,23 +327,12 @@
                         <label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label>
                         <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg">
                     </div>
-                    
                     <div>
-                        <label class="block text-xs font-bold opacity-60 mb-2">Add Image (Choose One)</label>
-                        <div class="flex gap-2">
-                            <label class="flex-1 bg-white p-4 rounded-xl border-2 border-dashed border-[#4a4238]/20 flex flex-col items-center justify-center cursor-pointer hover:bg-[#f3f0eb] transition-colors">
-                                <i class="fas fa-camera text-2xl text-[#726251] mb-1"></i>
-                                <span class="text-[10px] font-bold">Upload File</span>
-                                <input type="file" accept="image/*" @change="handleImageUpload" class="hidden">
-                            </label>
-                            
-                            <div class="flex-[2]">
-                                <input v-model="newWishItem.image" type="text" placeholder="Or paste image link here..." class="w-full h-full bg-white p-4 rounded-xl border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-sm">
-                            </div>
-                        </div>
+                        <label class="block text-xs font-bold opacity-60 mb-2">Image Link (URL)</label>
+                        <input v-model="newWishItem.image" type="text" placeholder="https://..." class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-sm">
+                        <div class="text-[10px] opacity-50 mt-1">Copy and paste image address from web (Cloud safe)</div>
                     </div>
                 </div>
-                
                 <div class="flex gap-3 mt-10">
                     <button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button>
                     <button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Add</button>
@@ -375,6 +366,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getFirestore, doc, onSnapshot, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
+    // *** FIREBASE CONFIGURATION ***
     const firebaseConfig = {
         apiKey: "AIzaSyCDOiAGPDY7Jd7ysg1fapFnCdidwGE66q8",
         authDomain: "nagoya-2026-361a0.firebaseapp.com",
@@ -386,6 +378,7 @@
     };
 
     let db;
+    // Simple check if config is present to avoid crash on copy-paste
     if (firebaseConfig.projectId) {
         const app = initializeApp(firebaseConfig);
         db = getFirestore(app);
@@ -454,6 +447,7 @@
                         }
                     });
                 } else {
+                    // Fallback to local storage if no Firebase config
                     const b = localStorage.getItem('jp_v60_b'); if(b) budgetList.value = JSON.parse(b);
                     const w = localStorage.getItem('jp_v60_w'); if(w) wishlist.value = JSON.parse(w);
                     const p = localStorage.getItem('jp_v60_p'); if(p) packingList.value = JSON.parse(p);
@@ -473,44 +467,6 @@
                     wishlist.value.unshift({...newWishItem.value}); 
                     newWishItem.value = { name: '', price: '', image: null }; 
                     showWishlistInput.value = false; 
-                } 
-            };
-
-            // --- IMAGE COMPRESSION LOGIC ---
-            const compressImage = (file, callback) => {
-                if(file.size > 5000000) { // Limit local upload to 5MB to prevent crash before compression
-                    alert('Image too large (>5MB). Please pick a smaller one.');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 500; // Aggressive resize for Firebase (keep string small)
-                        const scaleSize = MAX_WIDTH / img.width;
-                        if(scaleSize < 1) {
-                            canvas.width = MAX_WIDTH;
-                            canvas.height = img.height * scaleSize;
-                        } else {
-                            canvas.width = img.width;
-                            canvas.height = img.height;
-                        }
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        callback(canvas.toDataURL('image/jpeg', 0.4)); // Low quality for DB storage
-                    }
-                }
-            };
-
-            const handleImageUpload = (event) => { 
-                const file = event.target.files[0]; 
-                if(file) { 
-                    compressImage(file, (result) => {
-                        newWishItem.value.image = result; 
-                    });
                 } 
             };
 
@@ -583,18 +539,22 @@
                 return Math.min(Math.max(percentage, 0), 100);
             });
 
+            // FIXED GOOGLE MAPS LINK
             const openMap = (n) => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(n + ' Japan'), '_blank');
+            
             const addItem = () => { if(newItem.value.name&&newItem.value.price){ budgetList.value.unshift({...newItem.value}); showBudgetInput.value=false; newItem.value={name:'',price:'',payer:'TszLok'}; }};
             const deleteBudget = (item) => { const idx = budgetList.value.indexOf(item); if(idx>-1) budgetList.value.splice(idx,1); };
             const filteredBudgetList = computed(() => budgetFilter.value === 'All' ? budgetList.value : budgetList.value.filter(i => i.payer === budgetFilter.value));
             const filteredTotal = computed(() => filteredBudgetList.value.reduce((s,i)=>s+i.price,0));
             const deleteWishlist = (idx) => wishlist.value.splice(idx, 1);
 
+            // CALCULATOR LOGIC
             const appendCalc = (char) => { calcExpression.value += char; };
             const clearCalc = () => { calcExpression.value = ''; calcResult.value = '0'; };
             const backspace = () => { calcExpression.value = calcExpression.value.slice(0, -1); };
             const calculate = () => {
                 try {
+                    // Safe evaluation for simple math
                     const safeEval = new Function('return ' + calcExpression.value);
                     const res = safeEval();
                     calcResult.value = res.toString();
@@ -605,16 +565,20 @@
             
             const displayValue = computed(() => {
                 if(!calcExpression.value) return '0';
+                // If expression ends with operator, evaluate what we have so far for preview
                 try {
+                    // Check if last char is number
                     if (/[0-9.]$/.test(calcExpression.value)) {
                          const safeEval = new Function('return ' + calcExpression.value);
                          return safeEval().toLocaleString('en-US', {maximumFractionDigits: 2});
                     }
                 } catch(e) {}
+                
                 if(calcResult.value !== '0' && calcResult.value !== 'Error') return parseFloat(calcResult.value).toLocaleString('en-US', {maximumFractionDigits: 2});
                 return calcExpression.value;
             });
 
+            // UPDATED TABS (6 Items)
             const tabs = [ 
                 { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, 
                 { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, 
@@ -624,9 +588,12 @@
                 { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } 
             ];
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
+            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
+                // Calc exports
                 currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
+                // Resv
                 ticketList, openTicketDetail, getMethodClass, getMethodBadge, getMethodLabel, getTicketsByMethod,
+                // Cloud Status
                 syncStatus, syncPacking
             };
         }
