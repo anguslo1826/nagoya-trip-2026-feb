@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v58.2</title>
+    <title>梓樂Nagoya Trip v58.3</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -59,6 +59,29 @@
             to { transform: translateY(0); opacity: 1; }
         }
         .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Calculator Grid */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .calc-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(74, 66, 56, 0.1);
+            border-radius: 12px;
+            height: 50px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #4a4238;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+        }
+        .calc-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.95); }
+        .calc-btn.op { background: rgba(114, 98, 81, 0.2); color: #726251; }
+        .calc-btn.eq { background: #726251; color: white; }
 
         [v-cloak] { display: none !important; }
     </style>
@@ -216,7 +239,7 @@
         </div>
 
         <div v-if="currentView === 'reminders'" class="space-y-6 pt-4">
-            <h2 class="text-2xl font-black font-mincho text-white">省錢攻略 Reminders</h2>
+            <h2 class="text-2xl font-black font-mincho text-white">省錢攻略 Tips</h2>
             
             <div class="glass overflow-hidden relative">
                 <div class="bg-[#70808f] p-3 text-white flex justify-between items-center border-b border-white/20">
@@ -226,14 +249,32 @@
                 <div class="p-5">
                     <h3 class="font-bold text-lg mb-2 text-[#4a4238]">地鐵 24 小時券</h3>
                     <ul class="text-sm space-y-3 opacity-90 leading-relaxed list-disc pl-4 text-[#4a4238]">
-                        <li><b class="text-[#726251]">回本極快：</b>Day 3 行程 (飯店→水族館→大須→名站→飯店) 總車資約 ¥1,000+，使用此券<span class="font-bold border-b border-[#726251]">現省 ¥300</span>。</li>
-                        <li><b class="text-[#726251]">彈性極高：</b>採「24小時制」。若 Day 3 早上 10:00 第一次刷卡，可用到 Day 4 早上 09:59 (剛好免費搭去名站坐火車)。</li>
-                        <li><b class="text-[#726251]">週末特惠：</b>若是週末或每月8號，購買「週末環保券」更便宜 (¥620)。</li>
+                        <li><b class="text-[#726251]">回本極快：</b>行程總車資約 ¥1,000+，使用此券<span class="font-bold border-b border-[#726251]">現省 ¥300</span>。</li>
+                        <li><b class="text-[#726251]">彈性極高：</b>採「24小時制」。若 Day 3 早上 10:00 第一次刷卡，可用到 Day 4 早上 09:59。</li>
                     </ul>
                 </div>
             </div>
 
             <div class="glass overflow-hidden relative">
+                <div class="bg-[#91867f] p-3 text-white flex justify-between items-center border-b border-white/20">
+                    <span class="font-bold text-sm"><i class="fas fa-snowflake mr-2"></i>Day 6 備案</span>
+                    <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">Weather Check</span>
+                </div>
+                <div class="p-5">
+                    <h3 class="font-bold text-lg mb-2 text-[#4a4238]">新穗高纜車天氣備案</h3>
+                    <div class="bg-[#726251]/10 p-3 rounded-lg mb-3 text-sm font-bold border-l-4 border-[#726251] text-[#4a4238]">
+                        出發前務必看 Live Camera！
+                    </div>
+                    <p class="text-sm opacity-90 leading-relaxed mb-2 text-[#4a4238]">
+                        如果山頂<b class="text-red-500">大霧或能見度低</b>，<span class="font-bold underline">不要買 ¥6,300 的套票</span>。
+                    </p>
+                    <p class="text-sm opacity-90 leading-relaxed text-[#4a4238]">
+                        <i class="fas fa-arrow-right mr-1 text-[#726251]"></i> 替代方案：改在平湯溫泉區泡湯（單純泡湯約 ¥600），省下昂貴纜車費。
+                    </p>
+                </div>
+            </div>
+
+             <div class="glass overflow-hidden relative">
                 <div class="bg-[#726251] p-3 text-white flex justify-between items-center border-b border-white/20">
                     <span class="font-bold text-sm"><i class="fas fa-ticket-alt mr-2"></i>Day 6 套票</span>
                     <span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">Save ¥1,100</span>
@@ -244,39 +285,60 @@
                         <span class="opacity-50 line-through">分開買 ¥7,400</span>
                         <span class="text-[#726251] text-sm">套票 ¥6,300</span>
                     </div>
-                    <p class="text-sm opacity-90 leading-relaxed mb-2 font-bold text-[#4a4238]">前往新穗高雪山必買！包含：</p>
-                    <ul class="text-sm space-y-1 opacity-90 list-disc pl-4 mb-2 text-[#4a4238]">
-                        <li>高山 ↔ 新穗高 巴士往返</li>
-                        <li>新穗高纜車 往返券</li>
-                        <li>平湯溫泉「平湯之森」入浴折扣</li>
-                    </ul>
-                    <p class="text-[10px] opacity-60 mt-3 border-t border-[#4a4238]/10 pt-2 text-[#4a4238]">*在濃飛巴士中心購買 Okuhida Value Ticket。</p>
+                    <p class="text-sm opacity-90 leading-relaxed mb-2 font-bold text-[#4a4238]">天氣好時必買！包含巴士+纜車。</p>
                 </div>
             </div>
         </div>
 
-        <div v-if="currentView === 'info'" class="space-y-6 pt-4">
-            <h2 class="text-2xl font-black font-mincho text-white">資訊 Info</h2>
+        <div v-if="currentView === 'info'" class="space-y-6 pt-4 h-full flex flex-col">
+            <h2 class="text-2xl font-black font-mincho text-white">匯率計算機</h2>
             
-            <div class="glass p-5 text-center">
-                <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
-                <div class="text-3xl font-black font-mono">{{ countdown.days }} Days</div>
-                <div class="text-sm font-bold opacity-60">{{ countdown.hours }} hrs {{ countdown.minutes }} mins</div>
-            </div>
-
-            <div class="glass p-5">
-                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-3"><i class="fas fa-calculator mr-2"></i>Currency Calc</h3>
-                <div class="flex items-center gap-4">
-                    <div class="flex-1 bg-white/50 rounded-xl p-3 border border-[#4a4238]/10">
-                        <label class="text-[9px] font-bold opacity-50 block mb-1">JPY (¥)</label>
-                        <input type="number" v-model="currencyCalc.jpy" class="w-full font-mono font-bold text-xl bg-transparent outline-none text-[#4a4238]" placeholder="0">
+            <div class="glass flex-1 p-5 flex flex-col">
+                <div class="bg-[#f3f0eb] rounded-xl p-4 mb-4 flex-1 flex flex-col justify-end items-end shadow-inner relative overflow-hidden">
+                    <div class="text-[#4a4238]/40 font-bold font-mono text-sm mb-1 break-all text-right">{{ calcExpression || '0' }}</div>
+                    <div class="text-[#4a4238] font-black font-mono text-4xl mb-1 break-all text-right">¥{{ displayValue }}</div>
+                    <div class="w-full h-[1px] bg-[#4a4238]/10 my-2"></div>
+                    <div class="text-[#726251] font-bold font-mono text-2xl flex items-center justify-end w-full">
+                        <span class="text-xs mr-2 opacity-50">HKD</span> ${{ (parseFloat(displayValue.replace(/,/g,'')) * currencyRate).toFixed(1) }}
                     </div>
-                    <i class="fas fa-exchange-alt opacity-30 text-xs"></i>
-                    <div class="flex-1 bg-white/50 rounded-xl p-3 border border-[#4a4238]/10">
-                        <label class="text-[9px] font-bold opacity-50 block mb-1">HKD ($)</label>
-                        <div class="font-mono font-bold text-xl text-[#726251]">{{ (currencyCalc.jpy * currencyCalc.rate).toFixed(1) }}</div>
+                    
+                    <div class="absolute top-2 left-2 flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity">
+                        <span class="text-[9px] font-bold">Rate:</span>
+                        <input type="number" v-model="currencyRate" class="w-12 bg-transparent border-b border-[#4a4238]/30 text-[10px] font-mono text-right outline-none">
                     </div>
                 </div>
+
+                <div class="calc-grid">
+                    <button @click="clearCalc" class="calc-btn op">C</button>
+                    <button @click="appendCalc('(')" class="calc-btn op">(</button>
+                    <button @click="appendCalc(')')" class="calc-btn op">)</button>
+                    <button @click="appendCalc('/')" class="calc-btn op">÷</button>
+                    
+                    <button @click="appendCalc('7')" class="calc-btn">7</button>
+                    <button @click="appendCalc('8')" class="calc-btn">8</button>
+                    <button @click="appendCalc('9')" class="calc-btn">9</button>
+                    <button @click="appendCalc('*')" class="calc-btn op">×</button>
+                    
+                    <button @click="appendCalc('4')" class="calc-btn">4</button>
+                    <button @click="appendCalc('5')" class="calc-btn">5</button>
+                    <button @click="appendCalc('6')" class="calc-btn">6</button>
+                    <button @click="appendCalc('-')" class="calc-btn op">-</button>
+                    
+                    <button @click="appendCalc('1')" class="calc-btn">1</button>
+                    <button @click="appendCalc('2')" class="calc-btn">2</button>
+                    <button @click="appendCalc('3')" class="calc-btn">3</button>
+                    <button @click="appendCalc('+')" class="calc-btn op">+</button>
+                    
+                    <button @click="backspace" class="calc-btn op"><i class="fas fa-backspace text-sm"></i></button>
+                    <button @click="appendCalc('0')" class="calc-btn">0</button>
+                    <button @click="appendCalc('.')" class="calc-btn">.</button>
+                    <button @click="calculate" class="calc-btn eq">=</button>
+                </div>
+            </div>
+            
+            <div class="glass p-5 text-center shrink-0">
+                <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
+                <div class="text-xl font-black font-mono">{{ countdown.days }} Days {{ countdown.hours }}h</div>
             </div>
         </div>
 
@@ -392,8 +454,12 @@
             const newWishItem = ref({ name: '', price: '', image: null });
             const budgetList = ref([]);
             const wishlist = ref([]);
-            const currencyCalc = ref({ jpy: '', rate: 0.052 });
             
+            // Calculator State
+            const currencyRate = ref(0.052);
+            const calcExpression = ref('');
+            const calcResult = ref('0');
+
             // Computed: Check if any modal is open
             const isModalOpen = computed(() => showBudgetInput.value || showWishlistInput.value || detailModal.value.show);
 
@@ -433,7 +499,7 @@
                     { time: "21:00", name: "HARBS 本店", type: "food", typeLabel: "甜點", desc: "電視塔旁。", highlights: ["水果千層"], strategy: "就在電視塔旁。\n如果有位子就內用，沒位子就外帶 (Takeout) 回飯店。" }
                 ]},
                 { day: 3, date_short: "2/27", date_en: "Fri", location: "Nagoya", places: [
-                    { time: "09:00", name: "Komeda's Coffee", type: "food", typeLabel: "早餐", desc: "點飲料送紅豆泥吐司。", highlights: ["紅豆吐司"], strategy: "體驗 Morning Service。\n建議加點 Mini Shiro-Noir (冰與火丹麥麵包)。" },
+                    { time: "09:00", name: "Komeda's Coffee", type: "food", typeLabel: "早餐", desc: "點飲料送紅豆泥吐司。", highlights: ["紅豆吐司"], strategy: "攻略：每日11:00前，點飲料(約¥500)即送吐司+水煮蛋/紅豆泥。\n每人可省下約¥800早餐費！\n建議加點 Mini Shiro-Noir。" },
                     { time: "10:00", name: "名古屋港水族館", type: "spot", typeLabel: "景點", desc: "北館看虎鯨。", highlights: ["虎鯨", "海豚秀"], strategy: "直奔北館 3F 看虎鯨。\n查好海豚秀時間，想濕身坐前4排。\n南館看沙丁魚風暴。" },
                     { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "大須店。鐵板味噌豬排。", highlights: ["鐵板"], strategy: "務必點「鐵板」系列。\n一定要穿紙圍兜，醬汁會噴。\n桌上芝麻粉隨意加。" },
                     { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "逛街", desc: "Alice on Wednesday, 三輪神社。", highlights: ["三輪神社"], strategy: "Alice on Wednesday: 鑽小門進去。\n三輪神社: 摸兔子石像求好運。\nSeria (百元店)、Kannon Coffee。" },
@@ -590,16 +656,49 @@
             };
             const deleteWishlist = (idx) => wishlist.value.splice(idx, 1);
 
-            // UPDATED TABS to include Reminders
+            // CALCULATOR LOGIC
+            const appendCalc = (char) => { calcExpression.value += char; };
+            const clearCalc = () => { calcExpression.value = ''; calcResult.value = '0'; };
+            const backspace = () => { calcExpression.value = calcExpression.value.slice(0, -1); };
+            const calculate = () => {
+                try {
+                    // Safe evaluation for simple math
+                    const safeEval = new Function('return ' + calcExpression.value);
+                    const res = safeEval();
+                    calcResult.value = res.toString();
+                } catch (e) {
+                    calcResult.value = 'Error';
+                }
+            };
+            
+            const displayValue = computed(() => {
+                if(!calcExpression.value) return '0';
+                // If expression ends with operator, evaluate what we have so far for preview
+                try {
+                    // Check if last char is number
+                    if (/[0-9.]$/.test(calcExpression.value)) {
+                         const safeEval = new Function('return ' + calcExpression.value);
+                         return safeEval().toLocaleString('en-US', {maximumFractionDigits: 2});
+                    }
+                } catch(e) {}
+                
+                if(calcResult.value !== '0' && calcResult.value !== 'Error') return parseFloat(calcResult.value).toLocaleString('en-US', {maximumFractionDigits: 2});
+                return calcExpression.value;
+            });
+
+            // UPDATED TABS
             const tabs = [ 
                 { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, 
                 { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, 
                 { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, 
                 { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' },
-                { id: 'info', label: 'Info', icon: 'fas fa-info-circle' } 
+                { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } 
             ];
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currencyCalc, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen };
+            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
+                // Calc exports
+                currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue
+            };
         }
     }).mount('#app');
 </script>
