@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.0 (Final)</title>
+    <title>梓樂Nagoya v59.2 (Stable)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -41,25 +41,21 @@
         .safe-top { padding-top: max(20px, env(safe-area-inset-top)); }
         .safe-bottom { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
         
-        /* FIX: Force Inputs to be interactable */
         input { 
             user-select: text !important; 
             -webkit-user-select: text !important;
             pointer-events: auto !important;
         }
 
-        /* Modal Z-Index Fixes */
         .modal-layer { position: fixed; inset: 0; z-index: 99999; }
         .modal-content { position: relative; z-index: 100000; }
         
-        /* Animation */
         @keyframes slide-up {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-        /* Calculator Grid */
         .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .calc-btn {
             background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(74, 66, 56, 0.1);
@@ -70,7 +66,6 @@
         .calc-btn.op { background: rgba(114, 98, 81, 0.2); color: #726251; }
         .calc-btn.eq { background: #726251; color: white; }
 
-        /* Ticket Styles */
         .ticket-stub {
             position: relative;
             clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 70%, 5% 65%, 0% 60%, 0% 0%);
@@ -81,7 +76,6 @@
         .method-onsite { background: #fef7e0; color: #5f370e; border-left: 4px solid #fbbc04; }
         .method-mobile { background: #f1f3f4; color: #3c4043; border-left: 4px solid #9aa0a6; }
 
-        /* Sync Indicator */
         .sync-status { position: fixed; top: 10px; right: 10px; z-index: 9999; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 20px; background: rgba(0,0,0,0.5); color: white; display: flex; items-center; gap: 5px; }
 
         [v-cloak] { display: none !important; }
@@ -184,9 +178,11 @@
                     <button @click="budgetFilter='TszLok'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszLok'?'bg-[#91867f] text-white border-[#91867f]':'bg-transparent text-[#91867f] border-[#91867f]'">👦 TszLok</button>
                     <button @click="budgetFilter='TszTung'" class="px-4 py-2 rounded-full text-xs font-bold border transition-all" :class="budgetFilter==='TszTung'?'bg-[#726251] text-white border-[#726251]':'bg-transparent text-[#726251] border-[#726251]'">👧 TszTung</button>
                 </div>
+                
                 <div class="glass p-5 flex justify-between items-center">
                     <div class="flex flex-col"><span class="text-xs font-bold opacity-60 uppercase mb-1">Total Spent</span><span class="text-3xl font-mono font-black">¥{{ filteredTotal.toLocaleString() }}</span></div>
                 </div>
+                
                 <div class="space-y-3 pb-20">
                     <div v-if="filteredBudgetList.length === 0" class="text-center opacity-40 text-xs py-10 font-bold">同步中或無資料...</div>
                     <div v-for="(item, idx) in filteredBudgetList" :key="idx" class="glass p-4 flex justify-between items-center">
@@ -204,11 +200,14 @@
 
             <div v-if="walletMode==='wishlist'" class="grid grid-cols-2 gap-4 pb-20">
                 <div @click="showWishlistInput=true" class="glass p-4 flex flex-col items-center justify-center aspect-square border-2 border-dashed border-[#4a4238]/20 hover:bg-[#d6c9b5] cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
-                    <i class="fas fa-plus text-2xl mb-2"></i><span class="text-xs font-bold">Add Item</span>
+                    <i class="fas fa-camera text-2xl mb-2"></i><span class="text-xs font-bold">Add Item</span>
                 </div>
                 <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
                     <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 text-white shadow-md"><i class="fas fa-times"></i></button>
-                    <img :src="item.image || 'https://via.placeholder.com/300x300?text=No+Image'" class="w-full aspect-square object-cover">
+                    <img v-if="item.image" :src="item.image" class="w-full aspect-square object-cover">
+                    <div v-else class="w-full aspect-square bg-[#4a4238]/10 flex items-center justify-center flex-col p-2 text-center">
+                        <i class="fas fa-shopping-bag text-2xl mb-2 opacity-30"></i>
+                    </div>
                     <div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold opacity-60">¥{{ item.price }}</div></div>
                 </div>
             </div>
@@ -287,15 +286,6 @@
         
         <div v-if="currentView === 'info'" class="space-y-6 pt-4 h-full flex flex-col">
             <h2 class="text-2xl font-black font-mincho text-white">匯率計算機</h2>
-            
-            <div class="glass p-4 text-center">
-                <div class="text-[10px] font-bold opacity-60 uppercase tracking-widest mb-1">距離出發 (HKO)</div>
-                <div class="flex justify-center items-baseline gap-2">
-                    <span class="text-3xl font-black font-mono">{{ countdown.days }}</span><span class="text-xs font-bold">Days</span>
-                    <span class="text-xl font-black font-mono">{{ countdown.hours }}</span><span class="text-xs font-bold">Hrs</span>
-                </div>
-            </div>
-
             <div class="glass flex-1 p-5 flex flex-col">
                 <div class="bg-[#f3f0eb] rounded-xl p-4 mb-4 flex-1 flex flex-col justify-end items-end shadow-inner relative overflow-hidden"><div class="text-[#4a4238]/40 font-bold font-mono text-sm mb-1 break-all text-right">{{ calcExpression || '0' }}</div><div class="text-[#4a4238] font-black font-mono text-4xl mb-1 break-all text-right">¥{{ displayValue }}</div><div class="w-full h-[1px] bg-[#4a4238]/10 my-2"></div><div class="text-[#726251] font-bold font-mono text-2xl flex items-center justify-end w-full"><span class="text-xs mr-2 opacity-50">HKD</span> ${{ (parseFloat(displayValue.replace(/,/g,'')) * currencyRate).toFixed(1) }}</div><div class="absolute top-2 left-2 flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity"><span class="text-[9px] font-bold">Rate:</span><input type="number" v-model="currencyRate" class="w-12 bg-transparent border-b border-[#4a4238]/30 text-[10px] font-mono text-right outline-none"></div></div>
                 <div class="calc-grid"><button @click="clearCalc" class="calc-btn op">C</button><button @click="appendCalc('(')" class="calc-btn op">(</button><button @click="appendCalc(')')" class="calc-btn op">)</button><button @click="appendCalc('/')" class="calc-btn op">÷</button><button @click="appendCalc('7')" class="calc-btn">7</button><button @click="appendCalc('8')" class="calc-btn">8</button><button @click="appendCalc('9')" class="calc-btn">9</button><button @click="appendCalc('*')" class="calc-btn op">×</button><button @click="appendCalc('4')" class="calc-btn">4</button><button @click="appendCalc('5')" class="calc-btn">5</button><button @click="appendCalc('6')" class="calc-btn">6</button><button @click="appendCalc('-')" class="calc-btn op">-</button><button @click="appendCalc('1')" class="calc-btn">1</button><button @click="appendCalc('2')" class="calc-btn">2</button><button @click="appendCalc('3')" class="calc-btn">3</button><button @click="appendCalc('+')" class="calc-btn op">+</button><button @click="backspace" class="calc-btn op"><i class="fas fa-backspace text-sm"></i></button><button @click="appendCalc('0')" class="calc-btn">0</button><button @click="appendCalc('.')" class="calc-btn">.</button><button @click="calculate" class="calc-btn eq">=</button></div>
@@ -313,33 +303,21 @@
 
     <div v-if="showBudgetInput" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop><div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Expense</div><div class="flex-1 overflow-y-auto p-6 pb-40"><div class="flex gap-3 mb-6"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-4 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button></div><div class="space-y-6"><div><label class="block text-xs font-bold opacity-60 mb-2">Item Name</label><input v-model="newItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg"></div><div><label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label><input v-model.number="newItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg"></div></div><div class="flex gap-3 mt-10"><button @click="showBudgetInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button><button @click="addItem" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Save</button></div></div></div></div>
     
-    <div v-if="showWishlistInput" class="modal-layer flex items-end justify-center">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
-        <div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop>
-            <div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Wishlist Item</div>
-            <div class="flex-1 overflow-y-auto p-6 pb-40">
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-bold opacity-60 mb-2">Item Name</label>
-                        <input v-model="newWishItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label>
-                        <input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold opacity-60 mb-2">Image Link (URL)</label>
-                        <input v-model="newWishItem.image" type="text" placeholder="https://..." class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-sm">
-                        <div class="text-[10px] opacity-50 mt-1">Copy and paste image address from web (Cloud safe)</div>
-                    </div>
-                </div>
-                <div class="flex gap-3 mt-10">
-                    <button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button>
-                    <button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Add</button>
-                </div>
+    <div v-if="showWishlistInput" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div><div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop><div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Wishlist Item</div><div class="flex-1 overflow-y-auto p-6 pb-40">
+        
+        <div class="mb-4 text-center">
+            <div v-if="newWishItem.image" class="relative inline-block">
+                <img :src="newWishItem.image" class="h-32 w-auto rounded-xl shadow-md">
+                <button @click="newWishItem.image=null" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs"><i class="fas fa-times"></i></button>
+            </div>
+            <div v-else class="border-2 border-dashed border-[#4a4238]/30 rounded-xl p-6 text-[#4a4238]/50 flex flex-col items-center gap-2 cursor-pointer relative hover:bg-white/50">
+                <i class="fas fa-camera text-2xl"></i>
+                <span class="text-xs font-bold">Upload from iPhone Album</span>
+                <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
             </div>
         </div>
-    </div>
+
+        <div class="space-y-6"><div><label class="block text-xs font-bold opacity-60 mb-2">Item Name</label><input v-model="newWishItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg"></div><div><label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label><input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg"></div></div><div class="flex gap-3 mt-10"><button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button><button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Add</button></div></div></div></div>
 
     <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div>
         <div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop>
@@ -366,7 +344,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getFirestore, doc, onSnapshot, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-    // *** FIREBASE CONFIGURATION ***
+    // *** 🔥 PASTE YOUR FIREBASE CONFIG HERE 🔥 ***
     const firebaseConfig = {
         apiKey: "AIzaSyCDOiAGPDY7Jd7ysg1fapFnCdidwGE66q8",
         authDomain: "nagoya-2026-361a0.firebaseapp.com",
@@ -416,7 +394,7 @@
             const syncStatus = ref('');
 
             // --- FIREBASE LOGIC ---
-            const tripDocId = "nagoya_v60"; // Hardcoded ID for this trip
+            const tripDocId = "nagoya_v59_2"; // New ID to ensure clean slate
 
             const saveData = async () => {
                 if (!db) return;
@@ -424,7 +402,7 @@
                 try {
                     await setDoc(doc(db, "trips", tripDocId), {
                         budgetList: budgetList.value,
-                        wishlist: wishlist.value, 
+                        wishlist: wishlist.value, // Images stored as base64 string
                         packingList: packingList.value
                     }, { merge: true });
                     setTimeout(() => syncStatus.value = "", 1000);
@@ -448,25 +426,59 @@
                     });
                 } else {
                     // Fallback to local storage if no Firebase config
-                    const b = localStorage.getItem('jp_v60_b'); if(b) budgetList.value = JSON.parse(b);
-                    const w = localStorage.getItem('jp_v60_w'); if(w) wishlist.value = JSON.parse(w);
-                    const p = localStorage.getItem('jp_v60_p'); if(p) packingList.value = JSON.parse(p);
+                    const b = localStorage.getItem('jp_v59_b'); if(b) budgetList.value = JSON.parse(b);
+                    const w = localStorage.getItem('jp_v59_w'); if(w) wishlist.value = JSON.parse(w);
+                    const p = localStorage.getItem('jp_v59_p'); if(p) packingList.value = JSON.parse(p);
                 }
             });
 
             // Watchers to trigger Save
-            watch(budgetList, () => { if(db) saveData(); else localStorage.setItem('jp_v60_b', JSON.stringify(budgetList.value)); }, { deep: true });
-            watch(wishlist, () => { if(db) saveData(); else localStorage.setItem('jp_v60_w', JSON.stringify(wishlist.value)); }, { deep: true });
+            // Use deep watch, debounced slightly by logic nature (Vue handles updates efficiently)
+            // Ideally use lodash.debounce, but for this simple app, direct save is okay.
+            watch(budgetList, () => { if(db) saveData(); else localStorage.setItem('jp_v59_b', JSON.stringify(budgetList.value)); }, { deep: true });
+            watch(wishlist, () => { if(db) saveData(); else localStorage.setItem('jp_v59_w', JSON.stringify(wishlist.value)); }, { deep: true });
+            // Packing list syncing is triggered by @change in template to avoid infinite loops easily, but watch is safer for all updates
             
             const syncPacking = () => {
-                 if(db) saveData(); else localStorage.setItem('jp_v60_p', JSON.stringify(packingList.value));
+                 if(db) saveData(); else localStorage.setItem('jp_v59_p', JSON.stringify(packingList.value));
             }
 
-            const addWishlist = () => { 
-                if(newWishItem.value.name) { 
-                    wishlist.value.unshift({...newWishItem.value}); 
-                    newWishItem.value = { name: '', price: '', image: null }; 
-                    showWishlistInput.value = false; 
+            // --- IMAGE COMPRESSION LOGIC (ADDED BACK) ---
+            const compressImage = (file, callback) => {
+                if(file.size > 8000000) { // 8MB limit
+                    alert('Image too large. Please pick a smaller one.');
+                    return;
+                }
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 500; // Resize to 500px width
+                        const scaleSize = MAX_WIDTH / img.width;
+                        if(scaleSize < 1) {
+                            canvas.width = MAX_WIDTH;
+                            canvas.height = img.height * scaleSize;
+                        } else {
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                        }
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        // Compress to JPEG quality 0.5
+                        callback(canvas.toDataURL('image/jpeg', 0.5)); 
+                    }
+                }
+            };
+
+            const handleImageUpload = (event) => { 
+                const file = event.target.files[0]; 
+                if(file) { 
+                    compressImage(file, (result) => {
+                        newWishItem.value.image = result; 
+                    });
                 } 
             };
 
@@ -484,25 +496,113 @@
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
 
+            // ENRICHED TICKET DATA (Method: online, onsite, mobile)
             const ticketList = ref([
-                { date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站 售票機", guide: { steps: ["去售票機選 'Nagoya' 或 'Central Japan Int'l Airport'。", "除了基本運費 (¥980)，務必加購 'μ-ticket' (¥450) 才有指定座位。", "付款：現金或信用卡。"], reminder: "一定要拿兩張票（乘車券+座位券）才能進站！" } },
-                { date: "2/26", day: "Day 2", title: "吉卜力交通 (Linimo)", route: "市區 ↔ 吉卜力公園", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet", guide: { steps: ["iPhone 打開 Apple Wallet。", "新增交通卡 (Suica 或 ICOCA)。", "用 Apple Pay 加值約 ¥3,000。", "進出站時手機直接感應閘門。"], reminder: "確認手機有電！" } },
-                { date: "2/27", day: "Day 3", title: "地鐵 24 小時券", route: "市區觀光", price: "¥760", method: "onsite", location: "地鐵站 黃色售票機", guide: { steps: ["找黃色售票機。", "點選螢幕 'お得なチケット (Value Tickets)'。", "平日選 '24-hour Pass' (¥760)。", "週末選 'Donichi Eco Ticket' (¥620)。"], reminder: "第一次進站會印上時間，可使用至隔天同時間。" } },
-                { date: "2/28 & 3/3", day: "Day 4, 7", title: "JR 特急 Hida 號", route: "名古屋 ↔ 高山", price: "¥6,140", method: "online", location: "JR 西日本預約官網", url: "https://www.westjr.co.jp/global/tc/ticket/", guide: { steps: ["進入官網，搜尋 'Nagoya' 到 'Takayama'。", "鎖定 09:39 發車的 Hida 5 號。", "選位：去程 D 側，回程 A 側。", "付款：必須使用『實體信用卡』。"], reminder: "2/28 當天請帶這張『實體信用卡』去綠色機器領票！不可用 Apple Pay。" } },
-                { date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,200", method: "online", location: "Japan Bus Online", url: "https://japanbusonline.com/zh-tw", guide: { steps: ["進入網站 Japan Bus Online。", "預約 08:50 前的班次。", "線上刷卡付款。", "收到 E-ticket Email。"], reminder: "不用領實體票，上車出示手機 QR Code 即可。" } },
-                { date: "3/2", day: "Day 6", title: "奧飛驒 2 日套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心", guide: { steps: ["去 JR 高山站旁的巴士中心櫃檯。", "說 'Okuhida Value Ticket, 2 Days'。", "建議準備現金付款。"], reminder: "這本票包含來回巴士和新穗高纜車券，弄丟不補發。" } }
+                { 
+                    date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站 售票機",
+                    guide: {
+                        steps: ["去售票機選 'Nagoya' 或 'Central Japan Int'l Airport'。", "除了基本運費 (¥980)，務必加購 'μ-ticket' (¥450) 才有指定座位。", "付款：現金或信用卡。"],
+                        reminder: "一定要拿兩張票（乘車券+座位券）才能進站！"
+                    }
+                },
+                { 
+                    date: "2/26", day: "Day 2", title: "吉卜力交通 (Linimo)", route: "市區 ↔ 吉卜力公園", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet",
+                    guide: {
+                        steps: ["iPhone 打開 Apple Wallet。", "新增交通卡 (Suica 或 ICOCA)。", "用 Apple Pay 加值約 ¥3,000。", "進出站時手機直接感應閘門。"],
+                        reminder: "確認手機有電！"
+                    }
+                },
+                { 
+                    date: "2/27", day: "Day 3", title: "地鐵 24 小時券", route: "市區觀光", price: "¥760", method: "onsite", location: "地鐵站 黃色售票機",
+                    guide: {
+                        steps: ["找黃色售票機。", "點選螢幕 'お得なチケット (Value Tickets)'。", "平日選 '24-hour Pass' (¥760)。", "週末選 'Donichi Eco Ticket' (¥620)。"],
+                        reminder: "第一次進站會印上時間，可使用至隔天同時間。"
+                    }
+                },
+                { 
+                    date: "2/28 & 3/3", day: "Day 4, 7", title: "JR 特急 Hida 號", route: "名古屋 ↔ 高山", price: "¥6,140", method: "online", location: "JR 西日本預約官網", url: "https://www.westjr.co.jp/global/tc/ticket/",
+                    guide: {
+                        steps: ["進入官網，搜尋 'Nagoya' 到 'Takayama'。", "鎖定 09:39 發車的 Hida 5 號。", "選位：去程 D 側，回程 A 側。", "付款：必須使用『實體信用卡』。"],
+                        reminder: "2/28 當天請帶這張『實體信用卡』去綠色機器領票！不可用 Apple Pay。"
+                    }
+                },
+                { 
+                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,200", method: "online", location: "Japan Bus Online", url: "https://japanbusonline.com/zh-tw",
+                    guide: {
+                        steps: ["進入網站 Japan Bus Online。", "預約 08:50 前的班次。", "線上刷卡付款。", "收到 E-ticket Email。"],
+                        reminder: "不用領實體票，上車出示手機 QR Code 即可。"
+                    }
+                },
+                { 
+                    date: "3/2", day: "Day 6", title: "奧飛驒 2 日套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心",
+                    guide: {
+                        steps: ["去 JR 高山站旁的巴士中心櫃檯。", "說 'Okuhida Value Ticket, 2 Days'。", "建議準備現金付款。"],
+                        reminder: "這本票包含來回巴士和新穗高纜車券，弄丟不補發。"
+                    }
+                }
             ]);
 
             const getTicketsByMethod = (m) => ticketList.value.filter(t => t.method === m);
 
             const itinerary = ref([
-                { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [{ time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達", highlights: ["綠茶"], strategy: "出關後跟著「名鐵電車」指標走。\n去自動售票機或櫃檯購票。\n買一瓶綠茶 (伊右衛門)。" }, { time: "15:30", name: "前往市區", type: "transport", typeLabel: "移動", desc: "名鐵→名古屋站→櫻通線→久屋大通。", highlights: ["櫻通線"], strategy: "抵達名古屋站後，不要出站到地面，直接找「櫻通線 (紅線)」地鐵指標。\n往「德重」方向，下車站：久屋大通。" }, { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B 出口。", bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810", highlights: ["大浴場"], strategy: "走 4B 或 1A 出口（有電扶梯）。\nC/I 後先去大浴場洗澡或在房間休息。\n飯店對面有 7-11。" }, { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "尼泊爾咖哩。起司烤餅份量巨大。", highlights: ["Cheese Naan"], strategy: "這是尼泊爾人開的店。\n必點：Cheese Naan (起司烤餅)、Butter Chicken Curry、Mango Lassi。\n兩人點一份烤餅分食即可。" }, { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水之宇宙船。", highlights: ["電視塔倒影"], strategy: "搭電梯上頂層玻璃地面。\n走到水池正中央，拍攝電視塔倒影。" }, { time: "21:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "7-11 買宵夜。", highlights: ["焦糖冰淇淋"], strategy: "買宵夜和明天的水。\nOhayo 焦糖烤布蕾冰淇淋 (敲碎表面焦糖吃)。" }] },
-                { day: 2, date_short: "2/26", date_en: "Thu", location: "Nagoya", places: [{ time: "09:00", name: "Konparu 榮店", type: "food", typeLabel: "早餐", desc: "外帶炸蝦三明治去吉卜力野餐。", highlights: ["炸蝦三明治"], strategy: "關鍵策略：跟店員說 'Take out, please'。\n帶去吉卜力當午餐，省下園區排隊時間。\n不要切邊！" }, { time: "10:30", name: "前往吉卜力", type: "transport", typeLabel: "移動", desc: "榮→藤之丘→Linimo。", highlights: ["Linimo"], strategy: "在「榮站」搭東山線到終點「藤之丘」，轉 Linimo 磁浮列車。\n買 7-11 果昔 (Smoothie)。" }, { time: "12:00", name: "吉卜力大倉庫", type: "spot", typeLabel: "重點", desc: "12:00 入場。", bookingType: "ticket", ticketLink: "https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f", highlights: ["名場面展"], strategy: "動線：1.名場面展(拍照) → 2.獵戶座電影院 → 3.吃三明治 → 4.商店。\n商店買：湯婆婆戒指、無臉男周邊。\n⚠️ TszLok 請務必帶護照！" }, { time: "17:00", name: "榮區購物", type: "spot", typeLabel: "購物", desc: "Kapital, Montbell, BEAMS, Salomon.", highlights: ["Salomon", "骨頭T", "羽絨"], strategy: "ADDED: Salomon (CREARE) - 必逛！\nKapital (CREARE 1F): 找骨頭T/拼布牛仔。\nMontbell (Nadia Park 6F): 買羽絨衣。\nOnitsuka Tiger (PARCO 西館 1F)。" }, { time: "19:30", name: "熱田蓬萊軒", type: "food", typeLabel: "晚餐", desc: "松坂屋南館 10F。", booking: "#8823", highlights: ["鰻魚飯三吃"], strategy: "17:30 先去抽號碼牌。\n必吃：鰻魚飯三吃 (Hitsumabushi)。\n試試加高湯的茶泡飯。" }, { time: "21:00", name: "HARBS 本店", type: "food", typeLabel: "甜點", desc: "電視塔旁。", highlights: ["水果千層"], strategy: "就在電視塔旁。\n如果有位子就內用，沒位子就外帶 (Takeout) 回飯店。" }] },
-                { day: 3, date_short: "2/27", date_en: "Fri", location: "Nagoya", places: [{ time: "09:00", name: "Komeda's Coffee", type: "food", typeLabel: "早餐", desc: "點飲料送紅豆泥吐司。", highlights: ["紅豆吐司"], strategy: "攻略：每日11:00前，點飲料(約¥500)即送吐司+水煮蛋/紅豆泥。\n每人可省下約¥800早餐費！\n建議加點 Mini Shiro-Noir。" }, { time: "10:00", name: "名古屋港水族館", type: "spot", typeLabel: "景點", desc: "北館看虎鯨。", highlights: ["虎鯨", "海豚秀"], strategy: "直奔北館 3F 看虎鯨。\n查好海豚秀時間，想濕身坐前4排。\n南館看沙丁魚風暴。" }, { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "大須店。鐵板味噌豬排。", highlights: ["鐵板"], strategy: "務必點「鐵板」系列。\n一定要穿紙圍兜，醬汁會噴。\n桌上芝麻粉隨意加。" }, { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "逛街", desc: "Alice on Wednesday, 三輪神社。", highlights: ["三輪神社"], strategy: "Alice on Wednesday: 鑽小門進去。\n三輪神社: 摸兔子石像求好運。\nSeria (百元店)、Kannon Coffee。" }, { time: "17:00", name: "Muji 名鐵百貨", type: "spot", typeLabel: "購物", desc: "中部最大旗艦店。", highlights: ["咖哩包"], strategy: "去 'Muji Food' 區買調理包。\n咖哩包、年輪蛋糕、乾燥草莓巧克力。" }, { time: "18:30", name: "Tsubame Bread", type: "food", typeLabel: "點心", desc: "名站附近。", highlights: ["絹香吐司"], strategy: "外帶一條「絹香吐司」(Kinuka) 當明天去高山的早餐。\n現場吃北海道牛奶霜淇淋。" }, { time: "19:30", name: "鳥開總本家", type: "food", typeLabel: "晚餐", desc: "JR Gate Tower / ESCA。", highlights: ["親子丼"], strategy: "位於 JR Gate Tower 或 ESCA。\n名古屋交趾雞口感偏硬Q。\n必點金賞親子丼、手羽先 (炸雞翅)。" }, { time: "20:30", name: "Piyorin 挑戰", type: "food", typeLabel: "挑戰", desc: "小雞蛋糕。", highlights: ["Piyorin"], strategy: "在車站買小雞蛋糕。\n手持保持水平，搭電扶梯要抓緊，不要晃動。\n回飯店沒倒才算贏。" }] },
-                { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [{ time: "09:00", name: "JR Hida 特急", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["指定席"], strategy: "劃位時指名 'Luggage Seat' (最後一排)。\n火車美食：千壽炸蝦飯糰、松浦商店飛驒牛便當。" }, { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" }, { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", highlights: ["飛驒牛壽司"], strategy: "邊走邊吃。\n必吃：飛驒牛握壽司 (坂口屋)、飛驒牛包子 (喜八郎)。\n去船坂酒造投幣試喝清酒。" }, { time: "15:00", name: "Check-in", type: "stay", typeLabel: "休息", desc: "換上作務衣。", highlights: ["頂樓風景"], strategy: "1. 在大廳 Pillow Bar 搶枕頭。\n2. 換上作務衣 (Samue)。\n3. 去頂樓看風景。" }, { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", highlights: ["A5飛驒牛"], strategy: "務必預約。若無預約，16:30 去排隊。\n必點：味藏盛拼盤 (Ajikura Mori)。\nA5 和牛油脂多，沾芥末或鹽最好吃。" }, { time: "22:00", name: "夜鳴拉麵", type: "food", typeLabel: "宵夜", desc: "飯店免費。", highlights: ["免費"], strategy: "去餐廳吃免費拉麵 (Yonaki Soba)。\n還餓的話去 Lawson 買炸雞塊君 (Red)。" }] },
-                { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa", places: [{ time: "08:00", name: "飯店早餐", type: "food", typeLabel: "早餐", desc: "朴葉味噌。", highlights: ["朴葉味噌"], strategy: "專攻鄉土料理區。\n一定要吃朴葉味噌配白飯、飛驒牛奶、醃漬物。" }, { time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", highlights: ["暈車藥"], strategy: "在濃飛巴士中心搭車。\n會暈車者先吃藥。帶一瓶水。" }, { time: "10:00", name: "白川鄉合掌村", type: "spot", typeLabel: "世界遺產", desc: "展望台、和田家。", highlights: ["展望台"], strategy: "1. 搭接駁車上城山展望台。\n2. 走路下山逛和田家。\n3. 去三小屋拍照。" }, { time: "12:00", name: "喫茶 落人", type: "food", typeLabel: "午餐", desc: "Ochiudo。", highlights: ["紅豆湯"], strategy: "必吃：咖哩飯、紅豆湯 (無限續碗)。\n坐在地爐旁氣氛好。" }, { time: "16:00", name: "貸切風呂", type: "spot", typeLabel: "溫泉", desc: "飯店私人湯屋。", highlights: ["私人湯屋"], strategy: "回高山後，去頂樓預約貸切風呂 (私人湯屋)。\n泡完喝免費牛奶/冰棒。" }, { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "飛驒牛壽喜燒。", highlights: ["壽喜燒"], strategy: "進店指名 'Sukiyaki'。\n攻略：肉片煮好一定要裹滿生蛋液再入口。" }, { time: "20:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "買明日早餐。", highlights: ["R-1優格"], strategy: "因為明天要早起去雪山。\n買雞蛋沙拉三明治、明治 R-1 優格飲。" }] },
-                { day: 6, date_short: "3/2", date_en: "Mon", location: "Okuhida", places: [{ time: "07:30", name: "Coffee Don", type: "food", typeLabel: "早餐", desc: "昭和氣氛老舖。", highlights: ["吐司套餐"], strategy: "1951年老舖。點吐司套餐配黑咖啡。\n不想早起就在房吃便利商店早餐。" }, { time: "08:40", name: "前往新穗高", type: "transport", typeLabel: "移動", desc: "搭巴士。", highlights: ["左側風景"], strategy: "坐巴士左側 (Left Side) 看風景。" }, { time: "10:45", name: "Alps no Pan", type: "food", typeLabel: "點心", desc: "鍋平高原站。", highlights: ["可頌"], strategy: "在轉乘第二段纜車前，去麵包店買剛出爐的現烤可頌 (Croissant)。" }, { time: "11:00", name: "新穗高纜車", type: "spot", typeLabel: "絕景", desc: "雙層纜車。", highlights: ["雪之迴廊"], strategy: "搶雙層纜車 2樓 位置。\n山頂去走雪之迴廊、寄明信片。" }, { time: "14:00", name: "平湯之森", type: "spot", typeLabel: "溫泉", desc: "日歸溫泉。", highlights: ["雪見溫泉"], strategy: "回程巴士在「平湯溫泉」下。\n吃飛驒牛鐵板燒。\n泡 16 個露天雪見溫泉池。體驗雪中裸身奔跑。" }, { time: "18:00", name: "Center4 Burger", type: "food", typeLabel: "晚餐", desc: "飛驒牛漢堡。", highlights: ["漢堡"], strategy: "高山第一名漢堡。需提前預約。\n若無位，去平安樂吃餃子。" }] },
-                { day: 7, date_short: "3/3", date_en: "Tue", location: "Airport", places: [{ time: "08:00", name: "宮川朝市", type: "spot", typeLabel: "市集", desc: "河邊早市。", highlights: ["伴手禮"], strategy: "只收現金。買餅乾杯咖啡、炸蛋白霜、味噌煎餅。" }, { time: "11:00", name: "豆天狗", type: "food", typeLabel: "午餐", desc: "高山拉麵。", highlights: ["中華拉麵"], strategy: "最後巡禮。醬油湯頭，捲捲的細麵。加一顆味玉 (蛋)。" }, { time: "13:30", name: "前往機場", type: "transport", typeLabel: "移動", desc: "濃飛巴士直達。", highlights: ["預約"], strategy: "絕對要準時。車程 3.5 小時。\n上車前買好零食飲料、準備暈車藥。" }, { time: "17:00", name: "中部國際機場", type: "spot", typeLabel: "離境", desc: "T2。", highlights: ["蝦餅"], strategy: "1. 領行李 (Check-in)。\n2. 逛 Flight of Dreams 787 客機。\n3. 去風之浴看飛機泡腳。\n4. 買蝦餅 (えびせんべいの里)。" }, { time: "21:00", name: "起飛返港", type: "transport", typeLabel: "離境", desc: "UO685。", bookingType: "flight", flightNo: "UO685", terminal: "T2", highlights: [], strategy: "帶著滿滿的戰利品和肚子回家！" }] }
+                { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
+                    { time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達", highlights: ["綠茶"], strategy: "出關後跟著「名鐵電車」指標走。\n去自動售票機或櫃檯購票。\n買一瓶綠茶 (伊右衛門)。" },
+                    { time: "15:30", name: "前往市區", type: "transport", typeLabel: "移動", desc: "名鐵→名古屋站→櫻通線→久屋大通。", highlights: ["櫻通線"], strategy: "抵達名古屋站後，不要出站到地面，直接找「櫻通線 (紅線)」地鐵指標。\n往「德重」方向，下車站：久屋大通。" },
+                    { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B 出口。", bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810", highlights: ["大浴場"], strategy: "走 4B 或 1A 出口（有電扶梯）。\nC/I 後先去大浴場洗澡或在房間休息。\n飯店對面有 7-11。" },
+                    { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "尼泊爾咖哩。起司烤餅份量巨大。", highlights: ["Cheese Naan"], strategy: "這是尼泊爾人開的店。\n必點：Cheese Naan (起司烤餅)、Butter Chicken Curry、Mango Lassi。\n兩人點一份烤餅分食即可。" },
+                    { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水之宇宙船。", highlights: ["電視塔倒影"], strategy: "搭電梯上頂層玻璃地面。\n走到水池正中央，拍攝電視塔倒影。" },
+                    { time: "21:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "7-11 買宵夜。", highlights: ["焦糖冰淇淋"], strategy: "買宵夜和明天的水。\nOhayo 焦糖烤布蕾冰淇淋 (敲碎表面焦糖吃)。" }
+                ]},
+                { day: 2, date_short: "2/26", date_en: "Thu", location: "Nagoya", places: [
+                    { time: "09:00", name: "Konparu 榮店", type: "food", typeLabel: "早餐", desc: "外帶炸蝦三明治去吉卜力野餐。", highlights: ["炸蝦三明治"], strategy: "關鍵策略：跟店員說 'Take out, please'。\n帶去吉卜力當午餐，省下園區排隊時間。\n不要切邊！" },
+                    { time: "10:30", name: "前往吉卜力", type: "transport", typeLabel: "移動", desc: "榮→藤之丘→Linimo。", highlights: ["Linimo"], strategy: "在「榮站」搭東山線到終點「藤之丘」，轉 Linimo 磁浮列車。\n買 7-11 果昔 (Smoothie)。" },
+                    { time: "12:00", name: "吉卜力大倉庫", type: "spot", typeLabel: "重點", desc: "12:00 入場。", bookingType: "ticket", ticketLink: "https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f", highlights: ["名場面展"], strategy: "動線：1.名場面展(拍照) → 2.獵戶座電影院 → 3.吃三明治 → 4.商店。\n商店買：湯婆婆戒指、無臉男周邊。\n⚠️ TszLok 請務必帶護照！" },
+                    { time: "17:00", name: "榮區購物", type: "spot", typeLabel: "購物", desc: "Kapital, Montbell, BEAMS, Salomon.", highlights: ["Salomon", "骨頭T", "羽絨"], strategy: "ADDED: Salomon (CREARE) - 必逛！\nKapital (CREARE 1F): 找骨頭T/拼布牛仔。\nMontbell (Nadia Park 6F): 買羽絨衣。\nOnitsuka Tiger (PARCO 西館 1F)。" },
+                    { time: "19:30", name: "熱田蓬萊軒", type: "food", typeLabel: "晚餐", desc: "松坂屋南館 10F。", booking: "#8823", highlights: ["鰻魚飯三吃"], strategy: "17:30 先去抽號碼牌。\n必吃：鰻魚飯三吃 (Hitsumabushi)。\n試試加高湯的茶泡飯。" },
+                    { time: "21:00", name: "HARBS 本店", type: "food", typeLabel: "甜點", desc: "電視塔旁。", highlights: ["水果千層"], strategy: "就在電視塔旁。\n如果有位子就內用，沒位子就外帶 (Takeout) 回飯店。" }
+                ]},
+                { day: 3, date_short: "2/27", date_en: "Fri", location: "Nagoya", places: [
+                    { time: "09:00", name: "Komeda's Coffee", type: "food", typeLabel: "早餐", desc: "點飲料送紅豆泥吐司。", highlights: ["紅豆吐司"], strategy: "攻略：每日11:00前，點飲料(約¥500)即送吐司+水煮蛋/紅豆泥。\n每人可省下約¥800早餐費！\n建議加點 Mini Shiro-Noir。" },
+                    { time: "10:00", name: "名古屋港水族館", type: "spot", typeLabel: "景點", desc: "北館看虎鯨。", highlights: ["虎鯨", "海豚秀"], strategy: "直奔北館 3F 看虎鯨。\n查好海豚秀時間，想濕身坐前4排。\n南館看沙丁魚風暴。" },
+                    { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "大須店。鐵板味噌豬排。", highlights: ["鐵板"], strategy: "務必點「鐵板」系列。\n一定要穿紙圍兜，醬汁會噴。\n桌上芝麻粉隨意加。" },
+                    { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "逛街", desc: "Alice on Wednesday, 三輪神社。", highlights: ["三輪神社"], strategy: "Alice on Wednesday: 鑽小門進去。\n三輪神社: 摸兔子石像求好運。\nSeria (百元店)、Kannon Coffee。" },
+                    { time: "17:00", name: "Muji 名鐵百貨", type: "spot", typeLabel: "購物", desc: "中部最大旗艦店。", highlights: ["咖哩包"], strategy: "去 'Muji Food' 區買調理包。\n咖哩包、年輪蛋糕、乾燥草莓巧克力。" },
+                    { time: "18:30", name: "Tsubame Bread", type: "food", typeLabel: "點心", desc: "名站附近。", highlights: ["絹香吐司"], strategy: "外帶一條「絹香吐司」(Kinuka) 當明天去高山的早餐。\n現場吃北海道牛奶霜淇淋。" },
+                    { time: "19:30", name: "鳥開總本家", type: "food", typeLabel: "晚餐", desc: "JR Gate Tower / ESCA。", highlights: ["親子丼"], strategy: "位於 JR Gate Tower 或 ESCA。\n名古屋交趾雞口感偏硬Q。\n必點金賞親子丼、手羽先 (炸雞翅)。" },
+                    { time: "20:30", name: "Piyorin 挑戰", type: "food", typeLabel: "挑戰", desc: "小雞蛋糕。", highlights: ["Piyorin"], strategy: "在車站買小雞蛋糕。\n手持保持水平，搭電扶梯要抓緊，不要晃動。\n回飯店沒倒才算贏。" }
+                ]},
+                { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [
+                    { time: "09:00", name: "JR Hida 特急", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["指定席"], strategy: "劃位時指名 'Luggage Seat' (最後一排)。\n火車美食：千壽炸蝦飯糰、松浦商店飛驒牛便當。" },
+                    { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" },
+                    { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", highlights: ["飛驒牛壽司"], strategy: "邊走邊吃。\n必吃：飛驒牛握壽司 (坂口屋)、飛驒牛包子 (喜八郎)。\n去船坂酒造投幣試喝清酒。" },
+                    { time: "15:00", name: "Check-in", type: "stay", typeLabel: "休息", desc: "換上作務衣。", highlights: ["頂樓風景"], strategy: "1. 在大廳 Pillow Bar 搶枕頭。\n2. 換上作務衣 (Samue)。\n3. 去頂樓看風景。" },
+                    { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", highlights: ["A5飛驒牛"], strategy: "務必預約。若無預約，16:30 去排隊。\n必點：味藏盛拼盤 (Ajikura Mori)。\nA5 和牛油脂多，沾芥末或鹽最好吃。" },
+                    { time: "22:00", name: "夜鳴拉麵", type: "food", typeLabel: "宵夜", desc: "飯店免費。", highlights: ["免費"], strategy: "去餐廳吃免費拉麵 (Yonaki Soba)。\n還餓的話去 Lawson 買炸雞塊君 (Red)。" }
+                ]},
+                { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa", places: [
+                    { time: "08:00", name: "飯店早餐", type: "food", typeLabel: "早餐", desc: "朴葉味噌。", highlights: ["朴葉味噌"], strategy: "專攻鄉土料理區。\n一定要吃朴葉味噌配白飯、飛驒牛奶、醃漬物。" },
+                    { time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", highlights: ["暈車藥"], strategy: "在濃飛巴士中心搭車。\n會暈車者先吃藥。帶一瓶水。" },
+                    { time: "10:00", name: "白川鄉合掌村", type: "spot", typeLabel: "世界遺產", desc: "展望台、和田家。", highlights: ["展望台"], strategy: "1. 搭接駁車上城山展望台。\n2. 走路下山逛和田家。\n3. 去三小屋拍照。" },
+                    { time: "12:00", name: "喫茶 落人", type: "food", typeLabel: "午餐", desc: "Ochiudo。", highlights: ["紅豆湯"], strategy: "必吃：咖哩飯、紅豆湯 (無限續碗)。\n坐在地爐旁氣氛好。" },
+                    { time: "16:00", name: "貸切風呂", type: "spot", typeLabel: "溫泉", desc: "飯店私人湯屋。", highlights: ["私人湯屋"], strategy: "回高山後，去頂樓預約貸切風呂 (私人湯屋)。\n泡完喝免費牛奶/冰棒。" },
+                    { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "飛驒牛壽喜燒。", highlights: ["壽喜燒"], strategy: "進店指名 'Sukiyaki'。\n攻略：肉片煮好一定要裹滿生蛋液再入口。" },
+                    { time: "20:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "買明日早餐。", highlights: ["R-1優格"], strategy: "因為明天要早起去雪山。\n買雞蛋沙拉三明治、明治 R-1 優格飲。" }
+                ]},
+                { day: 6, date_short: "3/2", date_en: "Mon", location: "Okuhida", places: [
+                    { time: "07:30", name: "Coffee Don", type: "food", typeLabel: "早餐", desc: "昭和氣氛老舖。", highlights: ["吐司套餐"], strategy: "1951年老舖。點吐司套餐配黑咖啡。\n不想早起就在房吃便利商店早餐。" },
+                    { time: "08:40", name: "前往新穗高", type: "transport", typeLabel: "移動", desc: "搭巴士。", highlights: ["左側風景"], strategy: "坐巴士左側 (Left Side) 看風景。" },
+                    { time: "10:45", name: "Alps no Pan", type: "food", typeLabel: "點心", desc: "鍋平高原站。", highlights: ["可頌"], strategy: "在轉乘第二段纜車前，去麵包店買剛出爐的現烤可頌 (Croissant)。" },
+                    { time: "11:00", name: "新穗高纜車", type: "spot", typeLabel: "絕景", desc: "雙層纜車。", highlights: ["雪之迴廊"], strategy: "搶雙層纜車 2樓 位置。\n山頂去走雪之迴廊、寄明信片。" },
+                    { time: "14:00", name: "平湯之森", type: "spot", typeLabel: "溫泉", desc: "日歸溫泉。", highlights: ["雪見溫泉"], strategy: "回程巴士在「平湯溫泉」下。\n吃飛驒牛鐵板燒。\n泡 16 個露天雪見溫泉池。體驗雪中裸身奔跑。" },
+                    { time: "18:00", name: "Center4 Burger", type: "food", typeLabel: "晚餐", desc: "飛驒牛漢堡。", highlights: ["漢堡"], strategy: "高山第一名漢堡。需提前預約。\n若無位，去平安樂吃餃子。" }
+                ]},
+                { day: 7, date_short: "3/3", date_en: "Tue", location: "Airport", places: [
+                    { time: "08:00", name: "宮川朝市", type: "spot", typeLabel: "市集", desc: "河邊早市。", highlights: ["伴手禮"], strategy: "只收現金。買餅乾杯咖啡、炸蛋白霜、味噌煎餅。" },
+                    { time: "11:00", name: "豆天狗", type: "food", typeLabel: "午餐", desc: "高山拉麵。", highlights: ["中華拉麵"], strategy: "最後巡禮。醬油湯頭，捲捲的細麵。加一顆味玉 (蛋)。" },
+                    { time: "13:30", name: "前往機場", type: "transport", typeLabel: "移動", desc: "濃飛巴士直達。", highlights: ["預約"], strategy: "絕對要準時。車程 3.5 小時。\n上車前買好零食飲料、準備暈車藥。" },
+                    { time: "17:00", name: "中部國際機場", type: "spot", typeLabel: "離境", desc: "T2。", highlights: ["蝦餅"], strategy: "1. 領行李 (Check-in)。\n2. 逛 Flight of Dreams 787 客機。\n3. 去風之浴看飛機泡腳。\n4. 買蝦餅 (えびせんべいの里)。" },
+                    { time: "21:00", name: "起飛返港", type: "transport", typeLabel: "離境", desc: "UO685。", bookingType: "flight", flightNo: "UO685", terminal: "T2", highlights: [], strategy: "帶著滿滿的戰利品和肚子回家！" }
+                ]}
             ]);
 
             const tripStart = new Date(2026, 1, 25, 9, 0, 0); 
@@ -548,6 +648,14 @@
             const filteredTotal = computed(() => filteredBudgetList.value.reduce((s,i)=>s+i.price,0));
             const deleteWishlist = (idx) => wishlist.value.splice(idx, 1);
 
+            const addWishlist = () => { 
+                if(newWishItem.value.name) { 
+                    wishlist.value.unshift({...newWishItem.value}); 
+                    newWishItem.value = { name: '', price: '', image: null }; 
+                    showWishlistInput.value = false; 
+                } 
+            };
+
             // CALCULATOR LOGIC
             const appendCalc = (char) => { calcExpression.value += char; };
             const clearCalc = () => { calcExpression.value = ''; calcResult.value = '0'; };
@@ -588,7 +696,7 @@
                 { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } 
             ];
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
+            return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
                 // Calc exports
                 currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
                 // Resv
