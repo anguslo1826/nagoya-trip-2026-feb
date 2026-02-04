@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya Trip v58.3</title>
+    <title>梓樂Nagoya Trip v58.4</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -82,6 +81,19 @@
         .calc-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.95); }
         .calc-btn.op { background: rgba(114, 98, 81, 0.2); color: #726251; }
         .calc-btn.eq { background: #726251; color: white; }
+
+        /* Ticket Styles */
+        .ticket-stub {
+            background: #f3f0eb;
+            color: #4a4238;
+            position: relative;
+            clip-path: polygon(
+                0% 0%, 100% 0%, 100% 100%, 0% 100%, 
+                0% 70%, 5% 65%, 0% 60%, /* Left notch */
+                0% 0%
+            );
+            border-left: 4px solid #726251;
+        }
 
         [v-cloak] { display: none !important; }
     </style>
@@ -221,6 +233,69 @@
             </div>
         </div>
 
+        <div v-if="currentView === 'reservations'" class="space-y-6 pt-4">
+            <h2 class="text-2xl font-black font-mincho text-white">預約 & 票券 Resv</h2>
+
+            <div class="space-y-3">
+                <div class="glass p-0 overflow-hidden relative border-l-4 border-[#91867f]">
+                    <div class="bg-[#91867f]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10">
+                        <span class="text-xs font-bold uppercase tracking-widest text-[#91867f]"><i class="fas fa-plane-departure mr-2"></i>Outbound</span>
+                        <span class="text-xs font-bold text-[#4a4238]">2/25 (Wed)</span>
+                    </div>
+                    <div class="p-4 flex justify-between items-center">
+                        <div class="text-center"><div class="text-2xl font-black font-mono">HKG</div><div class="text-[10px] font-bold opacity-50">Hong Kong</div></div>
+                        <div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#91867f] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO680</div></div>
+                        <div class="text-center"><div class="text-2xl font-black font-mono">NGO</div><div class="text-[10px] font-bold opacity-50">Nagoya</div></div>
+                    </div>
+                </div>
+
+                <div class="glass p-0 overflow-hidden relative border-l-4 border-[#726251]">
+                    <div class="bg-[#726251]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10">
+                        <span class="text-xs font-bold uppercase tracking-widest text-[#726251]"><i class="fas fa-plane-arrival mr-2"></i>Inbound</span>
+                        <span class="text-xs font-bold text-[#4a4238]">3/3 (Tue)</span>
+                    </div>
+                    <div class="p-4 flex justify-between items-center">
+                        <div class="text-center"><div class="text-2xl font-black font-mono">NGO</div><div class="text-[10px] font-bold opacity-50">Nagoya</div></div>
+                        <div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#726251] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO685</div></div>
+                        <div class="text-center"><div class="text-2xl font-black font-mono">HKG</div><div class="text-[10px] font-bold opacity-50">Hong Kong</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass relative overflow-hidden bg-[#f3f0eb] border-dashed border-2 border-[#726251]/30">
+                <div class="absolute -left-3 top-1/2 w-6 h-6 rounded-full bg-[#70808f]"></div>
+                <div class="absolute -right-3 top-1/2 w-6 h-6 rounded-full bg-[#70808f]"></div>
+                <div class="p-5 flex justify-between items-center">
+                    <div>
+                        <div class="text-[10px] font-bold opacity-60 uppercase mb-1">Day 2 • 2/26 (Thu)</div>
+                        <div class="text-xl font-black font-mincho text-[#4a4238] mb-1">吉卜力大倉庫</div>
+                        <div class="text-xs font-bold text-[#726251]"><i class="fas fa-ticket-alt mr-1"></i>Admission Ticket</div>
+                    </div>
+                    <div class="text-center opacity-80">
+                        <i class="fas fa-qrcode text-4xl text-[#4a4238]"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-3 pb-20">
+                <h3 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-1 text-white">交通票券 Transport</h3>
+                <div v-for="(item, i) in transportPlan" :key="i" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md">
+                    <div class="flex flex-col">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-[#4a4238] text-white text-[9px] font-bold px-1.5 py-0.5 rounded">{{ item.date }}</span>
+                            <span class="text-[10px] font-bold opacity-50 uppercase">{{ item.day }}</span>
+                        </div>
+                        <div class="font-bold text-sm text-[#4a4238] leading-tight">{{ item.route }}</div>
+                        <div class="text-[10px] text-[#726251] mt-1 font-bold"><i class="fas fa-map-marker-alt mr-1"></i>{{ item.note }}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-mono font-black text-lg text-[#4a4238]">{{ item.price }}</div>
+                        <i class="fas opacity-20 text-[#4a4238]" :class="item.icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div v-if="currentView === 'packing'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">行李清單</h2>
             <div v-for="(group, key) in packingList" :key="key" class="glass overflow-hidden">
@@ -345,7 +420,7 @@
     </main>
 
     <nav v-show="!isModalOpen" class="fixed bottom-0 w-full h-[85px] bg-[#70808f]/95 backdrop-blur-xl border-t border-[#c5b59d]/20 z-50 flex justify-around items-center px-2 pb-safe-bottom">
-        <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" class="flex flex-col items-center justify-center w-14 h-full space-y-1 transition-all cursor-pointer active:scale-95" :class="currentView === tab.id ? 'text-[#c5b59d] scale-110' : 'text-white/40'">
+        <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" class="flex flex-col items-center justify-center w-12 h-full space-y-1 transition-all cursor-pointer active:scale-95" :class="currentView === tab.id ? 'text-[#c5b59d] scale-110' : 'text-white/40'">
             <i :class="tab.icon" class="text-xl"></i>
             <span class="text-[9px] font-bold uppercase tracking-widest">{{ tab.label }}</span>
         </button>
@@ -480,6 +555,17 @@
                 tszTung: [{name: '外出衣物', checked: false}, {name: '睡衣褲', checked: false}, {name: '內衣褲 & 襪', checked: false}, {name: '外套', checked: false}, {name: '化妝品', checked: false}, {name: '護膚品', checked: false}, {name: '洗面/洗髮', checked: false}, {name: '頭髮定型', checked: false}, {name: '梳 & 風筒', checked: false}, {name: '隱形眼鏡', checked: false}, {name: '女性護理', checked: false}, {name: '毛巾', checked: false}, {name: '公仔', checked: false}, {name: '熱水煲', checked: false}]
             });
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
+
+            // NEW TRANSPORT DATA
+            const transportPlan = ref([
+                { date: "2/25", day: "Day 1", route: "機場 → 市區", price: "¥1,430", note: "機場名鐵櫃檯", icon: "fa-train" },
+                { date: "2/26", day: "Day 2", route: "吉卜力往返", price: "約 ¥1,340", note: "地鐵+Linimo (IC卡)", icon: "fa-subway" },
+                { date: "2/27", day: "Day 3", route: "市區觀光", price: "¥760", note: "24小時券 (販賣機)", icon: "fa-ticket-alt" },
+                { date: "2/28", day: "Day 4", route: "名古屋 → 高山", price: "¥6,140", note: "JR Hida 5號 (名站)", icon: "fa-train" },
+                { date: "3/1", day: "Day 5", route: "高山 ↔ 白川鄉", price: "¥5,200", note: "濃飛巴士 (電子票)", icon: "fa-bus" },
+                { date: "3/2", day: "Day 6", route: "奧飛驒套票", price: "¥6,300", note: "高山巴士總站", icon: "fa-mountain" },
+                { date: "3/3", day: "Day 7", route: "高山 → 機場", price: "¥7,570", note: "Hida + μ-Sky", icon: "fa-plane" }
+            ]);
 
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
@@ -686,18 +772,21 @@
                 return calcExpression.value;
             });
 
-            // UPDATED TABS
+            // UPDATED TABS (6 Items)
             const tabs = [ 
                 { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, 
                 { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, 
                 { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, 
+                { id: 'reservations', label: 'Resv', icon: 'fas fa-ticket-alt' },
                 { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' },
                 { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } 
             ];
 
             return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openMap, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
                 // Calc exports
-                currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue
+                currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
+                // Resv
+                transportPlan
             };
         }
     }).mount('#app');
