@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.0 (Ultimate)</title>
+    <title>梓樂Nagoya v60.1 (PDF & Fixes)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,6 +28,9 @@
         .calc-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.95); }
         .ticket-stub { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 70%, 5% 65%, 0% 60%, 0% 0%); cursor: pointer; transition: transform 0.1s; }
         .ticket-stub:active { transform: scale(0.98); }
+        .method-online { background: #e6f4ea; color: #1e4620; border-left: 4px solid #34a853; }
+        .method-onsite { background: #fef7e0; color: #5f370e; border-left: 4px solid #fbbc04; }
+        .method-mobile { background: #f1f3f4; color: #3c4043; border-left: 4px solid #9aa0a6; }
         .sync-status { position: fixed; top: 10px; right: 10px; z-index: 9999; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 20px; background: rgba(0,0,0,0.5); color: white; display: flex; items-center; gap: 5px; }
         #app-error { display: none; padding: 20px; color: white; text-align: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #70808f; z-index: 999999; }
         [v-cloak] { display: none !important; }
@@ -55,16 +58,27 @@
                 <div><div class="text-[10px] font-bold text-white/80 uppercase tracking-widest">JP.TRIP 2026</div><h1 class="text-3xl font-black font-mincho text-white flex items-center gap-2"><i class="fas fa-chess-rook text-xl opacity-80"></i> 梓樂Nagoya</h1></div>
                 <div class="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden shadow-lg bg-[#c5b59d]"><img src="icon.jpg" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
             </div>
+            
             <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl">
                 <div class="flex justify-between items-end mb-2"><span class="text-xs font-bold opacity-60 uppercase tracking-wider">距離出發 (HKO)</span><i class="fas fa-plane text-[#726251] animate-pulse"></i></div>
-                <div class="flex items-baseline gap-2 mb-4"><span class="text-6xl font-black font-mono tracking-tighter">{{ countdown.days }}</span><span class="text-sm font-bold opacity-80">Days</span><span class="text-2xl font-mono font-bold ml-2">{{ countdown.hours }}:{{ countdown.minutes }}</span></div>
+                <div class="flex items-baseline gap-2 mb-4">
+                    <span class="text-5xl font-black font-mono tracking-tighter">{{ countdown.days }}</span><span class="text-xs font-bold opacity-80 mr-2">days</span>
+                    <span class="text-xl font-mono font-bold">{{ countdown.hours }}</span><span class="text-[10px] opacity-60 mr-1">h</span>
+                    <span class="text-xl font-mono font-bold">{{ countdown.minutes }}</span><span class="text-[10px] opacity-60 mr-1">m</span>
+                    <span class="text-xl font-mono font-bold">{{ countdown.seconds }}</span><span class="text-[10px] opacity-60">s</span>
+                </div>
                 <div class="relative w-full h-2 bg-[#4a4238]/10 rounded-full mt-2"><div class="absolute top-0 left-0 h-full bg-[#726251] rounded-full transition-all duration-1000" :style="{ width: tripProgress + '%' }"></div></div>
             </div>
+
             <div class="bg-[#70808f] sticky top-0 z-30 py-2 -mx-5 px-5 border-b border-[#c5b59d]/30 shadow-lg">
                 <div class="flex gap-3 overflow-x-auto no-scrollbar">
-                    <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx" class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer active:scale-95" :class="dayIndex === idx ? 'bg-[#c5b59d] text-[#4a4238] border-[#c5b59d] shadow-lg scale-105' : 'bg-white/10 border-white/10 text-white/60'"><span class="text-[9px] font-bold uppercase">{{ day.date_en.substr(0,3) }}</span><span class="text-lg font-black">{{ day.day }}</span></button>
+                    <button v-for="(day, idx) in itinerary" :key="idx" @click="dayIndex = idx" class="flex-shrink-0 w-12 h-14 rounded-xl flex flex-col items-center justify-center border transition-all cursor-pointer active:scale-95" :class="dayIndex === idx ? 'bg-[#c5b59d] text-[#4a4238] border-[#c5b59d] shadow-lg scale-105' : 'bg-white/10 border-white/10 text-white/60'">
+                        <span class="text-[9px] font-bold uppercase">{{ day.date_en.substr(0,3) }}</span>
+                        <span class="text-lg font-black">{{ day.date_short.split('/')[1] }}</span>
+                    </button>
                 </div>
             </div>
+
             <div class="glass p-3 border-l-4 border-[#726251] flex items-center justify-between">
                 <div class="flex flex-col"><span class="text-[10px] font-bold opacity-60 uppercase tracking-wider">{{ itinerary[dayIndex].date_short }} Weather</span><span class="text-xs font-bold">{{ itinerary[dayIndex].location }}</span></div>
                 <div class="flex gap-3 overflow-x-auto no-scrollbar max-w-[65%]"><div v-for="(h, i) in currentDayWeather" :key="i" class="flex flex-col items-center min-w-[2.5rem]"><span class="text-[9px] opacity-60 font-mono">{{ h.time }}</span><i :class="h.icon" class="text-sm my-0.5"></i><span class="text-[10px] font-bold">{{ h.temp }}</span></div></div>
@@ -110,9 +124,9 @@
                 <div class="glass p-0 overflow-hidden relative border-l-4 border-[#726251]"><div class="bg-[#726251]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10"><span class="text-xs font-bold uppercase tracking-widest text-[#726251]">Inbound</span><span class="text-xs font-bold text-[#4a4238]">3/3 (Tue)</span></div><div class="p-4 flex justify-between items-center"><div class="text-center"><div class="text-2xl font-black font-mono">NGO</div></div><div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#726251] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO685</div></div><div class="text-center"><div class="text-2xl font-black font-mono">HKG</div></div></div></div>
             </div>
             
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60 text-[#4a4238]">Day {{ item.date.split('/')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60 text-[#4a4238]">Day {{ item.date.split('/')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60 text-[#4a4238]">Day {{ item.date.split('/')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
 
             <div class="glass p-5 border-t-4 border-red-400 mb-20"><h3 class="font-bold text-sm mb-3 flex items-center"><i class="fas fa-clipboard-check mr-2"></i>最終確認清單</h3><div class="space-y-2"><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">實體信用卡 (Day 4 領票必備)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">JR 認證碼 (PIN: <span class="font-black text-red-600">1226</span>)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">現金 ¥15,000 (Day 6 買票)</span></label></div></div>
         </div>
@@ -160,7 +174,7 @@
         </div>
     </div>
 
-    <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop><div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div><div v-if="detailModal.data.isTicket"><span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2><div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">購票地點 / 網址</div><div class="font-bold mb-3">{{ detailModal.data.location }}</div><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="block w-full py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform"><i class="fas fa-external-link-alt mr-2"></i>前往預約網站</a></div><div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div><div v-if="detailModal.data.desc" class="bg-white/20 p-4 rounded-xl mt-4"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">票券資訊</h4><p class="text-sm font-bold">{{ detailModal.data.desc }}</p></div></div></div><div v-else><span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button></div></div></div>
+    <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop><div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div><div v-if="detailModal.data.isTicket"><span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2><div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">地點 / 詳細資訊</div><div class="font-bold mb-1">{{ detailModal.data.location }}</div><div v-if="detailModal.data.desc" class="text-xs opacity-70 font-mono">{{ detailModal.data.desc }}</div><div class="mt-3 flex gap-2"><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="flex-1 py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-external-link-alt mr-2"></i>預約網站</a><a v-if="detailModal.data.pdfLink" :href="detailModal.data.pdfLink" target="_blank" class="flex-1 py-3 bg-[#70808f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-pdf mr-2"></i>車票 PDF</a></div></div><div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div></div></div><div v-else><span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button></div></div></div>
 
 </div>
 
@@ -168,6 +182,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
+    // FIREBASE CONFIG (Your correct keys)
     const firebaseConfig = {
         apiKey: "AIzaSyCDOiAGPDY7Jd7ysg1fapFnCdidwGE66q8",
         authDomain: "nagoya-2026-361a0.firebaseapp.com",
@@ -188,7 +203,9 @@
     try {
         const app = initializeApp(firebaseConfig);
         db = getFirestore(app);
-    } catch (e) { console.warn("Firebase Init Error", e); }
+    } catch (e) {
+        console.warn("Firebase Init Error", e);
+    }
 
     const { createApp, ref, computed, onMounted, watch } = Vue;
 
@@ -204,7 +221,6 @@
             const payers = ['TszLok', 'TszTung'];
             const newItem = ref({ name: '', price: '', payer: 'TszLok' });
             const newWishItem = ref({ name: '', price: '', image: null });
-            
             const budgetList = ref([]);
             const wishlist = ref([]);
             const packingList = ref({
@@ -217,14 +233,15 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v60_final"; 
+            const tripDocId = "nagoya_v60_1"; 
 
-            // HELPER FUNCTIONS (RESTORED TO FIX GRAY SCREEN)
+            // HELPER FUNCTIONS (ALL RESTORED)
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
             const getMethodClass = (m) => ({ 'method-online': m==='online', 'method-onsite': m==='onsite', 'method-mobile': m==='mobile' }[m]);
             const getMethodBadge = (m) => ({ 'bg-[#e6f4ea] text-[#1e4620]': m==='online', 'bg-[#fef7e0] text-[#5f370e]': m==='onsite', 'bg-[#f1f3f4] text-[#3c4043]': m==='mobile' }[m]);
             const getMethodLabel = (m) => ({ online:'線上預約', onsite:'現場購買', mobile:'數位支付' }[m]);
 
+            // SYNC
             onSnapshot(doc(db, "trips", tripDocId), (doc) => {
                 syncStatus.value = "Live"; syncColor.value = "bg-green-400";
                 if (doc.exists()) {
@@ -276,10 +293,23 @@
             const openMap = (n) => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(n + ' Japan'), '_blank');
             const isModalOpen = computed(() => showBudgetInput.value || showWishlistInput.value || detailModal.value.show);
             const now = ref(new Date());
-            const countdown = computed(() => { const d = new Date(2026,1,25,9,0) - now.value; return { days: Math.floor(d/86400000), hours: Math.floor((d%86400000)/3600000), minutes: Math.floor((d%3600000)/60000) } });
+            
+            // FIXED COUNTDOWN (Details)
+            const countdown = computed(() => { 
+                const target = new Date(2026, 1, 25, 9, 0, 0);
+                const diff = target - now.value;
+                if (diff <= 0) return { days: 0, hours: '00', minutes: '00', seconds: '00' };
+                return { 
+                    days: Math.floor(diff / (1000 * 60 * 60 * 24)), 
+                    hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0'), 
+                    minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0'),
+                    seconds: Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0')
+                }; 
+            });
             const tripProgress = computed(() => Math.min(100, Math.max(0, ((now.value - new Date(2026,1,3,9,0)) / (new Date(2026,1,25,9,0) - new Date(2026,1,3,9,0))) * 100)));
             const nowFormatted = computed(() => now.value.toLocaleDateString('en-GB', { month: 'numeric', day: 'numeric' }));
-            setInterval(() => now.value = new Date(), 60000);
+            setInterval(() => now.value = new Date(), 1000);
+
             const appendCalc = (c) => calcExpression.value += c;
             const clearCalc = () => { calcExpression.value=''; calcResult.value='0'; };
             const backspace = () => calcExpression.value = calcExpression.value.slice(0,-1);
@@ -300,49 +330,39 @@
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
 
-            // *** TICKET DATA UPDATED WITH PDF INFO ***
+            // TICKET DATA (Updated with PDF Download Links)
             const ticketList = ref([
                 { 
                     date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站", 
-                    guide: { 
-                        steps: ["抵達名鐵機場站：走出機場入境大廳後，跟著「Train / Meitetsu Line」標示走。", "找到藍色或紅色售票機：選擇「μ-ticket」或「Limited Express」選項。", "劃位付款：前往「Nagoya」，選擇2人，選位 (可選連號)。", "可用現金、信用卡或 IC 卡。"], 
-                        reminder: "一定要拿兩張票（乘車券+座位券）才能進站！" 
-                    } 
+                    guide: { steps: ["去售票機選 'Nagoya'。", "加購 'μ-ticket' (¥450)。", "付款：現金/信用卡。"], reminder: "一定要拿兩張票！" } 
                 },
                 { date: "2/26", day: "Day 2", title: "吉卜力交通", route: "市區 ↔ 吉卜力", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet", guide: { steps: ["用 iPhone 交通卡。", "Apple Pay 加值 ¥3000。", "直接感應閘門。"], reminder: "確認手機有電！" } },
                 { date: "2/27", day: "Day 3", title: "地鐵 24 小時券", route: "市區觀光", price: "¥760", method: "onsite", location: "地鐵售票機", guide: { steps: ["找黃色售票機。", "選 'Value Tickets'。", "平日¥760 / 週末¥620。"], reminder: "第一次進站啟用。" } },
                 
-                // UPDATED: 2/28 NOHI BUS (PDF INFO)
+                // UPDATED: Nohi Bus 2/28 with PDF Link placeholder
                 { 
-                    date: "2/28", day: "Day 4", title: "濃飛巴士 (去程)", route: "名古屋 → 高山", price: "¥7,200", method: "online", location: "名鐵巴士中心 (Meitetsu Bus Center)", 
-                    desc: "發車: 09:30 | 座位: 02C, 02D | 車號: 133091",
-                    guide: { 
-                        steps: ["前往名鐵巴士中心 (Meitetsu Bus Center) 3F。", "出示電子車票 (手機 PDF)。", "尋找車號 133091。"], 
-                        reminder: "票券號碼: 113058582。請提早 15 分鐘抵達。" 
-                    } 
+                    date: "2/28", day: "Day 4", title: "濃飛巴士 (去程)", route: "名古屋 → 高山", price: "¥7,200", method: "online", location: "名鐵巴士中心", 
+                    desc: "發車: 09:30 | 座位: 02C/02D", 
+                    pdfLink: "https://your-pdf-link-here.com/228bus.pdf", // 🔥 PASTE YOUR PDF LINK HERE LATER
+                    guide: { steps: ["前往名鐵巴士中心3F。", "車號 133091。", "出示電子票 PDF。"], reminder: "提早15分鐘到。" } 
                 },
 
-                // UPDATED: 3/1 SHIRAKAWA BUS (PDF INFO)
+                // UPDATED: Shirakawa Bus 3/1
                 { 
                     date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,600", method: "online", location: "高山濃飛巴士中心", 
-                    desc: "去程: 08:10 | 座位: 8A, 8B | 車號: 01",
-                    guide: { 
-                        steps: ["前往高山站旁的巴士中心。", "出示 Japan Bus Online 電子票。", "車號 01，座位 8A/8B。"], 
-                        reminder: "預約編號: 02062000931。上車出示手機 QR Code。" 
-                    } 
+                    desc: "去程: 08:10 | 座位: 8A/8B",
+                    pdfLink: "https://your-pdf-link-here.com/301bus.pdf", // 🔥 PASTE YOUR PDF LINK HERE LATER
+                    guide: { steps: ["預約 08:50 前班次。", "線上刷卡。", "收 Email 電子票。"], reminder: "上車出示手機 QR Code。" } 
                 },
 
-                // UPDATED: 3/2 OKUHIDA TICKET
                 { date: "3/2", day: "Day 6", title: "奧飛驒套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心", guide: { steps: ["去 JR 旁巴士中心。", "買 'Okuhida Value Ticket'。", "付現金。"], reminder: "弄丟不補發！" } },
 
-                // UPDATED: 3/3 NOHI BUS (PDF INFO)
+                // UPDATED: Nohi Bus 3/3
                 { 
                     date: "3/3", day: "Day 7", title: "濃飛巴士 (回程)", route: "高山 → 名古屋", price: "¥7,200", method: "online", location: "高山濃飛巴士中心", 
-                    desc: "發車: 13:20 | 座位: 01A, 01B | 車號: 132821",
-                    guide: { 
-                        steps: ["前往高山濃飛巴士中心。", "出示電子車票 (手機 PDF)。", "尋找車號 132821。"], 
-                        reminder: "票券號碼: 113058584。下車地點: 名鐵巴士中心。" 
-                    } 
+                    desc: "發車: 13:20 | 座位: 01A/01B",
+                    pdfLink: "https://your-pdf-link-here.com/303bus.pdf", // 🔥 PASTE YOUR PDF LINK HERE LATER
+                    guide: { steps: ["前往高山濃飛巴士中心。", "車號 132821。", "回程下車點: 名鐵巴士中心。"], reminder: "不要遲到！" } 
                 }
             ]);
 
@@ -359,9 +379,12 @@
             const tabs = [ { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, { id: 'reservations', label: 'Resv', icon: 'fas fa-ticket-alt' }, { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' }, { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } ];
 
             return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openTicketDetail, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
-                currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue, 
-                ticketList, getMethodBadge, getMethodLabel, getTicketsByMethod, getMethodClass, // ADDED HERE TO FIX ERROR
-                syncStatus, syncColor, saveData, syncPacking 
+                // Calc exports
+                currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
+                // Resv & Utils (RESTORED HERE)
+                ticketList, openTicketDetail, getMethodClass, getMethodBadge, getMethodLabel, getTicketsByMethod,
+                // Cloud Status
+                syncStatus, syncColor, saveData, syncPacking
             };
         }
     }).mount('#app');
