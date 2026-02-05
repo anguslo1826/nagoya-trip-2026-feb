@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.1 (PDF & Fixes)</title>
+    <title>梓樂Nagoya v60.2 (PDF Fix)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -182,7 +182,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-    // FIREBASE CONFIG (Your correct keys)
+    // *** CONFIG FROM YOUR SCREENSHOT ***
     const firebaseConfig = {
         apiKey: "AIzaSyCDOiAGPDY7Jd7ysg1fapFnCdidwGE66q8",
         authDomain: "nagoya-2026-361a0.firebaseapp.com",
@@ -233,7 +233,7 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v60_1"; 
+            const tripDocId = "nagoya_v60_2"; 
 
             // HELPER FUNCTIONS (ALL RESTORED)
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
@@ -330,7 +330,7 @@
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
 
-            // TICKET DATA (Updated with PDF Download Links)
+            // TICKET DATA (RELATIVE LINKS - SAFE)
             const ticketList = ref([
                 { 
                     date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站", 
@@ -339,29 +339,29 @@
                 { date: "2/26", day: "Day 2", title: "吉卜力交通", route: "市區 ↔ 吉卜力", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet", guide: { steps: ["用 iPhone 交通卡。", "Apple Pay 加值 ¥3000。", "直接感應閘門。"], reminder: "確認手機有電！" } },
                 { date: "2/27", day: "Day 3", title: "地鐵 24 小時券", route: "市區觀光", price: "¥760", method: "onsite", location: "地鐵售票機", guide: { steps: ["找黃色售票機。", "選 'Value Tickets'。", "平日¥760 / 週末¥620。"], reminder: "第一次進站啟用。" } },
                 
-                // UPDATED: Nohi Bus 2/28 with PDF Link placeholder
+                // UPDATED: Nohi Bus 2/28 with RELATIVE PDF LINK
                 { 
                     date: "2/28", day: "Day 4", title: "濃飛巴士 (去程)", route: "名古屋 → 高山", price: "¥7,200", method: "online", location: "名鐵巴士中心", 
                     desc: "發車: 09:30 | 座位: 02C/02D", 
-                    pdfLink: "https://your-pdf-link-here.com/228bus.pdf", // 🔥 PASTE YOUR PDF LINK HERE LATER
+                    pdfLink: "ticket_228.pdf", 
                     guide: { steps: ["前往名鐵巴士中心3F。", "車號 133091。", "出示電子票 PDF。"], reminder: "提早15分鐘到。" } 
                 },
 
-                // UPDATED: Shirakawa Bus 3/1
+                // UPDATED: Shirakawa Bus 3/1 with RELATIVE PDF LINK
                 { 
                     date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,600", method: "online", location: "高山濃飛巴士中心", 
                     desc: "去程: 08:10 | 座位: 8A/8B",
-                    pdfLink: "https://your-pdf-link-here.com/301bus.pdf", // 🔥 PASTE YOUR PDF LINK HERE LATER
+                    pdfLink: "ticket_301.pdf", 
                     guide: { steps: ["預約 08:50 前班次。", "線上刷卡。", "收 Email 電子票。"], reminder: "上車出示手機 QR Code。" } 
                 },
 
                 { date: "3/2", day: "Day 6", title: "奧飛驒套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心", guide: { steps: ["去 JR 旁巴士中心。", "買 'Okuhida Value Ticket'。", "付現金。"], reminder: "弄丟不補發！" } },
 
-                // UPDATED: Nohi Bus 3/3
+                // UPDATED: Nohi Bus 3/3 with RELATIVE PDF LINK
                 { 
                     date: "3/3", day: "Day 7", title: "濃飛巴士 (回程)", route: "高山 → 名古屋", price: "¥7,200", method: "online", location: "高山濃飛巴士中心", 
                     desc: "發車: 13:20 | 座位: 01A/01B",
-                    pdfLink: "https://your-pdf-link-here.com/303bus.pdf", // 🔥 PASTE YOUR PDF LINK HERE LATER
+                    pdfLink: "ticket_303.pdf", 
                     guide: { steps: ["前往高山濃飛巴士中心。", "車號 132821。", "回程下車點: 名鐵巴士中心。"], reminder: "不要遲到！" } 
                 }
             ]);
