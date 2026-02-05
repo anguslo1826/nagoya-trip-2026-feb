@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.2</title>
+    <title>梓樂Nagoya v60.3 (Smart Rate)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -124,11 +124,19 @@
                 <div class="glass p-0 overflow-hidden relative border-l-4 border-[#726251]"><div class="bg-[#726251]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10"><span class="text-xs font-bold uppercase tracking-widest text-[#726251]">Inbound</span><span class="text-xs font-bold text-[#4a4238]">3/3 (Tue)</span></div><div class="p-4 flex justify-between items-center"><div class="text-center"><div class="text-2xl font-black font-mono">NGO</div></div><div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#726251] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO685</div></div><div class="text-center"><div class="text-2xl font-black font-mono">HKG</div></div></div></div>
             </div>
             
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase text-[#4a4238] tracking-wide">DAY {{ item.day.split(' ')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded text-[#4a4238]">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase text-[#4a4238] tracking-wide">DAY {{ item.day.split(' ')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded text-[#4a4238]">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase text-[#4a4238] tracking-wide">DAY {{ item.day.split(' ')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded text-[#4a4238]">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60 text-[#4a4238]">Day {{ item.date.split('/')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60 text-[#4a4238]">Day {{ item.date.split('/')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60 text-[#4a4238]">Day {{ item.date.split('/')[1] }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
 
-            <div class="glass p-5 border-t-4 border-red-400 mb-20"><h3 class="font-bold text-sm mb-3 flex items-center"><i class="fas fa-clipboard-check mr-2"></i>最終確認清單</h3><div class="space-y-2"><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">實體信用卡 (Day 4 領票必備)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">JR 認證碼 (PIN: <span class="font-black text-red-600">1226</span>)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">現金 ¥15,000 (Day 6 買票)</span></label></div></div>
+            <div class="glass p-5 border-t-4 border-red-400 mb-20">
+                <h3 class="font-bold text-sm mb-3 flex items-center"><i class="fas fa-clipboard-check mr-2"></i>最終確認清單</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">Visit Japan Web QR Code (入境)</span></label>
+                    <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">護照 (有效期 > 6個月)</span></label>
+                    <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">E-SIM / 漫遊已開通</span></label>
+                    <label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">現金 ¥30,000 (Day 6+雜支)</span></label>
+                </div>
+            </div>
         </div>
 
         <div v-if="currentView === 'packing'" class="space-y-6 pt-4">
@@ -150,7 +158,7 @@
         <button v-for="tab in tabs" :key="tab.id" @click="currentView = tab.id" class="flex flex-col items-center justify-center w-12 h-full space-y-1 transition-all cursor-pointer active:scale-95" :class="currentView === tab.id ? 'text-[#c5b59d] scale-110' : 'text-white/40'"><i :class="tab.icon" class="text-xl"></i><span class="text-[9px] font-bold uppercase tracking-widest">{{ tab.label }}</span></button>
     </nav>
 
-    <div v-if="showBudgetInput" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop><div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Expense</div><div class="flex-1 overflow-y-auto p-6 pb-40"><div class="flex gap-3 mb-6"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-4 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button></div><div class="space-y-6"><div><label class="block text-xs font-bold opacity-60 mb-2">Item Name</label><input v-model="newItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg"></div><div><label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label><input v-model.number="newItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg"></div></div><div class="flex gap-3 mt-10"><button @click="showBudgetInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button><button @click="addItem" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Save</button></div></div></div></div>
+    <div v-if="showBudgetInput" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showBudgetInput=false"></div><div class="bg-[#c5b59d] w-full max-w-md h-[90vh] rounded-t-3xl animate-slide-up flex flex-col text-[#4a4238] modal-content" @click.stop><div class="p-6 font-bold text-lg border-b border-[#4a4238]/10">Add Expense</div><div class="flex-1 overflow-y-auto p-6 pb-40"><div class="flex gap-3 mb-6"><button v-for="p in payers" :key="p" @click="newItem.payer=p" class="flex-1 py-4 rounded-xl border font-bold text-sm transition-colors" :class="newItem.payer===p?(p==='TszLok'?'bg-[#91867f] text-white border-transparent':'bg-[#726251] text-white border-transparent'):'border-[#4a4238]/30 text-[#4a4238]/60'">{{ p }}</button></div><div class="space-y-6"><div><label class="block text-xs font-bold opacity-60 mb-2">Item Name</label><input v-model="newItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg"></div><div><label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label><input v-model.number="newItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] placeholder-[#4a4238]/30 focus:border-[#726251] outline-none text-lg"><div v-if="newItem.price" class="text-right mt-2 font-mono font-bold text-[#4a4238]/60">≈ HKD ${{ (newItem.price * currencyRate).toFixed(1) }}</div></div></div><div class="flex gap-3 mt-10"><button @click="showBudgetInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button><button @click="addItem" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Save</button></div></div></div></div>
     
     <div v-if="showWishlistInput" class="modal-layer flex items-end justify-center">
         <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="showWishlistInput=false"></div>
@@ -168,7 +176,7 @@
                         <input type="file" accept="image/*" @change="handleImageUpload" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     </label>
                 </div>
-                <div class="space-y-6"><div><label class="block text-xs font-bold opacity-60 mb-2">Item Name</label><input v-model="newWishItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg"></div><div><label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label><input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg"></div></div>
+                <div class="space-y-6"><div><label class="block text-xs font-bold opacity-60 mb-2">Item Name</label><input v-model="newWishItem.name" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg"></div><div><label class="block text-xs font-bold opacity-60 mb-2">Price (¥)</label><input v-model.number="newWishItem.price" type="number" class="w-full bg-white p-5 rounded-2xl font-bold border-2 border-transparent text-[#4a4238] outline-none focus:border-[#726251] text-lg"><div v-if="newWishItem.price" class="text-right mt-2 font-mono font-bold text-[#4a4238]/60">≈ HKD ${{ (newWishItem.price * currencyRate).toFixed(1) }}</div></div></div>
                 <div class="flex gap-3 mt-10"><button @click="showWishlistInput=false" class="flex-1 py-4 font-bold text-[#4a4238]/50 bg-black/5 rounded-2xl">Cancel</button><button @click="addWishlist" class="flex-1 py-4 bg-[#70808f] text-white rounded-2xl font-bold shadow-lg text-lg">Add</button></div>
             </div>
         </div>
@@ -182,7 +190,7 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-    // *** CONFIG FROM YOUR SCREENSHOT ***
+    // FIREBASE CONFIG (Your correct keys)
     const firebaseConfig = {
         apiKey: "AIzaSyCDOiAGPDY7Jd7ysg1fapFnCdidwGE66q8",
         authDomain: "nagoya-2026-361a0.firebaseapp.com",
@@ -203,9 +211,7 @@
     try {
         const app = initializeApp(firebaseConfig);
         db = getFirestore(app);
-    } catch (e) {
-        console.warn("Firebase Init Error", e);
-    }
+    } catch (e) { console.warn("Firebase Init Error", e); }
 
     const { createApp, ref, computed, onMounted, watch } = Vue;
 
@@ -233,7 +239,21 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v60_2"; 
+            const tripDocId = "nagoya_v60_3"; 
+
+            // FETCH REAL TIME RATE
+            const fetchRate = async () => {
+                try {
+                    const res = await fetch('https://api.frankfurter.dev/v1/latest?from=JPY&to=HKD');
+                    const data = await res.json();
+                    if(data && data.rates && data.rates.HKD) {
+                        currencyRate.value = data.rates.HKD;
+                    }
+                } catch(e) {
+                    console.log("Using default rate");
+                }
+            };
+            onMounted(() => { fetchRate(); });
 
             // HELPER FUNCTIONS (ALL RESTORED)
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
@@ -330,7 +350,7 @@
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
 
-            // TICKET DATA (FIXED WITH RELATIVE LINKS ./filename)
+            // TICKET DATA (RELATIVE LINKS - SAFE)
             const ticketList = ref([
                 { 
                     date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站", 
@@ -339,29 +359,29 @@
                 { date: "2/26", day: "Day 2", title: "吉卜力交通", route: "市區 ↔ 吉卜力", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet", guide: { steps: ["用 iPhone 交通卡。", "Apple Pay 加值 ¥3000。", "直接感應閘門。"], reminder: "確認手機有電！" } },
                 { date: "2/27", day: "Day 3", title: "地鐵 24 小時券", route: "市區觀光", price: "¥760", method: "onsite", location: "地鐵售票機", guide: { steps: ["找黃色售票機。", "選 'Value Tickets'。", "平日¥760 / 週末¥620。"], reminder: "第一次進站啟用。" } },
                 
-                // UPDATED: Nohi Bus 2/28
+                // UPDATED: Nohi Bus 2/28 with RELATIVE PDF LINK
                 { 
                     date: "2/28", day: "Day 4", title: "濃飛巴士 (去程)", route: "名古屋 → 高山", price: "¥7,200", method: "online", location: "名鐵巴士中心", 
                     desc: "發車: 09:30 | 座位: 02C/02D", 
-                    pdfLink: "./ticket_228.pdf", 
+                    pdfLink: "ticket_228.pdf", 
                     guide: { steps: ["前往名鐵巴士中心3F。", "車號 133091。", "出示電子票 PDF。"], reminder: "提早15分鐘到。" } 
                 },
 
-                // UPDATED: Shirakawa Bus 3/1
+                // UPDATED: Shirakawa Bus 3/1 with RELATIVE PDF LINK
                 { 
                     date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,600", method: "online", location: "高山濃飛巴士中心", 
                     desc: "去程: 08:10 | 座位: 8A/8B",
-                    pdfLink: "./ticket_301.pdf", 
+                    pdfLink: "ticket_301.pdf", 
                     guide: { steps: ["預約 08:50 前班次。", "線上刷卡。", "收 Email 電子票。"], reminder: "上車出示手機 QR Code。" } 
                 },
 
                 { date: "3/2", day: "Day 6", title: "奧飛驒套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心", guide: { steps: ["去 JR 旁巴士中心。", "買 'Okuhida Value Ticket'。", "付現金。"], reminder: "弄丟不補發！" } },
 
-                // UPDATED: Nohi Bus 3/3
+                // UPDATED: Nohi Bus 3/3 with RELATIVE PDF LINK
                 { 
                     date: "3/3", day: "Day 7", title: "濃飛巴士 (回程)", route: "高山 → 名古屋", price: "¥7,200", method: "online", location: "高山濃飛巴士中心", 
                     desc: "發車: 13:20 | 座位: 01A/01B",
-                    pdfLink: "./ticket_303.pdf", 
+                    pdfLink: "ticket_303.pdf", 
                     guide: { steps: ["前往高山濃飛巴士中心。", "車號 132821。", "回程下車點: 名鐵巴士中心。"], reminder: "不要遲到！" } 
                 }
             ]);
