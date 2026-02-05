@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.0 (Ultimate Fix)</title>
+    <title>梓樂Nagoya v60.0 (Ultimate)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -28,9 +28,6 @@
         .calc-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.95); }
         .ticket-stub { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 70%, 5% 65%, 0% 60%, 0% 0%); cursor: pointer; transition: transform 0.1s; }
         .ticket-stub:active { transform: scale(0.98); }
-        .method-online { background: #e6f4ea; color: #1e4620; border-left: 4px solid #34a853; }
-        .method-onsite { background: #fef7e0; color: #5f370e; border-left: 4px solid #fbbc04; }
-        .method-mobile { background: #f1f3f4; color: #3c4043; border-left: 4px solid #9aa0a6; }
         .sync-status { position: fixed; top: 10px; right: 10px; z-index: 9999; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 20px; background: rgba(0,0,0,0.5); color: white; display: flex; items-center; gap: 5px; }
         #app-error { display: none; padding: 20px; color: white; text-align: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #70808f; z-index: 999999; }
         [v-cloak] { display: none !important; }
@@ -100,22 +97,22 @@
                 <div v-for="(item, idx) in wishlist" :key="idx" class="glass overflow-hidden relative group">
                     <button @click="deleteWishlist(idx)" class="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full flex items-center justify-center text-xs z-10 text-white shadow-md"><i class="fas fa-times"></i></button>
                     <img v-if="item.image" :src="item.image" class="w-full aspect-square object-cover">
-                    <div v-else class="w-full aspect-square bg-[#4a4238]/10 flex items-center justify-center"><i class="fas fa-shopping-bag text-2xl opacity-30"></i></div>
+                    <div v-else class="w-full aspect-square bg-[#4a4238]/10 flex items-center justify-center flex-col p-2 text-center"><i class="fas fa-shopping-bag text-2xl mb-2 opacity-30"></i></div>
                     <div class="p-3"><div class="font-bold text-sm truncate">{{ item.name }}</div><div class="font-mono text-xs font-bold opacity-60">¥{{ item.price }}</div></div>
                 </div>
             </div>
         </div>
 
         <div v-if="currentView === 'reservations'" class="space-y-6 pt-4">
-            <h2 class="text-2xl font-black font-mincho text-white">預約 & 票券</h2>
+            <h2 class="text-2xl font-black font-mincho text-white">預約 & 票券 Resv</h2>
             <div class="space-y-3">
                 <div class="glass p-0 overflow-hidden relative border-l-4 border-[#91867f]"><div class="bg-[#91867f]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10"><span class="text-xs font-bold uppercase tracking-widest text-[#91867f]">Outbound</span><span class="text-xs font-bold text-[#4a4238]">2/25 (Wed)</span></div><div class="p-4 flex justify-between items-center"><div class="text-center"><div class="text-2xl font-black font-mono">HKG</div></div><div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#91867f] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO680</div></div><div class="text-center"><div class="text-2xl font-black font-mono">NGO</div></div></div></div>
                 <div class="glass p-0 overflow-hidden relative border-l-4 border-[#726251]"><div class="bg-[#726251]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10"><span class="text-xs font-bold uppercase tracking-widest text-[#726251]">Inbound</span><span class="text-xs font-bold text-[#4a4238]">3/3 (Tue)</span></div><div class="p-4 flex justify-between items-center"><div class="text-center"><div class="text-2xl font-black font-mono">NGO</div></div><div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#726251] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO685</div></div><div class="text-center"><div class="text-2xl font-black font-mono">HKG</div></div></div></div>
             </div>
             
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]" :class="getMethodClass('online')"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]" :class="getMethodClass('onsite')"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
-            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]" :class="getMethodClass('mobile')"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#34a853] shadow-[0_0_10px_#34a853]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現在就買 Online</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('online')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#34a853]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#fbbc04] shadow-[0_0_10px_#fbbc04]"></span><h3 class="text-xs font-bold uppercase tracking-widest">現場購買 Onsite</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('onsite')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#fbbc04]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
+            <div><div class="flex items-center gap-2 mb-2 text-white/80"><span class="w-2 h-2 rounded-full bg-[#9aa0a6] shadow-[0_0_10px_#9aa0a6]"></span><h3 class="text-xs font-bold uppercase tracking-widest">數位支付 Mobile</h3></div><div class="space-y-2"><div v-for="(item, i) in getTicketsByMethod('mobile')" :key="i" @click="openTicketDetail(item)" class="ticket-stub p-4 rounded-r-xl flex justify-between items-center shadow-md bg-white border-l-4 border-[#9aa0a6]"><div class="flex flex-col"><div class="flex items-center gap-2 mb-1"><span class="text-[10px] font-black uppercase opacity-60">{{ item.day }}</span><span class="text-[10px] font-bold bg-black/5 px-1.5 rounded">{{ item.date }}</span></div><div class="font-black text-sm text-[#4a4238] leading-tight">{{ item.title }}</div></div><div class="text-right"><i class="fas fa-chevron-right text-xs opacity-30"></i></div></div></div></div>
 
             <div class="glass p-5 border-t-4 border-red-400 mb-20"><h3 class="font-bold text-sm mb-3 flex items-center"><i class="fas fa-clipboard-check mr-2"></i>最終確認清單</h3><div class="space-y-2"><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">實體信用卡 (Day 4 領票必備)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">JR 認證碼 (PIN: <span class="font-black text-red-600">1226</span>)</span></label><label class="flex items-center gap-3 p-2 bg-black/5 rounded-lg"><input type="checkbox" class="w-4 h-4 accent-[#726251]"><span class="text-xs font-bold">現金 ¥15,000 (Day 6 買票)</span></label></div></div>
         </div>
@@ -128,7 +125,7 @@
         <div v-if="currentView === 'reminders'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">省錢攻略 Tips</h2>
             <div class="glass overflow-hidden relative"><div class="bg-[#70808f] p-3 text-white flex justify-between items-center border-b border-white/20"><span class="font-bold text-sm"><i class="fas fa-subway mr-2"></i>Day 3 交通</span><span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">¥760 / 24hr</span></div><div class="p-5"><h3 class="font-bold text-lg mb-2 text-[#4a4238]">地鐵 24 小時券</h3><ul class="text-sm space-y-3 opacity-90 leading-relaxed list-disc pl-4 text-[#4a4238]"><li><b class="text-[#726251]">回本極快：</b>行程總車資約 ¥1,000+，使用此券<span class="font-bold border-b border-[#726251]">現省 ¥300</span>。</li><li><b class="text-[#726251]">彈性極高：</b>採「24小時制」。若 Day 3 早上 10:00 第一次刷卡，可用到 Day 4 早上 09:59。</li></ul></div></div>
-            <div class="glass overflow-hidden relative"><div class="bg-[#91867f] p-3 text-white flex justify-between items-center border-b border-white/20"><span class="font-bold text-sm"><i class="fas fa-snowflake mr-2"></i>Day 6 備案</span><span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">Check Weather</span></div><div class="p-5"><h3 class="font-bold text-lg mb-2 text-[#4a4238]">新穗高纜車</h3><div class="bg-[#726251]/10 p-3 rounded-lg mb-3 text-sm font-bold border-l-4 border-[#726251] text-[#4a4238]">出發前務必看 Live Camera！</div><p class="text-sm opacity-90 text-[#4a4238]">如果山頂大霧，不要買套票，改去平湯溫泉。</p></div></div>
+            <div class="glass overflow-hidden relative"><div class="bg-[#91867f] p-3 text-white flex justify-between items-center border-b border-white/20"><span class="font-bold text-sm"><i class="fas fa-snowflake mr-2"></i>Day 6 備案</span><span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">Weather Check</span></div><div class="p-5"><h3 class="font-bold text-lg mb-2 text-[#4a4238]">新穗高纜車</h3><div class="bg-[#726251]/10 p-3 rounded-lg mb-3 text-sm font-bold border-l-4 border-[#726251] text-[#4a4238]">出發前務必看 Live Camera！</div><p class="text-sm opacity-90 text-[#4a4238]">如果山頂大霧，不要買套票，改去平湯溫泉。</p></div></div>
         </div>
 
         <div v-if="currentView === 'info'" class="space-y-6 pt-4 h-full flex flex-col"><h2 class="text-2xl font-black font-mincho text-white">匯率計算機</h2><div class="glass flex-1 p-5 flex flex-col"><div class="bg-[#f3f0eb] rounded-xl p-4 mb-4 flex-1 flex flex-col justify-end items-end shadow-inner relative overflow-hidden"><div class="text-[#4a4238]/40 font-bold font-mono text-sm mb-1 break-all text-right">{{ calcExpression || '0' }}</div><div class="text-[#4a4238] font-black font-mono text-4xl mb-1 break-all text-right">¥{{ displayValue }}</div><div class="text-[#726251] font-bold font-mono text-2xl flex items-center justify-end w-full">HKD ${{ (parseFloat(displayValue.replace(/,/g,'')) * currencyRate).toFixed(1) }}</div><div class="absolute top-2 left-2 flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity"><span class="text-[9px] font-bold">Rate:</span><input type="number" v-model="currencyRate" class="w-12 bg-transparent border-b border-[#4a4238]/30 text-[10px] font-mono text-right outline-none"></div></div><div class="calc-grid"><button @click="clearCalc" class="calc-btn op">C</button><button @click="appendCalc('/')" class="calc-btn op">÷</button><button @click="appendCalc('*')" class="calc-btn op">×</button><button @click="backspace" class="calc-btn op">←</button><button @click="appendCalc('7')" class="calc-btn">7</button><button @click="appendCalc('8')" class="calc-btn">8</button><button @click="appendCalc('9')" class="calc-btn">9</button><button @click="appendCalc('-')" class="calc-btn op">-</button><button @click="appendCalc('4')" class="calc-btn">4</button><button @click="appendCalc('5')" class="calc-btn">5</button><button @click="appendCalc('6')" class="calc-btn">6</button><button @click="appendCalc('+')" class="calc-btn op">+</button><button @click="appendCalc('1')" class="calc-btn">1</button><button @click="appendCalc('2')" class="calc-btn">2</button><button @click="appendCalc('3')" class="calc-btn">3</button><button @click="calculate" class="calc-btn eq">=</button><button @click="appendCalc('0')" class="calc-btn col-span-2">0</button><button @click="appendCalc('.')" class="calc-btn">.</button></div></div></div>
@@ -163,7 +160,7 @@
         </div>
     </div>
 
-    <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop><div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div><div v-if="detailModal.data.isTicket"><span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2><div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">購票地點 / 網址</div><div class="font-bold mb-3">{{ detailModal.data.location }}</div><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="block w-full py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform"><i class="fas fa-external-link-alt mr-2"></i>前往預約網站</a></div><div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div></div></div><div v-else><span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button></div></div></div>
+    <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop><div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div><div v-if="detailModal.data.isTicket"><span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2><div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">購票地點 / 網址</div><div class="font-bold mb-3">{{ detailModal.data.location }}</div><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="block w-full py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform"><i class="fas fa-external-link-alt mr-2"></i>前往預約網站</a></div><div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div><div v-if="detailModal.data.desc" class="bg-white/20 p-4 rounded-xl mt-4"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">票券資訊</h4><p class="text-sm font-bold">{{ detailModal.data.desc }}</p></div></div></div><div v-else><span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button></div></div></div>
 
 </div>
 
@@ -171,7 +168,6 @@
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
     import { getFirestore, doc, onSnapshot, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
 
-    // FIREBASE CONFIG (Your correct keys)
     const firebaseConfig = {
         apiKey: "AIzaSyCDOiAGPDY7Jd7ysg1fapFnCdidwGE66q8",
         authDomain: "nagoya-2026-361a0.firebaseapp.com",
@@ -182,7 +178,6 @@
         measurementId: "G-Z0NV8048TJ"
     };
 
-    // Error Catcher (Prevents Gray Screen)
     window.onerror = function(msg, url, line) {
         document.getElementById('app-error').style.display = 'block';
         document.getElementById('error-msg').innerText = msg;
@@ -193,9 +188,7 @@
     try {
         const app = initializeApp(firebaseConfig);
         db = getFirestore(app);
-    } catch (e) {
-        console.warn("Firebase Init Error", e);
-    }
+    } catch (e) { console.warn("Firebase Init Error", e); }
 
     const { createApp, ref, computed, onMounted, watch } = Vue;
 
@@ -212,7 +205,6 @@
             const newItem = ref({ name: '', price: '', payer: 'TszLok' });
             const newWishItem = ref({ name: '', price: '', image: null });
             
-            // Data
             const budgetList = ref([]);
             const wishlist = ref([]);
             const packingList = ref({
@@ -225,49 +217,35 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
+            const tripDocId = "nagoya_v60_final"; 
 
-            // --- FUNCTIONS RESTORED (FIXING GRAY SCREEN) ---
+            // HELPER FUNCTIONS (RESTORED TO FIX GRAY SCREEN)
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
             const getMethodClass = (m) => ({ 'method-online': m==='online', 'method-onsite': m==='onsite', 'method-mobile': m==='mobile' }[m]);
             const getMethodBadge = (m) => ({ 'bg-[#e6f4ea] text-[#1e4620]': m==='online', 'bg-[#fef7e0] text-[#5f370e]': m==='onsite', 'bg-[#f1f3f4] text-[#3c4043]': m==='mobile' }[m]);
             const getMethodLabel = (m) => ({ online:'線上預約', onsite:'現場購買', mobile:'數位支付' }[m]);
 
-            // --- SYNC ---
-            const tripDocId = "nagoya_v60_final"; 
-            
-            onSnapshot(doc(db, "trips", tripDocId), 
-                (doc) => {
-                    syncStatus.value = "Live"; syncColor.value = "bg-green-400";
-                    if (doc.exists()) {
-                        const data = doc.data();
-                        if(data.budgetList) budgetList.value = data.budgetList;
-                        if(data.wishlist) wishlist.value = data.wishlist;
-                        if(data.packingList) packingList.value = data.packingList;
-                    }
-                },
-                (error) => {
-                    console.error(error); syncStatus.value = "Offline"; syncColor.value = "bg-red-500";
+            onSnapshot(doc(db, "trips", tripDocId), (doc) => {
+                syncStatus.value = "Live"; syncColor.value = "bg-green-400";
+                if (doc.exists()) {
+                    const data = doc.data();
+                    if(data.budgetList) budgetList.value = data.budgetList;
+                    if(data.wishlist) wishlist.value = data.wishlist;
+                    if(data.packingList) packingList.value = data.packingList;
                 }
-            );
+            }, (error) => { console.error(error); syncStatus.value = "Offline"; syncColor.value = "bg-red-500"; });
 
             const saveData = async () => {
                 syncStatus.value = "Saving..."; syncColor.value = "bg-blue-400 animate-pulse";
                 try {
-                    await setDoc(doc(db, "trips", tripDocId), {
-                        budgetList: budgetList.value,
-                        wishlist: wishlist.value,
-                        packingList: packingList.value
-                    }, { merge: true });
+                    await setDoc(doc(db, "trips", tripDocId), { budgetList: budgetList.value, wishlist: wishlist.value, packingList: packingList.value }, { merge: true });
                     setTimeout(() => { syncStatus.value = "Live"; syncColor.value = "bg-green-400"; }, 500);
-                } catch (e) {
-                    syncStatus.value = "Error"; syncColor.value = "bg-red-500";
-                }
+                } catch (e) { syncStatus.value = "Error"; syncColor.value = "bg-red-500"; }
             };
             watch(budgetList, saveData, { deep: true });
             watch(wishlist, saveData, { deep: true });
             const syncPacking = () => saveData();
 
-            // --- IMAGE ---
             const handleImageUpload = (event) => {
                 const file = event.target.files[0];
                 if(!file) return;
@@ -310,7 +288,6 @@
             const filteredBudgetList = computed(() => budgetFilter.value === 'All' ? budgetList.value : budgetList.value.filter(i => i.payer === budgetFilter.value));
             const filteredTotal = computed(() => filteredBudgetList.value.reduce((s,i)=>s+i.price,0));
 
-            // Static Data
             const weatherDB = [
                 { date: "2/25", hourly: [{time:"14:00",temp:"8°",icon:"fas fa-cloud-sun"},{time:"16:00",temp:"7°",icon:"fas fa-cloud"},{time:"18:00",temp:"6°",icon:"fas fa-moon"},{time:"20:00",temp:"5°",icon:"fas fa-moon"}] },
                 { date: "2/26", hourly: [{time:"09:00",temp:"7°",icon:"fas fa-sun"},{time:"12:00",temp:"11°",icon:"fas fa-sun"},{time:"15:00",temp:"10°",icon:"fas fa-cloud-sun"},{time:"18:00",temp:"7°",icon:"fas fa-moon"}] },
@@ -322,40 +299,69 @@
             ];
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
+
+            // *** TICKET DATA UPDATED WITH PDF INFO ***
             const ticketList = ref([
-                { date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站", guide: { steps: ["去售票機選 'Nagoya'。", "加購 'μ-ticket' (¥450)。", "付款：現金/信用卡。"], reminder: "一定要拿兩張票！" } },
+                { 
+                    date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站", 
+                    guide: { 
+                        steps: ["抵達名鐵機場站：走出機場入境大廳後，跟著「Train / Meitetsu Line」標示走。", "找到藍色或紅色售票機：選擇「μ-ticket」或「Limited Express」選項。", "劃位付款：前往「Nagoya」，選擇2人，選位 (可選連號)。", "可用現金、信用卡或 IC 卡。"], 
+                        reminder: "一定要拿兩張票（乘車券+座位券）才能進站！" 
+                    } 
+                },
                 { date: "2/26", day: "Day 2", title: "吉卜力交通", route: "市區 ↔ 吉卜力", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet", guide: { steps: ["用 iPhone 交通卡。", "Apple Pay 加值 ¥3000。", "直接感應閘門。"], reminder: "確認手機有電！" } },
                 { date: "2/27", day: "Day 3", title: "地鐵 24 小時券", route: "市區觀光", price: "¥760", method: "onsite", location: "地鐵售票機", guide: { steps: ["找黃色售票機。", "選 'Value Tickets'。", "平日¥760 / 週末¥620。"], reminder: "第一次進站啟用。" } },
-                { date: "2/28 & 3/3", day: "Day 4, 7", title: "JR 特急 Hida", route: "名古屋 ↔ 高山", price: "¥6,140", method: "online", location: "JR 官網", url: "https://www.westjr.co.jp/global/tc/ticket/", guide: { steps: ["搜尋 Nagoya ↔ Takayama。", "09:39 Hida 5號。", "實體信用卡付款。"], reminder: "2/28 帶實體卡去綠色機器領票！" } },
-                { date: "3/1", day: "Day 5", title: "濃飛巴士", route: "高山 ↔ 白川鄉", price: "¥5,200", method: "online", location: "Japan Bus Online", url: "https://japanbusonline.com/zh-tw", guide: { steps: ["預約 08:50 前班次。", "線上刷卡。", "收 Email 電子票。"], reminder: "上車出示手機 QR Code。" } },
-                { date: "3/2", day: "Day 6", title: "奧飛驒套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心", guide: { steps: ["去 JR 旁巴士中心。", "買 'Okuhida Value Ticket'。", "付現金。"], reminder: "弄丟不補發！" } }
+                
+                // UPDATED: 2/28 NOHI BUS (PDF INFO)
+                { 
+                    date: "2/28", day: "Day 4", title: "濃飛巴士 (去程)", route: "名古屋 → 高山", price: "¥7,200", method: "online", location: "名鐵巴士中心 (Meitetsu Bus Center)", 
+                    desc: "發車: 09:30 | 座位: 02C, 02D | 車號: 133091",
+                    guide: { 
+                        steps: ["前往名鐵巴士中心 (Meitetsu Bus Center) 3F。", "出示電子車票 (手機 PDF)。", "尋找車號 133091。"], 
+                        reminder: "票券號碼: 113058582。請提早 15 分鐘抵達。" 
+                    } 
+                },
+
+                // UPDATED: 3/1 SHIRAKAWA BUS (PDF INFO)
+                { 
+                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥5,600", method: "online", location: "高山濃飛巴士中心", 
+                    desc: "去程: 08:10 | 座位: 8A, 8B | 車號: 01",
+                    guide: { 
+                        steps: ["前往高山站旁的巴士中心。", "出示 Japan Bus Online 電子票。", "車號 01，座位 8A/8B。"], 
+                        reminder: "預約編號: 02062000931。上車出示手機 QR Code。" 
+                    } 
+                },
+
+                // UPDATED: 3/2 OKUHIDA TICKET
+                { date: "3/2", day: "Day 6", title: "奧飛驒套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心", guide: { steps: ["去 JR 旁巴士中心。", "買 'Okuhida Value Ticket'。", "付現金。"], reminder: "弄丟不補發！" } },
+
+                // UPDATED: 3/3 NOHI BUS (PDF INFO)
+                { 
+                    date: "3/3", day: "Day 7", title: "濃飛巴士 (回程)", route: "高山 → 名古屋", price: "¥7,200", method: "online", location: "高山濃飛巴士中心", 
+                    desc: "發車: 13:20 | 座位: 01A, 01B | 車號: 132821",
+                    guide: { 
+                        steps: ["前往高山濃飛巴士中心。", "出示電子車票 (手機 PDF)。", "尋找車號 132821。"], 
+                        reminder: "票券號碼: 113058584。下車地點: 名鐵巴士中心。" 
+                    } 
+                }
             ]);
+
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [{ time: "14:30", name: "中部國際機場", type: "transport", typeLabel: "抵達", desc: "NGO 抵達。購買 μ-Sky。", bookingType: "flight", flightNo: "UO680", terminal: "T2 抵達", highlights: ["綠茶"], strategy: "出關後跟著「名鐵電車」指標走。\n去自動售票機或櫃檯購票。\n買一瓶綠茶 (伊右衛門)。" }, { time: "15:30", name: "前往市區", type: "transport", typeLabel: "移動", desc: "名鐵→名古屋站→櫻通線→久屋大通。", highlights: ["櫻通線"], strategy: "抵達名古屋站後，不要出站到地面，直接找「櫻通線 (紅線)」地鐵指標。\n往「德重」方向，下車站：久屋大通。" }, { time: "16:30", name: "西鐵酒店 Croom", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4B 出口。", bookingType: "hotel", hotelLink: "https://hk.trip.com/hotels/ctorderdetail?orderid=1359041951884810", highlights: ["大浴場"], strategy: "走 4B 或 1A 出口（有電扶梯）。\nC/I 後先去大浴場洗澡或在房間休息。\n飯店對面有 7-11。" }, { time: "18:00", name: "Indo Ryori Kalash", type: "food", typeLabel: "晚餐", desc: "尼泊爾咖哩。起司烤餅份量巨大。", highlights: ["Cheese Naan"], strategy: "這是尼泊爾人開的店。\n必點：Cheese Naan (起司烤餅)、Butter Chicken Curry、Mango Lassi。\n兩人點一份烤餅分食即可。" }, { time: "20:00", name: "Oasis 21", type: "spot", typeLabel: "夜景", desc: "水之宇宙船。", highlights: ["電視塔倒影"], strategy: "搭電梯上頂層玻璃地面。\n走到水池正中央，拍攝電視塔倒影。" }, { time: "21:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "7-11 買宵夜。", highlights: ["焦糖冰淇淋"], strategy: "買宵夜和明天的水。\nOhayo 焦糖烤布蕾冰淇淋 (敲碎表面焦糖吃)。" }] },
                 { day: 2, date_short: "2/26", date_en: "Thu", location: "Nagoya", places: [{ time: "09:00", name: "Konparu 榮店", type: "food", typeLabel: "早餐", desc: "外帶炸蝦三明治去吉卜力野餐。", highlights: ["炸蝦三明治"], strategy: "關鍵策略：跟店員說 'Take out, please'。\n帶去吉卜力當午餐，省下園區排隊時間。\n不要切邊！" }, { time: "10:30", name: "前往吉卜力", type: "transport", typeLabel: "移動", desc: "榮→藤之丘→Linimo。", highlights: ["Linimo"], strategy: "在「榮站」搭東山線到終點「藤之丘」，轉 Linimo 磁浮列車。\n買 7-11 果昔 (Smoothie)。" }, { time: "12:00", name: "吉卜力大倉庫", type: "spot", typeLabel: "重點", desc: "12:00 入場。", bookingType: "ticket", ticketLink: "https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f", highlights: ["名場面展"], strategy: "動線：1.名場面展(拍照) → 2.獵戶座電影院 → 3.吃三明治 → 4.商店。\n商店買：湯婆婆戒指、無臉男周邊。\n⚠️ TszLok 請務必帶護照！" }, { time: "17:00", name: "榮區購物", type: "spot", typeLabel: "購物", desc: "Kapital, Montbell, BEAMS, Salomon.", highlights: ["Salomon", "骨頭T", "羽絨"], strategy: "ADDED: Salomon (CREARE) - 必逛！\nKapital (CREARE 1F): 找骨頭T/拼布牛仔。\nMontbell (Nadia Park 6F): 買羽絨衣。\nOnitsuka Tiger (PARCO 西館 1F)。" }, { time: "19:30", name: "熱田蓬萊軒", type: "food", typeLabel: "晚餐", desc: "松坂屋南館 10F。", booking: "#8823", highlights: ["鰻魚飯三吃"], strategy: "17:30 先去抽號碼牌。\n必吃：鰻魚飯三吃 (Hitsumabushi)。\n試試加高湯的茶泡飯。" }, { time: "21:00", name: "HARBS 本店", type: "food", typeLabel: "甜點", desc: "電視塔旁。", highlights: ["水果千層"], strategy: "就在電視塔旁。\n如果有位子就內用，沒位子就外帶 (Takeout) 回飯店。" }] },
                 { day: 3, date_short: "2/27", date_en: "Fri", location: "Nagoya", places: [{ time: "09:00", name: "Komeda's Coffee", type: "food", typeLabel: "早餐", desc: "點飲料送紅豆泥吐司。", highlights: ["紅豆吐司"], strategy: "攻略：每日11:00前，點飲料(約¥500)即送吐司+水煮蛋/紅豆泥。\n每人可省下約¥800早餐費！\n建議加點 Mini Shiro-Noir。" }, { time: "10:00", name: "名古屋港水族館", type: "spot", typeLabel: "景點", desc: "北館看虎鯨。", highlights: ["虎鯨", "海豚秀"], strategy: "直奔北館 3F 看虎鯨。\n查好海豚秀時間，想濕身坐前4排。\n南館看沙丁魚風暴。" }, { time: "13:30", name: "矢場炸豬排", type: "food", typeLabel: "午餐", desc: "大須店。鐵板味噌豬排。", highlights: ["鐵板"], strategy: "務必點「鐵板」系列。\n一定要穿紙圍兜，醬汁會噴。\n桌上芝麻粉隨意加。" }, { time: "15:00", name: "大須商店街", type: "spot", typeLabel: "逛街", desc: "Alice on Wednesday, 三輪神社。", highlights: ["三輪神社"], strategy: "Alice on Wednesday: 鑽小門進去。\n三輪神社: 摸兔子石像求好運。\nSeria (百元店)、Kannon Coffee。" }, { time: "17:00", name: "Muji 名鐵百貨", type: "spot", typeLabel: "購物", desc: "中部最大旗艦店。", highlights: ["咖哩包"], strategy: "去 'Muji Food' 區買調理包。\n咖哩包、年輪蛋糕、乾燥草莓巧克力。" }, { time: "18:30", name: "Tsubame Bread", type: "food", typeLabel: "點心", desc: "名站附近。", highlights: ["絹香吐司"], strategy: "外帶一條「絹香吐司」(Kinuka) 當明天去高山的早餐。\n現場吃北海道牛奶霜淇淋。" }, { time: "19:30", name: "鳥開總本家", type: "food", typeLabel: "晚餐", desc: "JR Gate Tower / ESCA。", highlights: ["親子丼"], strategy: "位於 JR Gate Tower 或 ESCA。\n名古屋交趾雞口感偏硬Q。\n必點金賞親子丼、手羽先 (炸雞翅)。" }, { time: "20:30", name: "Piyorin 挑戰", type: "food", typeLabel: "挑戰", desc: "小雞蛋糕。", highlights: ["Piyorin"], strategy: "在車站買小雞蛋糕。\n手持保持水平，搭電扶梯要抓緊，不要晃動。\n回飯店沒倒才算贏。" }] },
-                { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [{ time: "09:00", name: "JR Hida 特急", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["指定席"], strategy: "劃位時指名 'Luggage Seat' (最後一排)。\n火車美食：千壽炸蝦飯糰、松浦商店飛驒牛便當。" }, { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" }, { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", highlights: ["飛驒牛壽司"], strategy: "邊走邊吃。\n必吃：飛驒牛握壽司 (坂口屋)、飛驒牛包子 (喜八郎)。\n去船坂酒造投幣試喝清酒。" }, { time: "15:00", name: "Check-in", type: "stay", typeLabel: "休息", desc: "換上作務衣。", highlights: ["頂樓風景"], strategy: "1. 在大廳 Pillow Bar 搶枕頭。\n2. 換上作務衣 (Samue)。\n3. 去頂樓看風景。" }, { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", highlights: ["A5飛驒牛"], strategy: "務必預約。若無預約，16:30 去排隊。\n必點：味藏盛拼盤 (Ajikura Mori)。\nA5 和牛油脂多，沾芥末或鹽最好吃。" }, { time: "22:00", name: "夜鳴拉麵", type: "food", typeLabel: "宵夜", desc: "飯店免費。", highlights: ["免費"], strategy: "去餐廳吃免費拉麵 (Yonaki Soba)。\n還餓的話去 Lawson 買炸雞塊君 (Red)。" }] },
-                { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa", places: [{ time: "08:00", name: "飯店早餐", type: "food", typeLabel: "早餐", desc: "朴葉味噌。", highlights: ["朴葉味噌"], strategy: "專攻鄉土料理區。\n一定要吃朴葉味噌配白飯、飛驒牛奶、醃漬物。" }, { time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", highlights: ["暈車藥"], strategy: "在濃飛巴士中心搭車。\n會暈車者先吃藥。帶一瓶水。" }, { time: "10:00", name: "白川鄉合掌村", type: "spot", typeLabel: "世界遺產", desc: "展望台、和田家。", highlights: ["展望台"], strategy: "1. 搭接駁車上城山展望台。\n2. 走路下山逛和田家。\n3. 去三小屋拍照。" }, { time: "12:00", name: "喫茶 落人", type: "food", typeLabel: "午餐", desc: "Ochiudo。", highlights: ["紅豆湯"], strategy: "必吃：咖哩飯、紅豆湯 (無限續碗)。\n坐在地爐旁氣氛好。" }, { time: "16:00", name: "貸切風呂", type: "spot", typeLabel: "溫泉", desc: "飯店私人湯屋。", highlights: ["私人湯屋"], strategy: "回高山後，去頂樓預約貸切風呂 (私人湯屋)。\n泡完喝免費牛奶/冰棒。" }, { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "飛驒牛壽喜燒。", highlights: ["壽喜燒"], strategy: "進店指名 'Sukiyaki'。\n攻略：肉片煮好一定要裹滿生蛋液再入口。" }, { time: "20:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "買明日早餐。", highlights: ["R-1優格"], strategy: "因為明天要早起去雪山。\n買雞蛋沙拉三明治、明治 R-1 優格飲。" }] },
+                { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [{ time: "09:00", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往高山 (Bus 133091)。", highlights: ["02C/02D"], strategy: "前往名鐵巴士中心3F。車號 133091。座位 02C, 02D。09:30 發車。" }, { time: "12:15", name: "高山櫻庵", type: "stay", typeLabel: "寄放", desc: "高山站旁。", bookingType: "hotel", hotelLink: "https://hk.trip.com/cw/hotel/ctOrderDetailPages/CheckOrderAuthPage.html?orderId=1359041951886445", highlights: ["寄放行李"], strategy: "出站走 3 分鐘。寄放行李 (Check-in前)，拿號碼牌。" }, { time: "13:00", name: "高山老街", type: "spot", typeLabel: "散策", desc: "三町通。", highlights: ["飛驒牛壽司"], strategy: "邊走邊吃。\n必吃：飛驒牛握壽司 (坂口屋)、飛驒牛包子 (喜八郎)。\n去船坂酒造投幣試喝清酒。" }, { time: "15:00", name: "Check-in", type: "stay", typeLabel: "休息", desc: "換上作務衣。", highlights: ["頂樓風景"], strategy: "1. 在大廳 Pillow Bar 搶枕頭。\n2. 換上作務衣 (Samue)。\n3. 去頂樓看風景。" }, { time: "18:00", name: "味藏天國", type: "food", typeLabel: "晚餐", desc: "高山第一燒肉。", highlights: ["A5飛驒牛"], strategy: "務必預約。若無預約，16:30 去排隊。\n必點：味藏盛拼盤 (Ajikura Mori)。\nA5 和牛油脂多，沾芥末或鹽最好吃。" }, { time: "22:00", name: "夜鳴拉麵", type: "food", typeLabel: "宵夜", desc: "飯店免費。", highlights: ["免費"], strategy: "去餐廳吃免費拉麵 (Yonaki Soba)。\n還餓的話去 Lawson 買炸雞塊君 (Red)。" }] },
+                { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa", places: [{ time: "08:00", name: "飯店早餐", type: "food", typeLabel: "早餐", desc: "朴葉味噌。", highlights: ["朴葉味噌"], strategy: "專攻鄉土料理區。\n一定要吃朴葉味噌配白飯、飛驒牛奶、醃漬物。" }, { time: "08:10", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往白川鄉 (Bus 01)。", highlights: ["8A/8B"], strategy: "前往高山濃飛巴士中心。車號 01。座位 8A, 8B。08:10 發車。" }, { time: "10:00", name: "白川鄉合掌村", type: "spot", typeLabel: "世界遺產", desc: "展望台、和田家。", highlights: ["展望台"], strategy: "1. 搭接駁車上城山展望台。\n2. 走路下山逛和田家。\n3. 去三小屋拍照。" }, { time: "12:00", name: "喫茶 落人", type: "food", typeLabel: "午餐", desc: "Ochiudo。", highlights: ["紅豆湯"], strategy: "必吃：咖哩飯、紅豆湯 (無限續碗)。\n坐在地爐旁氣氛好。" }, { time: "16:00", name: "貸切風呂", type: "spot", typeLabel: "溫泉", desc: "飯店私人湯屋。", highlights: ["私人湯屋"], strategy: "回高山後，去頂樓預約貸切風呂 (私人湯屋)。\n泡完喝免費牛奶/冰棒。" }, { time: "18:00", name: "丸明", type: "food", typeLabel: "晚餐", desc: "飛驒牛壽喜燒。", highlights: ["壽喜燒"], strategy: "進店指名 'Sukiyaki'。\n攻略：肉片煮好一定要裹滿生蛋液再入口。" }, { time: "20:00", name: "便利商店", type: "spot", typeLabel: "採買", desc: "買明日早餐。", highlights: ["R-1優格"], strategy: "因為明天要早起去雪山。\n買雞蛋沙拉三明治、明治 R-1 優格飲。" }] },
                 { day: 6, date_short: "3/2", date_en: "Mon", location: "Okuhida", places: [{ time: "07:30", name: "Coffee Don", type: "food", typeLabel: "早餐", desc: "昭和氣氛老舖。", highlights: ["吐司套餐"], strategy: "1951年老舖。點吐司套餐配黑咖啡。\n不想早起就在房吃便利商店早餐。" }, { time: "08:40", name: "前往新穗高", type: "transport", typeLabel: "移動", desc: "搭巴士。", highlights: ["左側風景"], strategy: "坐巴士左側 (Left Side) 看風景。" }, { time: "10:45", name: "Alps no Pan", type: "food", typeLabel: "點心", desc: "鍋平高原站。", highlights: ["可頌"], strategy: "在轉乘第二段纜車前，去麵包店買剛出爐的現烤可頌 (Croissant)。" }, { time: "11:00", name: "新穗高纜車", type: "spot", typeLabel: "絕景", desc: "雙層纜車。", highlights: ["雪之迴廊"], strategy: "搶雙層纜車 2樓 位置。\n山頂去走雪之迴廊、寄明信片。" }, { time: "14:00", name: "平湯之森", type: "spot", typeLabel: "溫泉", desc: "日歸溫泉。", highlights: ["雪見溫泉"], strategy: "回程巴士在「平湯溫泉」下。\n吃飛驒牛鐵板燒。\n泡 16 個露天雪見溫泉池。體驗雪中裸身奔跑。" }, { time: "18:00", name: "Center4 Burger", type: "food", typeLabel: "晚餐", desc: "飛驒牛漢堡。", highlights: ["漢堡"], strategy: "高山第一名漢堡。需提前預約。\n若無位，去平安樂吃餃子。" }] },
-                { day: 7, date_short: "3/3", date_en: "Tue", location: "Airport", places: [{ time: "08:00", name: "宮川朝市", type: "spot", typeLabel: "市集", desc: "河邊早市。", highlights: ["伴手禮"], strategy: "只收現金。買餅乾杯咖啡、炸蛋白霜、味噌煎餅。" }, { time: "11:00", name: "豆天狗", type: "food", typeLabel: "午餐", desc: "高山拉麵。", highlights: ["中華拉麵"], strategy: "最後巡禮。醬油湯頭，捲捲的細麵。加一顆味玉 (蛋)。" }, { time: "13:30", name: "前往機場", type: "transport", typeLabel: "移動", desc: "濃飛巴士直達。", highlights: ["預約"], strategy: "絕對要準時。車程 3.5 小時。\n上車前買好零食飲料、準備暈車藥。" }, { time: "17:00", name: "中部國際機場", type: "spot", typeLabel: "離境", desc: "T2。", highlights: ["蝦餅"], strategy: "1. 領行李 (Check-in)。\n2. 逛 Flight of Dreams 787 客機。\n3. 去風之浴看飛機泡腳。\n4. 買蝦餅 (えびせんべいの里)。" }, { time: "21:00", name: "起飛返港", type: "transport", typeLabel: "離境", desc: "UO685。", bookingType: "flight", flightNo: "UO685", terminal: "T2", highlights: [], strategy: "帶著滿滿的戰利品和肚子回家！" }] }
+                { day: 7, date_short: "3/3", date_en: "Tue", location: "Airport", places: [{ time: "08:00", name: "宮川朝市", type: "spot", typeLabel: "市集", desc: "河邊早市。", highlights: ["伴手禮"], strategy: "只收現金。買餅乾杯咖啡、炸蛋白霜、味噌煎餅。" }, { time: "11:00", name: "豆天狗", type: "food", typeLabel: "午餐", desc: "高山拉麵。", highlights: ["中華拉麵"], strategy: "最後巡禮。醬油湯頭，捲捲的細麵。加一顆味玉 (蛋)。" }, { time: "13:20", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往機場 (Bus 132821)。", highlights: ["01A/01B"], strategy: "前往高山濃飛巴士中心。車號 132821。座位 01A, 01B。13:20 發車。" }, { time: "17:00", name: "中部國際機場", type: "spot", typeLabel: "離境", desc: "T2。", highlights: ["蝦餅"], strategy: "1. 領行李 (Check-in)。\n2. 逛 Flight of Dreams 787 客機。\n3. 去風之浴看飛機泡腳。\n4. 買蝦餅 (えびせんべいの里)。" }, { time: "21:00", name: "起飛返港", type: "transport", typeLabel: "離境", desc: "UO685。", bookingType: "flight", flightNo: "UO685", terminal: "T2", highlights: [], strategy: "帶著滿滿的戰利品和肚子回家！" }] }
             ]);
 
-            const tabs = [ 
-                { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, 
-                { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, 
-                { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, 
-                { id: 'reservations', label: 'Resv', icon: 'fas fa-ticket-alt' }, 
-                { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' }, 
-                { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } 
-            ];
+            const tabs = [ { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, { id: 'reservations', label: 'Resv', icon: 'fas fa-ticket-alt' }, { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' }, { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } ];
 
             return { currentView, dayIndex, itinerary, budgetList, packingList, newItem, showBudgetInput, detailModal, countdown, openDetail, openTicketDetail, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
-                // Calc exports
-                currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
-                // Resv & Utils (RESTORED HERE)
-                ticketList, openTicketDetail, getMethodClass, getMethodBadge, getMethodLabel, getTicketsByMethod,
-                // Cloud Status
-                syncStatus, syncColor, saveData, syncPacking
+                currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue, 
+                ticketList, getMethodBadge, getMethodLabel, getTicketsByMethod, getMethodClass, // ADDED HERE TO FIX ERROR
+                syncStatus, syncColor, saveData, syncPacking 
             };
         }
     }).mount('#app');
