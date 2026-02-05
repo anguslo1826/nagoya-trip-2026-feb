@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.5 (Final Schedule)</title>
+    <title>梓樂Nagoya v60.6 (Hirayu Fix)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -239,7 +239,7 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v60_5"; 
+            const tripDocId = "nagoya_v60_6"; 
 
             // FETCH REAL TIME RATE
             const fetchRate = async () => {
@@ -432,7 +432,7 @@
                 { day: 6, date_short: "3/2", date_en: "Mon", location: "Okuhida", places: [
                     { time: "09:40", name: "濃飛巴士", type: "transport", typeLabel: "移動", desc: "前往新穗高。", highlights: ["套票"], strategy: "在高山巴士站購買「奧飛驒 2 日套票」(¥6,300)。" }, 
                     { time: "12:00", name: "新穗高山頂", type: "spot", typeLabel: "展望台", desc: "標高 2156m。", highlights: ["雪之迴廊"], strategy: "欣賞全景及雪之迴廊。" }, 
-                    { time: "14:20", name: "平湯大瀑布", type: "spot", typeLabel: "健行", desc: "結冰瀑布。", highlights: ["藍色冰瀑"], strategy: "⚠️ 裝備警告：這段路雪地微上坡，單程 25 分鐘。\n務必穿著「防滑鞋」(雪靴或冰爪)，非常滑！" }, 
+                    { time: "14:20", name: "平湯大瀑布", type: "spot", typeLabel: "步行攻略", desc: "雪地健行。", highlights: ["藍色冰瀑", "⚠️防滑鞋"], strategy: "路線：從平湯巴士總站出發，往瀑布方向走。\n地形：雪地微上坡，單程約 25 分鐘。\n⚠️ 裝備建議：務必穿著「防滑鞋」(雪靴或加裝冰爪)，因為雪地結冰非常滑！\n景點：高達 64 米的瀑布會結冰成漂亮的藍色，是冬季限定美景。" }, 
                     { time: "15:40", name: "平湯巴士站", type: "food", typeLabel: "休息", desc: "足湯與牛奶。", highlights: ["溫泉蛋"], strategy: "吃溫泉蛋、喝飛驒牛奶、享受免費足湯。" }, 
                     { time: "18:30", name: "丸明", type: "food", typeLabel: "晚餐", desc: "飛驒牛壽喜燒。", highlights: ["壽喜燒"], strategy: "高山著名飛驒牛餐廳。" }
                 ]},
