@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v61.1 (Plan B Added)</title>
+    <title>梓樂Nagoya v61.2 (Map Fixed)</title>
     
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzcwODA4ZiIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjEwMCIgcj0iNjAiIGZpbGw9IiNlZjQ0NDQiLz48cGF0aCBkPSJNMjU2IDEyMCBMNDIwIDQwMCBMOTIgNDAwIFoiIGZpbGw9IiNjNWI1OWQiLz48cGF0aCBkPSJNMjU2IDEyMCBMMzEwIDIxMCBMMjgwIDIwMCBMMjU2IDIyMCBMMjMyIDIwMCBMMjAyIDIxMCBaIiBmaWxsPSIjZmZmZmZmIi8+PHRleHQgeD0iMjU2IiB5PSI0NjAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmZmZmIiBsZXR0ZXItc3BhY2luZz0iNCIgb3BhY2l0eT0iMC44Ij5OQUdPWUE8L3RleHQ+PC9zdmc+">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzcwODA4ZiIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjEwMCIgcj0iNjAiIGZpbGw9IiNlZjQ0NDQiLz48cGF0aCBkPSJNMjU2IDEyMCBMNDIwIDQwMCBMOTIgNDAwIFoiIGZpbGw9IiNjNWI1OWQiLz48cGF0aCBkPSJNMjU2IDEyMCBMMzEwIDIxMCBMMjgwIDIwMCBMMjU2IDIyMCBMMjMyIDIwMCBMMjAyIDIxMCBaIiBmaWxsPSIjZmZmZmZmIi8+PHRleHQgeD0iMjU2IiB5PSI0NjAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmZmZmIiBsZXR0ZXItc3BhY2luZz0iNCIgb3BhY2l0eT0iMC44Ij5OQUdPWUE8L3RleHQ+PC9zdmc+">
+    <link rel="icon" id="favicon" href="">
+    <link rel="apple-touch-icon" id="appicon" href="">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,6 +46,8 @@
     <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-white/20 rounded-lg">Reload</button>
 </div>
 
+<canvas id="iconCanvas" width="512" height="512" style="display:none;"></canvas>
+
 <div id="app" v-cloak class="flex flex-col h-full w-full max-w-md mx-auto relative bg-[#70808f]">
     
     <div class="sync-status" v-if="syncStatus">
@@ -62,13 +64,7 @@
                     <h1 class="text-3xl font-black font-mincho text-white flex items-center gap-2"><i class="fas fa-chess-rook text-xl opacity-80"></i> 梓樂Nagoya</h1>
                 </div>
                 <div class="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden shadow-lg bg-[#70808f] flex items-center justify-center">
-                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
-                        <rect width="512" height="512" fill="#70808f"/>
-                        <circle cx="256" cy="150" r="60" fill="#ef4444" opacity="0.9"/>
-                        <path d="M256 120 L420 400 L92 400 Z" fill="#c5b59d"/>
-                        <path d="M256 120 L310 210 L280 200 L256 220 L232 200 L202 210 Z" fill="#ffffff"/>
-                        <text x="256" y="460" font-family="sans-serif" font-weight="900" font-size="60" text-anchor="middle" fill="#ffffff" letter-spacing="4" opacity="0.8">NAGOYA</text>
-                    </svg>
+                    <i class="fas fa-mountain text-white text-xl"></i>
                 </div>
             </div>
             
@@ -390,7 +386,7 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v61_1"; 
+            const tripDocId = "nagoya_v61_2"; 
 
             // FETCH REAL TIME RATE
             const fetchRate = async () => {
@@ -404,7 +400,58 @@
                     console.log("Using default rate");
                 }
             };
-            onMounted(() => { fetchRate(); });
+            
+            // DYNAMIC ICON GENERATION
+            onMounted(() => { 
+                fetchRate(); 
+                
+                // Draw Icon to Canvas and set as Link
+                const canvas = document.getElementById('iconCanvas');
+                if (canvas) {
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Background
+                    ctx.fillStyle = "#70808f";
+                    ctx.fillRect(0, 0, 512, 512);
+                    
+                    // Sun
+                    ctx.beginPath();
+                    ctx.arc(256, 150, 60, 0, 2 * Math.PI);
+                    ctx.fillStyle = "#ef4444";
+                    ctx.fill();
+                    
+                    // Mountain
+                    ctx.beginPath();
+                    ctx.moveTo(256, 120);
+                    ctx.lineTo(420, 400);
+                    ctx.lineTo(92, 400);
+                    ctx.closePath();
+                    ctx.fillStyle = "#c5b59d";
+                    ctx.fill();
+                    
+                    // Snow Cap
+                    ctx.beginPath();
+                    ctx.moveTo(256, 120);
+                    ctx.lineTo(310, 210);
+                    ctx.lineTo(280, 200);
+                    ctx.lineTo(256, 220);
+                    ctx.lineTo(232, 200);
+                    ctx.lineTo(202, 210);
+                    ctx.closePath();
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fill();
+                    
+                    // Text
+                    ctx.font = "900 60px sans-serif";
+                    ctx.fillStyle = "#ffffff";
+                    ctx.textAlign = "center";
+                    ctx.fillText("NAGOYA", 256, 460);
+                    
+                    const dataUrl = canvas.toDataURL('image/png');
+                    document.getElementById('favicon').href = dataUrl;
+                    document.getElementById('appicon').href = dataUrl;
+                }
+            });
 
             // HELPER FUNCTIONS (ALL RESTORED)
             const getTypeColor = (t) => ({food:'border-[#726251] bg-[#c5b59d]', transport:'border-[#70808f] bg-[#c5b59d]', stay:'border-[#91867f] bg-[#c5b59d]', spot:'border-[#4a4238] bg-[#c5b59d]'}[t]||'border-gray-400');
@@ -461,7 +508,14 @@
             const openDetail = (p) => { detailModal.value = { show:true, data:p }; };
             const openTicketDetail = (t) => { detailModal.value = { show:true, data: { ...t, isTicket: true } }; };
             const getTicketsByMethod = (m) => ticketList.value.filter(t => t.method === m);
-            const openMap = (n) => window.open('https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(n + ' Japan'), '_blank');
+            
+            // FIXED OPEN MAP FUNCTION
+            const openMap = (n) => {
+                const location = itinerary.value[dayIndex.value].location || 'Japan';
+                const query = encodeURIComponent(n + ' ' + location); // Adds location context (e.g. "Oasis 21 Nagoya")
+                window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+            };
+            
             const isModalOpen = computed(() => showBudgetInput.value || showWishlistInput.value || detailModal.value.show);
             const now = ref(new Date());
             
