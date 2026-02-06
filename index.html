@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.6 (Hirayu Fix)</title>
+    <title>梓樂Nagoya v60.7 (Bus Return Added)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -239,7 +239,7 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v60_6"; 
+            const tripDocId = "nagoya_v60_7"; 
 
             // FETCH REAL TIME RATE
             const fetchRate = async () => {
@@ -370,12 +370,20 @@
                     guide: { steps: ["前往名鐵巴士中心(名古屋站) 3F。", "出示 Web Ticket 手機畫面。", "尋找往高山/白川鄉月台。"], reminder: "請提早 15 分鐘抵達。" } 
                 },
 
-                // UPDATED: Shirakawa Bus 3/1 (Specific Resv #)
+                // UPDATED: Shirakawa Bus 3/1 (Outbound)
                 { 
-                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉)", route: "高山 ↔ 白川鄉", price: "¥2,800 (單程)", method: "online", location: "高山濃飛巴士中心", 
+                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉去程)", route: "高山 → 白川鄉", price: "¥2,800 (單程)", method: "online", location: "高山濃飛巴士中心", 
                     desc: "去程: 08:10 | 座位: 8A/8B",
                     pdfLink: "ticket_301.pdf", 
                     guide: { steps: ["前往高山站旁的巴士中心 4 號月台。", "出示 Email 電子票。", "座位 8A / 8B。"], reminder: "預約編號: 02062000931。請務必準時。" } 
+                },
+
+                // ADDED: Shirakawa Bus 3/1 (Return) - FROM PDF
+                { 
+                    date: "3/1", day: "Day 5", title: "濃飛巴士 (白川鄉回程)", route: "白川鄉 → 高山", price: "¥5,600 (2人)", method: "online", location: "白川鄉巴士總站", 
+                    desc: "發車: 15:45 | 座位: 1C/1D",
+                    pdfLink: "ticket301_back.pdf", 
+                    guide: { steps: ["前往白川鄉巴士總站。", "出示電子車票 (手機 PDF)。", "尋找車號 01，座位 1C/1D。"], reminder: "預約編號: 02072000521。發車前請提早抵達。" } 
                 },
 
                 { date: "3/2", day: "Day 6", title: "奧飛驒 2 日套票", route: "巴士+纜車", price: "¥6,300", method: "onsite", location: "高山濃飛巴士中心", guide: { steps: ["去 JR 旁巴士中心。", "買 'Okuhida Value Ticket'。", "付現金。"], reminder: "弄丟不補發！包含新穗高纜車來回。" } },
