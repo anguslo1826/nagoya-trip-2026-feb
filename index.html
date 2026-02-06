@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.9 (Final)</title>
+    <title>梓樂Nagoya v61.0 (Tools Added)</title>
     
     <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzcwODA4ZiIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1MCIgcj0iNjAiIGZpbGw9IiNlZjQ0NDQiLz48cGF0aCBkPSJNMjU2IDEyMCBMNDIwIDQwMCBMOTIgNDAwIFoiIGZpbGw9IiNjNWI1OWQiLz48cGF0aCBkPSJNMjU2IDEyMCBMMzEwIDIxMCBMMjgwIDIwMCBMMjU2IDIyMCBMMjMyIDIwMCBMMjAyIDIxMCBaIiBmaWxsPSIjZmZmZmZmIi8+PHRleHQgeD0iMjU2IiB5PSI0NjAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmZmZmIiBsZXR0ZXItc3BhY2luZz0iNCIgb3BhY2l0eT0iMC44Ij5OQUdPWUE8L3RleHQ+PC9zdmc+">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzcwODA4ZiIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjE1MCIgcj0iNjAiIGZpbGw9IiNlZjQ0NDQiLz48cGF0aCBkPSJNMjU2IDEyMCBMNDIwIDQwMCBMOTIgNDAwIFoiIGZpbGw9IiNjNWI1OWQiLz48cGF0aCBkPSJNMjU2IDEyMCBMMzEwIDIxMCBMMjgwIDIwMCBMMjU2IDIyMCBMMjMyIDIwMCBMMjAyIDIxMCBaIiBmaWxsPSIjZmZmZmZmIi8+PHRleHQgeD0iMjU2IiB5PSI0NjAiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iOTAwIiBmb250LXNpemU9IjYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjZmZmZmZmIiBsZXR0ZXItc3BhY2luZz0iNCIgb3BhY2l0eT0iMC44Ij5OQUdPWUE8L3RleHQ+PC9zdmc+">
@@ -26,9 +26,6 @@
         .modal-content { position: relative; z-index: 100000; }
         @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-slide-up { animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .calc-btn { background: rgba(255, 255, 255, 0.2); border-radius: 12px; height: 50px; font-weight: 800; color: #4a4238; display: flex; align-items: center; justify-content: center; }
-        .calc-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.95); }
         .ticket-stub { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 70%, 5% 65%, 0% 60%, 0% 0%); cursor: pointer; transition: transform 0.1s; }
         .ticket-stub:active { transform: scale(0.98); }
         .method-online { background: #e6f4ea; color: #1e4620; border-left: 4px solid #34a853; }
@@ -37,8 +34,8 @@
         .sync-status { position: fixed; top: 10px; right: 10px; z-index: 9999; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 20px; background: rgba(0,0,0,0.5); color: white; display: flex; items-center; gap: 5px; }
         #app-error { display: none; padding: 20px; color: white; text-align: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #70808f; z-index: 999999; }
         [v-cloak] { display: none !important; }
-        /* Toggle Switch for Packing */
         .toggle-btn { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .phrase-card:active { transform: scale(0.95); background: white; }
     </style>
 </head>
 <body>
@@ -207,12 +204,60 @@
         </div>
 
         <div v-if="currentView === 'reminders'" class="space-y-6 pt-4">
-            <h2 class="text-2xl font-black font-mincho text-white">省錢攻略 Tips</h2>
+            <h2 class="text-2xl font-black font-mincho text-white">省錢 & 攻略 Tips</h2>
+            <div class="glass overflow-hidden relative"><div class="bg-[#70808f] p-3 text-white flex justify-between items-center border-b border-white/20"><span class="font-bold text-sm"><i class="fas fa-key mr-2"></i>寄放行李</span><span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">Coin Locker</span></div><div class="p-5"><h3 class="font-bold text-lg mb-2 text-[#4a4238]">名古屋站/高山站</h3><ul class="text-sm space-y-3 opacity-90 leading-relaxed list-disc pl-4 text-[#4a4238]"><li><b class="text-[#726251]">IC 卡付款：</b>大部分置物櫃可用 Suica/Pasmo 付款，不用找零錢，且鑰匙就是你的卡。</li><li><b class="text-[#726251]">高山站：</b>若車站置物櫃滿了，可去對面的「高山濃飛巴士中心」找置物櫃。</li></ul></div></div>
+            
+            <div class="glass overflow-hidden relative"><div class="bg-[#91867f] p-3 text-white flex justify-between items-center border-b border-white/20"><span class="font-bold text-sm"><i class="fas fa-print mr-2"></i>緊急列印</span><span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">7-11</span></div><div class="p-5"><h3 class="font-bold text-lg mb-2 text-[#4a4238]">車票沒電怎麼辦？</h3><p class="text-sm opacity-90 text-[#4a4238] mb-2">如果手機沒電無法出示車票 PDF，可去 7-11 使用多功能事務機。</p><div class="bg-[#726251]/10 p-2 rounded text-xs font-bold text-[#726251]">下載「netprint」App 上傳 PDF，去 7-11 輸入預約號碼列印。</div></div></div>
+
             <div class="glass overflow-hidden relative"><div class="bg-[#70808f] p-3 text-white flex justify-between items-center border-b border-white/20"><span class="font-bold text-sm"><i class="fas fa-subway mr-2"></i>Day 3 交通</span><span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">¥760 / 24hr</span></div><div class="p-5"><h3 class="font-bold text-lg mb-2 text-[#4a4238]">地鐵 24 小時券</h3><ul class="text-sm space-y-3 opacity-90 leading-relaxed list-disc pl-4 text-[#4a4238]"><li><b class="text-[#726251]">回本極快：</b>行程總車資約 ¥1,000+，使用此券<span class="font-bold border-b border-[#726251]">現省 ¥300</span>。</li><li><b class="text-[#726251]">彈性極高：</b>採「24小時制」。若 Day 3 早上 10:00 第一次刷卡，可用到 Day 4 早上 09:59。</li></ul></div></div>
             <div class="glass overflow-hidden relative"><div class="bg-[#91867f] p-3 text-white flex justify-between items-center border-b border-white/20"><span class="font-bold text-sm"><i class="fas fa-snowflake mr-2"></i>Day 6 警告</span><span class="bg-white/20 px-2 py-0.5 rounded text-[10px] font-bold">安全第一</span></div><div class="p-5"><h3 class="font-bold text-lg mb-2 text-[#4a4238]">平湯大瀑布 雪地裝備</h3><div class="bg-red-500/10 p-3 rounded-lg mb-3 text-sm font-bold border-l-4 border-red-500 text-red-800">地面極滑！Danger!</div><p class="text-sm opacity-90 text-[#4a4238]">前往瀑布的路段為雪地微上坡，極易結冰滑倒。請務必穿著<b class="text-red-700">防滑鞋 (雪靴)</b> 或加裝簡易冰爪。</p></div></div>
         </div>
 
-        <div v-if="currentView === 'info'" class="space-y-6 pt-4 h-full flex flex-col"><h2 class="text-2xl font-black font-mincho text-white">匯率計算機</h2><div class="glass flex-1 p-5 flex flex-col"><div class="bg-[#f3f0eb] rounded-xl p-4 mb-4 flex-1 flex flex-col justify-end items-end shadow-inner relative overflow-hidden"><div class="text-[#4a4238]/40 font-bold font-mono text-sm mb-1 break-all text-right">{{ calcExpression || '0' }}</div><div class="text-[#4a4238] font-black font-mono text-4xl mb-1 break-all text-right">¥{{ displayValue }}</div><div class="text-[#726251] font-bold font-mono text-2xl flex items-center justify-end w-full">HKD ${{ (parseFloat(displayValue.replace(/,/g,'')) * currencyRate).toFixed(1) }}</div><div class="absolute top-2 left-2 flex items-center gap-1 opacity-40 hover:opacity-100 transition-opacity"><span class="text-[9px] font-bold">Rate:</span><input type="number" v-model="currencyRate" class="w-12 bg-transparent border-b border-[#4a4238]/30 text-[10px] font-mono text-right outline-none"></div></div><div class="calc-grid"><button @click="clearCalc" class="calc-btn op">C</button><button @click="appendCalc('/')" class="calc-btn op">÷</button><button @click="appendCalc('*')" class="calc-btn op">×</button><button @click="backspace" class="calc-btn op">←</button><button @click="appendCalc('7')" class="calc-btn">7</button><button @click="appendCalc('8')" class="calc-btn">8</button><button @click="appendCalc('9')" class="calc-btn">9</button><button @click="appendCalc('-')" class="calc-btn op">-</button><button @click="appendCalc('4')" class="calc-btn">4</button><button @click="appendCalc('5')" class="calc-btn">5</button><button @click="appendCalc('6')" class="calc-btn">6</button><button @click="appendCalc('+')" class="calc-btn op">+</button><button @click="appendCalc('1')" class="calc-btn">1</button><button @click="appendCalc('2')" class="calc-btn">2</button><button @click="appendCalc('3')" class="calc-btn">3</button><button @click="calculate" class="calc-btn eq">=</button><button @click="appendCalc('0')" class="calc-btn col-span-2">0</button><button @click="appendCalc('.')" class="calc-btn">.</button></div></div></div>
+        <div v-if="currentView === 'tools'" class="space-y-6 pt-4 h-full flex flex-col">
+            <h2 class="text-2xl font-black font-mincho text-white">隨身工具 Tools</h2>
+            
+            <div class="glass p-5">
+                <h3 class="text-sm font-bold opacity-60 uppercase mb-3"><i class="fas fa-language mr-2"></i>指路卡 Speak for me</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <button v-for="p in phrases" :key="p.zh" @click="detailModal={show:true, data:{isPhrase:true, ...p}}" class="bg-white/50 p-4 rounded-xl text-left hover:bg-white transition-colors border border-[#4a4238]/10 phrase-card">
+                        <div class="text-xs font-bold opacity-60 mb-1">{{ p.zh }}</div>
+                        <div class="font-bold text-lg text-[#4a4238]">{{ p.jp_short }}</div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass p-5 border-l-4 border-red-500">
+                <h3 class="text-sm font-bold opacity-60 uppercase mb-3"><i class="fas fa-phone-alt mr-2 text-red-500"></i>緊急聯絡 Emergency</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center border-b border-[#4a4238]/10 pb-2">
+                        <span class="font-bold">警察局 (Police)</span>
+                        <a href="tel:110" class="bg-red-500 text-white px-3 py-1 rounded-lg font-black text-sm">110</a>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-[#4a4238]/10 pb-2">
+                        <span class="font-bold">救護車/火警 (Fire)</span>
+                        <a href="tel:119" class="bg-red-500 text-white px-3 py-1 rounded-lg font-black text-sm">119</a>
+                    </div>
+                    <div class="mt-2">
+                        <div class="text-[10px] font-bold opacity-50 uppercase">駐日辦事處 (HK Immigration)</div>
+                        <div class="font-bold text-sm mt-1 selectable">+852 1868</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-5">
+                <h3 class="text-sm font-bold opacity-60 uppercase mb-3"><i class="fas fa-map-marker-alt mr-2"></i>飯店地址 Hotel Address</h3>
+                <div class="bg-[#f3f0eb] p-3 rounded-lg border border-[#4a4238]/20 mb-3">
+                    <div class="text-[10px] opacity-60 mb-1">Nagoya (Day 1-3)</div>
+                    <div class="font-black text-sm text-[#726251]">西鉄ホテル クルーム 名古屋</div>
+                    <div class="text-xs opacity-80 mt-1 selectable">愛知県名古屋市中区錦3-4-3</div>
+                </div>
+                <div class="bg-[#f3f0eb] p-3 rounded-lg border border-[#4a4238]/20">
+                    <div class="text-[10px] opacity-60 mb-1">Takayama (Day 4-6)</div>
+                    <div class="font-black text-sm text-[#726251]">東急ステイ飛騨高山 結の湯</div>
+                    <div class="text-xs opacity-80 mt-1 selectable">岐阜県高山市花里町4-126</div>
+                </div>
+            </div>
+        </div>
 
     </main>
 
@@ -244,7 +289,15 @@
         </div>
     </div>
 
-    <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop><div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div><div v-if="detailModal.data.isTicket"><span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2><div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">地點 / 詳細資訊</div><div class="font-bold mb-1">{{ detailModal.data.location }}</div><div v-if="detailModal.data.desc" class="text-xs opacity-70 font-mono">{{ detailModal.data.desc }}</div><div class="mt-3 flex gap-2"><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="flex-1 py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-external-link-alt mr-2"></i>預約網站</a><a v-if="detailModal.data.pdfLink" :href="detailModal.data.pdfLink" target="_blank" class="flex-1 py-3 bg-[#70808f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-pdf mr-2"></i>車票 PDF</a></div></div><div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div></div></div><div v-else><span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button></div></div></div>
+    <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop><div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div>
+    
+    <div v-if="detailModal.data.isPhrase" class="text-center py-10">
+        <div class="text-sm font-bold opacity-60 mb-4">{{ detailModal.data.zh }}</div>
+        <div class="text-4xl font-black mb-6">{{ detailModal.data.jp }}</div>
+        <div class="text-xs opacity-50 font-mono">{{ detailModal.data.pronounce }}</div>
+    </div>
+
+    <div v-else-if="detailModal.data.isTicket"><span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2><div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">地點 / 詳細資訊</div><div class="font-bold mb-1">{{ detailModal.data.location }}</div><div v-if="detailModal.data.desc" class="text-xs opacity-70 font-mono">{{ detailModal.data.desc }}</div><div class="mt-3 flex gap-2"><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="flex-1 py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-external-link-alt mr-2"></i>預約網站</a><a v-if="detailModal.data.pdfLink" :href="detailModal.data.pdfLink" target="_blank" class="flex-1 py-3 bg-[#70808f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-pdf mr-2"></i>車票 PDF</a></div></div><div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div></div></div><div v-else><span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div><button @click="openMap(detailModal.data.name)" class="w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg">Open Map</button></div></div></div>
 
 </div>
 
@@ -346,12 +399,24 @@
                 }
             });
 
+            // 4. PHRASES FOR TOOLS
+            const phrases = [
+                { zh: '不好意思', jp_short: 'すみません', jp: 'すみません', pronounce: 'Sumimasen' },
+                { zh: '謝謝', jp_short: 'ありがとう', jp: 'ありがとうございます', pronounce: 'Arigatou Gozaimasu' },
+                { zh: '這個', jp_short: 'これ', jp: 'これをください', pronounce: 'Kore o kudasai' },
+                { zh: '洗手間', jp_short: 'トイレ', jp: 'トイレはどこですか？', pronounce: 'Toire wa doko desu ka?' },
+                { zh: '結帳', jp_short: 'お会計', jp: 'お会計をお願いします', pronounce: 'Okaikei o onegaishimasu' },
+                { zh: '不要蔥', jp_short: 'ネギ抜き', jp: 'ネギを抜いてください', pronounce: 'Negi o nuite kudasai' },
+                { zh: '有推薦嗎', jp_short: 'おすすめ', jp: 'おすすめは何ですか？', pronounce: 'Osusume wa nan desu ka?' },
+                { zh: '請帶我去', jp_short: 'ここへ', jp: 'ここへ行ってください', pronounce: 'Koko e itte kudasai' }
+            ];
+
             const currencyRate = ref(0.052);
             const calcExpression = ref('');
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v60_9"; 
+            const tripDocId = "nagoya_v61_0"; 
 
             // FETCH REAL TIME RATE
             const fetchRate = async () => {
@@ -467,7 +532,7 @@
             const currentDayWeather = computed(() => weatherDB[dayIndex.value]?.hourly || []);
             const keyLabels = { handCarry: 'Hand Carry', tszLok: 'TszLok (Boy)', tszTung: 'TszTung (Girl)' };
 
-            // TICKET DATA (UPDATED WITH GHIBLI)
+            // TICKET DATA (UPDATED WITH GHIBLI LINK)
             const ticketList = ref([
                 { 
                     date: "2/25 & 3/3", day: "Day 1, 7", title: "名鐵 μ-Sky (往返機場)", route: "機場 ↔ 名古屋", price: "¥1,430", method: "onsite", location: "機場/名鐵車站", 
@@ -476,9 +541,10 @@
                         reminder: "一定要拿兩張票（乘車券+座位券）才能進站！" 
                     } 
                 },
-                // 4. ADDED GHIBLI TICKET
+                // 1. GHIBLI LINK ADDED HERE
                 { 
                     date: "2/26", day: "Day 2", title: "吉卜力大倉庫 (入場券)", route: "入場預約", price: "已預約", method: "online", location: "愛・地球博紀念公園", 
+                    url: "https://quickticket.moala.fun/books?id=d1315e41-24de-40a9-a20a-0cf36d07ec8f",
                     guide: { steps: ["開啟預約 Email 確認信。", "點擊連結顯示入場 QR Code。", "依預約時間 12:00 排隊掃描入場。"], reminder: "請務必攜帶護照查驗身分！遲到無效。" } 
                 },
                 { date: "2/26", day: "Day 2", title: "吉卜力交通 (Linimo)", route: "市區 ↔ 吉卜力", price: "約 ¥1,340", method: "mobile", location: "Apple Wallet", guide: { steps: ["用 iPhone 交通卡。", "Apple Pay 加值 ¥3000。", "直接感應閘門。"], reminder: "確認手機有電！" } },
@@ -575,9 +641,9 @@
                 ]}
             ]);
 
-            const tabs = [ { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, { id: 'reservations', label: 'Resv', icon: 'fas fa-ticket-alt' }, { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' }, { id: 'info', label: 'Calc', icon: 'fas fa-calculator' } ];
+            const tabs = [ { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, { id: 'reservations', label: 'Resv', icon: 'fas fa-ticket-alt' }, { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' }, { id: 'tools', label: 'Tools', icon: 'fas fa-toolbox' } ];
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, packingTab, newItem, showBudgetInput, detailModal, countdown, openDetail, openTicketDetail, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, totalSpent, spentTszLok, spentTszTung, getTypeColor, tripProgress, nowFormatted, isModalOpen, 
+            return { currentView, dayIndex, itinerary, budgetList, packingList, packingTab, newItem, showBudgetInput, detailModal, countdown, openDetail, openTicketDetail, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, totalSpent, spentTszLok, spentTszTung, getTypeColor, tripProgress, nowFormatted, isModalOpen, phrases, 
                 // Calc exports
                 currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
                 // Resv & Utils (RESTORED HERE)
