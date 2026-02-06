@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v60.7 (Bus Return Added)</title>
+    <title>梓樂Nagoya v60.8 (Final + Icon)</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -55,8 +55,22 @@
         
         <div v-if="currentView === 'itinerary'" class="space-y-5 pb-4">
             <div class="flex justify-between items-center mb-2 mt-2">
-                <div><div class="text-[10px] font-bold text-white/80 uppercase tracking-widest">JP.TRIP 2026</div><h1 class="text-3xl font-black font-mincho text-white flex items-center gap-2"><i class="fas fa-chess-rook text-xl opacity-80"></i> 梓樂Nagoya</h1></div>
-                <div class="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden shadow-lg bg-[#c5b59d]"><img src="icon.jpg" class="w-full h-full object-cover" onerror="this.style.display='none'"></div>
+                <div>
+                    <div class="text-[10px] font-bold text-white/80 uppercase tracking-widest">JP.TRIP 2026</div>
+                    <h1 class="text-3xl font-black font-mincho text-white flex items-center gap-2"><i class="fas fa-chess-rook text-xl opacity-80"></i> 梓樂Nagoya</h1>
+                </div>
+                <div class="w-10 h-10 rounded-full border-2 border-white/50 overflow-hidden shadow-lg bg-[#70808f] flex items-center justify-center">
+                    <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="w-full h-full">
+                        <rect width="512" height="512" fill="#70808f"/>
+                        <circle cx="256" cy="150" r="60" fill="#ef4444" opacity="0.9"/>
+                        <path d="M256 120 L420 400 L92 400 Z" fill="#c5b59d"/>
+                        <path d="M256 120 L310 210 L280 200 L256 220 L232 200 L202 210 Z" fill="#ffffff"/>
+                        <rect x="226" y="300" width="60" height="100" rx="10" fill="#4a4238" opacity="0.8"/>
+                        <rect x="230" y="304" width="24" height="44" rx="5" fill="#f3f0eb" opacity="0.9"/>
+                        <rect x="258" y="304" width="24" height="44" rx="5" fill="#f3f0eb" opacity="0.9"/>
+                        <text x="256" y="460" font-family="sans-serif" font-weight="900" font-size="60" text-anchor="middle" fill="#ffffff" letter-spacing="4" opacity="0.8">NAGOYA</text>
+                    </svg>
+                </div>
             </div>
             
             <div class="glass p-5 relative overflow-hidden mb-2 shadow-xl">
@@ -239,7 +253,7 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v60_7"; 
+            const tripDocId = "nagoya_v60_8"; 
 
             // FETCH REAL TIME RATE
             const fetchRate = async () => {
