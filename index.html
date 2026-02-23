@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>梓樂Nagoya v67.0 (Payment Method)</title>
+    <title>梓樂Nagoya v68.0 (Map API Fixed & New Itinerary)</title>
     
-    <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
-    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAMAAAAKE/YAAAAhUExURQAAAHCAj8W1tcW1tcW1tcW1tcW1tcW1tcW1tcW1tcW1tc/y0e0AAAALdFJOUwAAP19/gL+/z9/vI9vUOgAAAAlwSFlzAAAOwwAADsMBx2+oZAAABqZJREFUeNrtnQt7ojAMhU9baKHQvrf//7+8Q4FCoS1t0znn5Fy8w0eIIcnJJSGFAAAAAAAAAAAAAAAAAAAAAAAA4J+i67q+7/92Gf+aIAiC13A4/Osy/iU1x1uSJH9dxr+k5ng55/zP5fxLao638/n8r8v4l9QcbxVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1/R983bTtu9M07Z/4+rZt27Z9d/q+/xNf347jOI777gzD+ImvbydJkiTJuzMM4ye+vp0lWZZl784wjJ/4+naO53ie9+4Mw/iJr2/neZ7n+bvTNO2f+Pp2juM4jvvudF33J76+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6/pXfP2S53me99/x9cMwDMMw/H18/fV6vV6v/x1fP03TNE3T38fXT9M0TdPf8fXjOI7jOP4+vn4cx3Ec/x1fP0mSJEn+Pr5+kiRJkvwdXz/LsizL/j6+fpZlWZb9HV8/z/M8z/8+vn6e53me/x1fP8/zPM//Pr5+nud5nv8dX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV/Xv+Pr13G9Xq/X3/H167iu67quf8fXr+O6ruu6/h1fv47ruq7r+nd8/Tqu67qu69/x9eu4ruu6rn/H16/juq7rur6Ir6v4uoyvX8f1fd/3fX0RX1fxdRlfv47r+77v+/oivq7i6zK+fh3X933f9/VFfF3F12V8/Tqu7/u+7+uL+LqKr8v4+nVcPwiC4C/j6yq+LuPr13H9IAiCv4yvq/i6jK9fx/WDIAj+Mr6u4usyvn4d1w+CIPjL+LqKr8v4+nVcPwiC4C/j6yq+LuPr13H9IAiCv4yvq/i6jK9fx/WDIAj+Mr6u4usyvn4d1w+CIPjL+LqKr8v4+nVcPwiC4C/j6yq+LuPr13H9IAiC/4Ovi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyv/wN9F4L72+M1OAAAAABJRU5ErkJggg==">
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAMAAAAKE/YAAAAhUExURQAAAHCAj8W1tcW1tcW1tcW1tcW1tcW1tcW1tcW1tcW1tc/y0e0AAAALdFJOUwAAP19/gL+/z9/vI9vUOgAAAAlwSFlzAAAOwwAADsMBx2+oZAAABqZJREFUeNrtnQt7ojAMhU9baKHQvrf//7+8Q4FCoS1t0znn5Fy8w0eIIcnJJSGFAAAAAAAAAAAAAAAAAAAAAAAA4J+i67q+7/92Gf+aIAiC13A4/Osy/iU1x1uSJH9dxr+k5ng55/zP5fxLao638/n8r8v4l9QcbxVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1/R983bTtu9M07Z/4+rZt27Z9d/q+/xNf347jOI777gzD+ImvbydJkiTJuzMM4ye+vp0lWZZl784wjJ/4+naO53ie9+4Mw/iJr2/neZ7n+bvTNO2f+Pp2juM4jvvudF33J76+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6yq+ruLrKr6u4usqvq7i6/pXfP2S53me99/x9cMwDMMw/H18/fV6vV6v/x1fP03TNE3T38fXT9M0TdPf8fXjOI7jOP4+vn4cx3Ec/x1fP0mSJEn+Pr5+kiRJkvwdXz/LsizL/j6+fpZlWZb9HV8/z/M8z/8+vn6e53me/x1fP8/zPM//Pr5+nud5nv8dX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV9X8XUVX1fxdRVfV/F1FV/Xv+Pr13G9Xq/X3/H167iu67quf8fXr+O6ruu6/h1fv47ruq7r+nd8/Tqu67qu69/x9eu4ruu6rn/H16/juq7rur6Ir6v4uoyvX8f1fd/3fX0RX1fxdRlfv47r+77v+/oivq7i6zK+fh3X933f9/VFfF3F12V8/Tqu7/u+7+uL+LqKr8v4+nVcPwiC4C/j6yq+LuPr13H9IAiCv4yvq/i6jK9fx/WDIAj+Mr6u4usyvn4d1w+CIPjL+LqKr8v4+nVcPwiC4C/j6yq+LuPr13H9IAiCv4yvq/i6jK9fx/WDIAj+Mr6u4usyvn4d1w+CIPjL+LqKr8v4+nVcPwiC4C/j6yq+LuPr13H9IAiC/4Ovi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyvi6+r+LqIr6v4uoyv/wN9F4L72+M1OAAAAABJRU5ErkJggg==">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -90,7 +89,7 @@
                     <div @click="openDetail(place)" class="glass p-4 relative overflow-hidden active:scale-[0.98] transition-all cursor-pointer hover:bg-[#d6c9b5] z-10" :class="place.isOptional ? 'opacity-80 border-dashed border-2 border-[#4a4238]/30' : ''">
                         <div class="flex justify-between items-start mb-2 relative z-10">
                             <span class="text-[10px] font-black bg-[#70808f] text-white px-2 py-1 rounded">{{ place.time }}</span>
-                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded" :class="place.isOptional ? 'bg-yellow-400/20 text-yellow-900' : 'opacity-60'">{{ place.typeLabel }}</span>
+                            <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded" :class="place.isOptional ? 'bg-yellow-400 text-yellow-900 shadow-sm' : 'opacity-60'">{{ place.isOptional ? 'Optional' : place.typeLabel }}</span>
                         </div>
                         <h3 class="text-lg font-black mb-1 relative z-10">{{ place.name }}</h3><p class="text-xs opacity-80 line-clamp-1 mb-2 relative z-10">{{ place.desc }}</p>
                         <div class="flex flex-wrap gap-2 mt-2 relative z-10"><span v-for="tag in place.highlights" class="px-2 py-1 bg-white/50 border border-black/5 rounded text-[10px] font-bold text-[#726251]">{{ tag }}</span></div>
@@ -155,7 +154,7 @@
         <div v-if="currentView === 'reservations'" class="space-y-6 pt-4">
             <h2 class="text-2xl font-black font-mincho text-white">預約 & 票券 Resv</h2>
             
-            <div class="glass p-5 border-l-4 border-blue-500 mb-4 bg-white/20">
+            <div class="glass p-5 border-l-4 border-blue-500 mb-4 bg-white/20 shadow-lg">
                 <h3 class="text-xs font-bold uppercase tracking-widest text-[#4a4238] mb-3"><i class="fas fa-qrcode mr-2"></i>Visit Japan Web (入境 QR)</h3>
                 <div class="flex gap-3">
                     <a href="https://www.vjw.digital.go.jp/main/#/vjwpti006" target="_blank" class="flex-1 py-3 bg-[#91867f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-male mr-1"></i> TszLok</a>
@@ -171,7 +170,7 @@
                         <div class="text-xs opacity-90 mb-1 font-bold">確認號: 1359041951884860 | PIN: 9525</div>
                         <div class="text-xs opacity-70 mb-2">入住: 2/25 (15:00) - 退房: 2/28 (11:00)</div>
                         <div class="text-xs opacity-50 selectable">愛知県名古屋市中区錦3丁目4-3 (Tel: +81-52-9635959)</div>
-                        <button @click="detailModal={show:true, data:{isVoucher:true, title:'西鐵酒店 Croom 名古屋', confirm:'1359041951884860', pin:'9525', order:'1359041951884810', dates:'2/25 - 2/28', address:'3 Chome-4-3 Nishiki, Naka Ward, Nagoya', tel:'+81-52-9635959', room:'Comfort Double (Non-smoking)', guest:'Lo Tsz Lok', price:'HK$2,545.30 (Paid)', cancel:'2/24 23:00 前免費取消'}}" class="mt-3 block w-full py-3 bg-[#91867f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-invoice mr-2"></i>查看電子憑證 (Digital Voucher)</button>
+                        <a href="hotelcroom%20.pdf" target="_blank" class="mt-3 block w-full py-3 bg-[#91867f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-pdf mr-2"></i>開啟住宿憑證 PDF</a>
                     </div>
                 </div>
                 <div class="glass p-0 overflow-hidden relative border-l-4 border-[#726251]">
@@ -182,7 +181,7 @@
                         <div class="text-xs opacity-70 mb-2">入住: 2/28 (15:00) - 退房: 3/3 (11:00)</div>
                         <div class="text-xs opacity-50 selectable">岐阜県高山市花里町4丁目301 (Tel: +81-577-361109)</div>
                         <div class="mt-2 text-[10px] text-red-800 bg-red-100 px-2 py-1 rounded inline-block">需現場支付溫泉稅 (約 ¥900/房)</div>
-                        <button @click="detailModal={show:true, data:{isVoucher:true, title:'東急 STAY 飛驒高山 結之湯', confirm:'6185199858', pin:'8900', order:'1359041951886445', dates:'2/28 - 3/3', address:'Hanasatomachi 4-301, Takayama, Gifu', tel:'+81-577-361109', room:'Comfort Double (1 Large Bed)', guest:'Lo Tsz Lok', price:'HK$2,830.73 (Paid) + ¥900 Tax', cancel:'2/25 23:59 前免費取消'}}" class="mt-3 block w-full py-3 bg-[#726251] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-invoice mr-2"></i>查看電子憑證 (Digital Voucher)</button>
+                        <a href="hotelstay%20.pdf" target="_blank" class="mt-3 block w-full py-3 bg-[#726251] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-pdf mr-2"></i>開啟住宿憑證 PDF</a>
                     </div>
                 </div>
                 <div class="glass p-0 overflow-hidden relative border-l-4 border-[#91867f]"><div class="bg-[#91867f]/10 p-3 flex justify-between items-center border-b border-[#4a4238]/10"><span class="text-xs font-bold uppercase tracking-widest text-[#91867f]">Outbound</span><span class="text-xs font-bold text-[#4a4238]">2/25 (Wed)</span></div><div class="p-4 flex justify-between items-center"><div class="text-center"><div class="text-2xl font-black font-mono">HKG</div></div><div class="flex flex-col items-center px-4"><i class="fas fa-arrow-right text-[#91867f] mb-1"></i><div class="text-[10px] font-bold bg-[#4a4238] text-white px-2 py-0.5 rounded">UO680</div></div><div class="text-center"><div class="text-2xl font-black font-mono">NGO</div></div></div></div>
@@ -273,43 +272,32 @@
 
     <div v-if="detailModal.show" class="modal-layer flex items-end justify-center"><div class="absolute inset-0 bg-black/80 backdrop-blur-sm" @click="detailModal.show=false"></div><div class="bg-[#c5b59d] w-full max-w-md rounded-t-3xl p-6 relative animate-slide-up max-h-[85vh] overflow-y-auto text-[#4a4238] modal-content" @click.stop><div class="w-12 h-1 bg-[#4a4238]/20 rounded-full mx-auto mb-6"></div>
     
-    <div v-if="detailModal.data.isPhrase" class="text-center py-10"><div class="text-sm font-bold opacity-60 mb-4">{{ detailModal.data.zh }}</div><div class="text-4xl font-black mb-6">{{ detailModal.data.jp }}</div><div class="text-xs opacity-50 font-mono">{{ detailModal.data.pronounce }}</div></div>
-
-    <div v-else-if="detailModal.data.isVoucher" class="space-y-4">
-        <span class="px-3 py-1 bg-[#726251] text-white rounded-lg text-xs font-bold uppercase">HOTEL VOUCHER</span>
-        <h2 class="text-2xl font-black mt-2 mb-2 font-mincho">{{ detailModal.data.title }}</h2>
-        <div class="bg-white/50 p-5 rounded-xl border border-[#4a4238]/10 space-y-4">
-            <div><div class="text-[10px] uppercase opacity-50 font-bold">Confirmation No.</div><div class="font-mono font-black text-xl tracking-wider">{{ detailModal.data.confirm }}</div></div>
-            <div class="flex justify-between">
-                <div><div class="text-[10px] uppercase opacity-50 font-bold">PIN Code</div><div class="font-mono font-bold">{{ detailModal.data.pin }}</div></div>
-                <div class="text-right"><div><div class="text-[10px] uppercase opacity-50 font-bold">Order ID</div><div class="font-mono font-bold">{{ detailModal.data.order }}</div></div></div>
-            </div>
-            <div class="border-t border-[#4a4238]/10 pt-4">
-                <div class="flex justify-between mb-2"><span class="text-xs font-bold opacity-60">Guest</span><span class="text-xs font-bold">{{ detailModal.data.guest }}</span></div>
-                <div class="flex justify-between mb-2"><span class="text-xs font-bold opacity-60">Dates</span><span class="text-xs font-bold">{{ detailModal.data.dates }}</span></div>
-                <div class="flex justify-between mb-2"><span class="text-xs font-bold opacity-60">Room</span><span class="text-xs font-bold">{{ detailModal.data.room }}</span></div>
-                <div class="flex justify-between"><span class="text-xs font-bold opacity-60">Price</span><span class="text-xs font-bold">{{ detailModal.data.price }}</span></div>
-            </div>
-        </div>
-        <div class="bg-red-500/10 p-4 rounded-xl text-xs font-bold text-red-800"><i class="fas fa-info-circle mr-2"></i>{{ detailModal.data.cancel }}</div>
-        <div class="space-y-2">
-            <h4 class="text-xs font-bold opacity-50 uppercase mt-4">Address</h4>
-            <div class="font-bold text-sm">{{ detailModal.data.address }}</div>
-            <div class="font-mono text-xs opacity-60">{{ detailModal.data.tel }}</div>
-        </div>
-        <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(detailModal.data.title + ' 日本')" target="_blank" class="block w-full mt-6 py-4 bg-[#70808f] text-white text-center rounded-2xl font-bold shadow-lg"><i class="fas fa-map-marker-alt mr-2"></i>Open Map</a>
+    <div v-if="detailModal.data.isPhrase" class="text-center py-10">
+        <div class="text-sm font-bold opacity-60 mb-4">{{ detailModal.data.zh }}</div>
+        <div class="text-4xl font-black mb-6">{{ detailModal.data.jp }}</div>
+        <div class="text-xs opacity-50 font-mono">{{ detailModal.data.pronounce }}</div>
     </div>
 
-    <div v-else-if="detailModal.data.isTicket"><span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span><h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2><div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">地點 / 詳細資訊</div><div class="font-bold mb-1">{{ detailModal.data.location }}</div><div v-if="detailModal.data.desc" class="text-xs opacity-70 font-mono">{{ detailModal.data.desc }}</div><div class="mt-3 flex gap-2"><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="flex-1 py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-external-link-alt mr-2"></i>預約網站</a><a v-if="detailModal.data.pdfLink" :href="detailModal.data.pdfLink" target="_blank" class="flex-1 py-3 bg-[#70808f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-pdf mr-2"></i>車票 PDF</a></div></div><div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div></div>
-    <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(detailModal.data.title + ' 日本')" target="_blank" class="block w-full mt-6 py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg text-center"><i class="fas fa-map-marker-alt mr-2"></i>Open Map</a>
+    <div v-else-if="detailModal.data.isTicket">
+        <span class="px-3 py-1 rounded-lg text-xs font-bold uppercase" :class="getMethodBadge(detailModal.data.method)">{{ getMethodLabel(detailModal.data.method) }}</span>
+        <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.title }}</h2>
+        <div class="bg-white/40 p-4 rounded-xl mb-4 shadow-sm"><div class="text-[10px] font-bold opacity-50 uppercase tracking-widest mb-1">地點 / 詳細資訊</div><div class="font-bold mb-1">{{ detailModal.data.location }}</div><div v-if="detailModal.data.desc" class="text-xs opacity-70 font-mono">{{ detailModal.data.desc }}</div>
+        <div class="mt-3 flex gap-2"><a v-if="detailModal.data.method === 'online' && detailModal.data.url" :href="detailModal.data.url" target="_blank" class="flex-1 py-3 bg-[#34a853] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-external-link-alt mr-2"></i>預約網站</a><a v-if="detailModal.data.pdfLink" :href="detailModal.data.pdfLink" target="_blank" class="flex-1 py-3 bg-[#70808f] text-white text-center rounded-xl font-bold shadow-md active:scale-95 transition-transform text-sm"><i class="fas fa-file-pdf mr-2"></i>車票 PDF</a></div></div>
+        <div class="space-y-4"><div v-if="detailModal.data.guide.steps"><h4 class="text-xs font-bold opacity-60 uppercase tracking-widest mb-2">操作步驟</h4><ul class="list-decimal pl-5 space-y-2 text-sm font-bold opacity-90"><li v-for="step in detailModal.data.guide.steps">{{ step }}</li></ul></div><div v-if="detailModal.data.guide.reminder" class="bg-red-400/10 p-4 rounded-xl border-l-4 border-red-500 text-sm font-bold text-red-900"><i class="fas fa-exclamation-triangle mr-2"></i>{{ detailModal.data.guide.reminder }}</div></div>
+        
+        <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(detailModal.data.location + ' ' + detailModal.data.title)" target="_blank" class="block w-full mt-6 py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg text-center"><i class="fas fa-map-marker-alt mr-2"></i>Open Map</a>
     </div>
 
     <div v-else>
         <span v-if="detailModal.data.isOptional" class="px-3 py-1 bg-yellow-400/80 text-yellow-900 rounded-lg text-xs font-bold uppercase mr-2">OPTIONAL</span>
         <span class="px-3 py-1 bg-[#70808f] text-white rounded-lg text-xs font-bold uppercase">{{ detailModal.data.typeLabel }}</span>
         
-        <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2><div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div><div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div><div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div>
-    <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(detailModal.data.name)" target="_blank" class="block w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg text-center"><i class="fas fa-map-marker-alt mr-2"></i>Open Map</a>
+        <h2 class="text-2xl font-black mt-3 mb-2 font-mincho">{{ detailModal.data.name }}</h2>
+        <div class="text-sm font-bold opacity-60 mb-6 flex items-center"><i class="far fa-clock mr-2"></i> {{ detailModal.data.time }}</div>
+        <div class="space-y-6 text-sm leading-relaxed"><div v-if="detailModal.data.desc"><h4 class="text-xs font-bold opacity-50 uppercase tracking-widest mb-2">Description</h4><p class="font-bold whitespace-pre-line">{{ detailModal.data.desc }}</p></div><div v-if="detailModal.data.strategy" class="bg-[#726251]/10 p-5 rounded-2xl border-l-4 border-[#726251]"><h4 class="text-xs font-bold uppercase tracking-widest mb-3 flex items-center"><i class="fas fa-chess-knight mr-2"></i>攻略 Strategy</h4><div class="font-bold whitespace-pre-line">{{ detailModal.data.strategy }}</div></div></div>
+        <div class="mt-6 space-y-3"><a v-if="detailModal.data.ticketLink" :href="detailModal.data.ticketLink" target="_blank" class="block w-full py-4 bg-[#726251] text-white text-center rounded-2xl font-bold shadow-lg">View Ticket</a><a v-if="detailModal.data.hotelLink" :href="detailModal.data.hotelLink" target="_blank" class="block w-full py-4 bg-[#91867f] text-white text-center rounded-2xl font-bold shadow-lg">View Hotel Booking</a></div><div class="h-6"></div>
+        
+        <a :href="'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(detailModal.data.name.replace(/\(.*\)/, '').trim())" target="_blank" class="block w-full py-4 bg-white text-[#4a4238] rounded-2xl font-bold shadow-lg text-center"><i class="fas fa-map-marker-alt mr-2"></i>Open Map</a>
     </div></div></div>
 
 </div>
@@ -326,11 +314,6 @@
         messagingSenderId: "156812601167",
         appId: "1:156812601167:web:852ed3f4f431f7506cc73a",
         measurementId: "G-Z0NV8048TJ"
-    };
-
-    window.onerror = function(msg, url, line) {
-        console.warn("Global Error Suppressed:", msg);
-        return false;
     };
 
     let db;
@@ -351,8 +334,6 @@
             const showBudgetInput = ref(false);
             const showWishlistInput = ref(false);
             const payers = ['TszLok', 'TszTung'];
-            
-            // UPDATED NEW ITEM STATE
             const newItem = ref({ name: '', price: '', payer: 'TszLok', method: 'cash' });
             const newWishItem = ref({ name: '', price: '', image: null });
             const budgetList = ref([]);
@@ -427,7 +408,7 @@
             const calcResult = ref('0');
             const syncStatus = ref('Connecting...');
             const syncColor = ref('bg-yellow-400');
-            const tripDocId = "nagoya_v67_0"; 
+            const tripDocId = "nagoya_v68_0"; 
 
             const fetchRate = async () => {
                 try {
@@ -587,20 +568,21 @@
             const itinerary = ref([
                 { day: 1, date_short: "2/25", date_en: "Wed", location: "Nagoya", places: [
                     { time: "14:30", name: "中部国際空港", type: "transport", typeLabel: "抵達", desc: "入境、領行李 (預計 1 小時)。", highlights: ["入境"], strategy: "出關後跟著「名鐵電車」藍色指標走，前往機場站。" }, 
-                    { time: "15:30", name: "名鉄名古屋駅", type: "transport", typeLabel: "移動", desc: "前往名古屋站。", highlights: ["指定席"], strategy: "購票：自動售票機選「μ-ticket」，目的地「Nagoya」。\n劃位：機器上選 2 位成人及連號座位。\n費用：¥1,430。" }, 
+                    { time: "15:30", name: "名鉄名古屋駅", type: "transport", typeLabel: "移動", desc: "搭乘 μ-Sky 前往名古屋站。", highlights: ["指定席"], strategy: "購票：自動售票機選「μ-ticket」，目的地「Nagoya」。\n劃位：機器上選 2 位成人及連號座位。\n費用：約¥1,430。" }, 
                     { time: "16:00", name: "タイトーステーション 名古屋名駅店", type: "spot", typeLabel: "娛樂", desc: "名站周邊夾娃娃。", highlights: ["夾娃娃"], strategy: "戰術：下車後先在名古屋車站找「コインロッカー (Coin Locker)」把大件行李鎖進去，空手去對面夾娃娃，爽感倍增！" }, 
-                    { time: "17:30", name: "西鉄ホテル クルーム 名古屋", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4 號出口。", bookingType: "hotel", highlights: ["大浴場"], strategy: "位置：久屋大通站 4 號出口步行 1 分鐘。" }, 
-                    { time: "18:00", name: "バンジャラ 栄店 (Banjara Sakae)", type: "food", typeLabel: "晚餐", desc: "印度咖哩。", highlights: ["Cheese Naan"], strategy: "取代原本遙遠的店，這家離飯店走路幾分鐘而已，起司餅 (Cheese Naan) 是必點神物！" }, 
-                    { time: "20:00", name: "オアシス 21 (Oasis 21)", type: "spot", typeLabel: "夜景", desc: "水的宇宙船。", highlights: ["電視塔"], strategy: "在酒店附近，建議上頂層拍攝名古屋電視塔夜景。" },
-                    { time: "21:00", name: "ドン・キホーテ 名古屋栄店", type: "spot", typeLabel: "購物", isOptional: true, desc: "唐吉訶德採買。", highlights: ["24小時"], strategy: "Optional 宵夜採買：24 小時營業的唐吉訶德，買休足時間與零食。" }
+                    { time: "17:30", name: "西鉄ホテル クルーム 名古屋", type: "stay", typeLabel: "Check-in", desc: "久屋大通站 4 號出口。", bookingType: "hotel", hotelLink: "hotelcroom .pdf", highlights: ["大浴場"], strategy: "訂單編號: 1359041951884860 | PIN: 9525\n位置：久屋大通站 4 號出口步行 1 分鐘。\n\n[📄 點擊下方 PDF 按鈕開啟憑證]" }, 
+                    { time: "18:00", name: "バンジャラ 栄店 (Banjara Sakae)", type: "food", typeLabel: "晚餐", desc: "印度咖哩。", highlights: ["Cheese Naan"], strategy: "距離飯店走路幾分鐘，起司餅 (Cheese Naan) 是必點神物。" }, 
+                    { time: "19:00", name: "購物 Part 1 (機能裝備)", type: "spot", typeLabel: "購物", desc: "各大旗艦店補裝。", highlights: ["Snow Peak", "mont-bell", "UNIQLO"], strategy: "吃飽散步買機能裝備，這幾家旗艦店腹地廣大、需要試穿，安排在第一天晚上最適合：\n1. Snow Peak: 久屋大通公園(飯店旁綠地)。\n2. mont-bell 名古屋栄店: Nadya Park內(買羽絨)。\n3. UNIQLO 名古屋栄店: 超大型店，補齊發熱衣。" }, 
+                    { time: "20:30", name: "オアシス 21 (Oasis 21) & 3COINS", type: "spot", typeLabel: "夜景", desc: "水的宇宙船與雜貨。", highlights: ["電視塔", "3COINS"], strategy: "建議上頂層拍攝名古屋電視塔夜景。裡面有 3COINS オアシス21店，順便買質感旅行雜貨。" },
+                    { time: "21:30", name: "ドン・キホーテ 名古屋栄店", type: "spot", typeLabel: "購物", isOptional: true, desc: "唐吉訶德採買。", highlights: ["24小時"], strategy: "Optional 宵夜採買：24 小時營業的唐吉訶德，買休足時間與零食。" }
                 ]},
                 { day: 2, date_short: "2/26", date_en: "Thu", location: "Nagoya", places: [
                     { time: "09:00", name: "コンパル 栄西店 (Konparu)", type: "food", typeLabel: "早餐", desc: "名古屋炸蝦三明治。", highlights: ["炸蝦三明治"], strategy: "必吃招牌「炸蝦三明治」。" }, 
-                    { time: "12:00", name: "ジブリパーク ジブリの大倉庫", type: "spot", typeLabel: "重點", desc: "需依預約時間入場。", bookingType: "ticket", highlights: ["名場面展"], strategy: "準時入場，預留 3-4 小時慢慢拍照。" }, 
+                    { time: "12:00", name: "ジブリパーク ジブリの大倉庫", type: "spot", typeLabel: "重點", desc: "需依預約時間入場。", bookingType: "ticket", ticketLink: "#", highlights: ["名場面展"], strategy: "準時入場，預留 3-4 小時慢慢拍照。" }, 
                     { time: "17:30", name: "あつた蓬莱軒 松坂屋店", type: "food", typeLabel: "戰術走位", desc: "抽號碼牌。", highlights: ["先抽牌"], strategy: "戰術：回到榮區後，千萬別先逛街！第一件事直衝松坂屋 10 樓抽號碼牌，拿到確切時間後再去逛。" }, 
-                    { time: "18:00", name: "ワークマン女子 栄スカイル店 & つばめパン", type: "spot", typeLabel: "購物", desc: "機能服與紅豆吐司。", highlights: ["Workman", "紅豆吐司"], strategy: "購物(等待晚餐空檔)：\n1. ワークマン女子 (Workman Joshi): 高 CP 值防風防水外套。\n2. つばめパン & Milk 栄店: 買紅豆吐司。" }, 
-                    { time: "19:00", name: "あつた蓬莱軒 松坂屋店", type: "food", typeLabel: "晚餐", desc: "鰻魚飯三吃。", highlights: ["鰻魚飯"], strategy: "[☔ 備案]\n若排太久：立刻轉往旁邊的 しら河 栄店 (Shirakawa Sakae)。" }, 
-                    { time: "20:30", name: "ハーブス 栄本店 (HARBS)", type: "food", typeLabel: "甜點", desc: "水果千層蛋糕。", highlights: ["外帶"], strategy: "外帶招牌水果千層蛋糕回飯店吃。" }
+                    { time: "18:00", name: "購物 Part 2 (潮牌/機能服)", type: "spot", typeLabel: "購物", desc: "松坂屋周邊黃金 1.5hr。", highlights: ["Workman", "ARC'TERYX", "Stussy"], strategy: "這幾家店全部都在松坂屋步行5分鐘內的範圍，等待時間火力全開：\n1. Workman 女子 (SKYLE)\n2. ARC'TERYX (松坂屋斜對面)\n3. The North Face+ (LACHIC 找紫標)\n4. BEAMS, atmos, FREAK'S STORE (PARCO)\n5. Stussy, KAPITAL, adidas, Patagonia (巷弄獨立店)\n6. つばめパン & Milk 栄店 (買紅豆吐司)" }, 
+                    { time: "19:30", name: "あつた蓬莱軒 松坂屋店", type: "food", typeLabel: "晚餐", desc: "鰻魚飯三吃。", highlights: ["鰻魚飯"], strategy: "回到松坂屋享用。\n\n[☔ 備案]\n若排太久：立刻轉往旁邊的 しら河 栄店 (Shirakawa Sakae)。" }, 
+                    { time: "21:00", name: "ハーブス 栄本店 (HARBS)", type: "food", typeLabel: "甜點", desc: "水果千層蛋糕。", highlights: ["外帶"], strategy: "外帶水果千層蛋糕回飯店吃。" }
                 ]},
                 { day: 3, date_short: "2/27", date_en: "Fri", location: "Nagoya", places: [
                     { time: "09:00", name: "コメダ珈琲店 栄店", type: "food", typeLabel: "早餐", desc: "點咖啡送吐司。", highlights: ["紅豆泥"], strategy: "點咖啡送吐司，體驗正宗名古屋早餐文化。" }, 
@@ -608,39 +590,41 @@
                     { time: "13:30", name: "矢場とん 矢場町本店", type: "food", typeLabel: "午餐", desc: "味噌豬排。", highlights: ["鐵板"], strategy: "品嚐道地的名古屋味噌豬排。" }, 
                     { time: "15:00", name: "大須商店街 & 三輪神社", type: "spot", typeLabel: "逛街", desc: "商店街與兔子神社。", highlights: ["兔子神社"], strategy: "參拜兔子神社，體驗熱鬧的商店街。" }, 
                     { time: "15:30", name: "#C-pla 大須店", type: "spot", typeLabel: "娛樂", desc: "扭蛋天堂。", highlights: ["扭蛋"], strategy: "名古屋最大級扭蛋店，機台極多，準備好零錢。" }, 
-                    { time: "17:30", name: "無印良品 名鉄百貨店本店", type: "spot", typeLabel: "購物", desc: "生活雜貨。", highlights: ["旗艦店"], strategy: "逛生活雜貨補貨。" }, 
-                    { time: "19:30", name: "名古屋站周邊", type: "food", typeLabel: "晚餐", desc: "寬麵或雞翅 (備案二選一)。", highlights: ["手羽先", "寬麵"], strategy: "晚餐(備案二選一)：\n1. 炸雞翅: 世界の山ちゃん 名駅太閤店\n2. 寬麵: 驛釜きしめん" }
+                    { time: "17:00", name: "カフェ ジャンシアーヌ", type: "food", typeLabel: "搶購", desc: "Piyorin 小雞蛋糕。", highlights: ["挑戰"], strategy: "戰術: 買 Piyorin 小雞蛋糕。17:00 出爐，請在 16:45 前抵達排隊。\n\n[☔ 備案]\n地雷也炸蝦飯糰 (Tenmusu)，名鐵百貨 B1 購買外帶。" }, 
+                    { time: "17:30", name: "購物 Part 3 (名站商圈)", type: "spot", typeLabel: "購物", desc: "補齊剩餘品牌。", highlights: ["MUJI", "Salomon", "Oakley"], strategy: "買完蛋糕後，直接在名古屋站周邊把剩下的品牌買齊：\n1. MUJI 無印良品 (名鉄百貨店本店)\n2. Salomon (名站百貨專櫃，買神級山系潮鞋)\n3. Oakley Store" }, 
+                    { time: "19:30", name: "名古屋站周邊", type: "food", typeLabel: "晚餐", desc: "寬麵或雞翅 (備案二選一)。", highlights: ["手羽先", "寬麵"], strategy: "晚餐(二選一)：\n1. 炸雞翅: 世界の山ちゃん 名駅太閤店\n2. 寬麵: 驛釜きしめん" }
                 ]},
                 { day: 4, date_short: "2/28", date_en: "Sat", location: "Takayama", places: [
-                    { time: "09:30", name: "名鉄バスセンター", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["Web Ticket"], strategy: "名鐵巴士中心 3 樓乘車。來回票 ¥6,000，出示手機 Email 電子車票即可。" }, 
-                    { time: "12:30", name: "東急ステイ飛騨高山 結の湯", type: "stay", typeLabel: "寄放", desc: "步行 2 分鐘即達。", bookingType: "hotel", highlights: ["近車站"], strategy: "距離車站步行僅 2 分鐘，先寄放行李。" }, 
+                    { time: "09:30", name: "名鉄バスセンター", type: "transport", typeLabel: "移動", desc: "前往高山。", highlights: ["Web Ticket"], strategy: "名鐵巴士中心 3 樓乘車。來回票 ¥6,000，出示手機 Email 電子車票即可上車。" }, 
+                    { time: "12:30", name: "東急ステイ飛騨高山 結の湯", type: "stay", typeLabel: "寄放", desc: "步行 2 分鐘即達。", bookingType: "hotel", hotelLink: "hotelstay .pdf", highlights: ["近車站"], strategy: "訂單編號: 6185199858 | PIN: 8900\n距離車站步行僅 2 分鐘，先寄放行李。\n\n[📄 點擊下方 PDF 按鈕開啟憑證]" }, 
                     { time: "13:00", name: "飛騨高山 古い町並 & 飛騨こって牛", type: "spot", typeLabel: "散策", desc: "高山老街。", highlights: ["飛驒牛壽司"], strategy: "老街散步，必吃放在仙貝上的飛驒牛握壽司。" }, 
-                    { time: "14:30", name: "原田酒造場", type: "spot", typeLabel: "品酒", isOptional: true, desc: "大人口味行程。", highlights: ["試喝清酒"], strategy: "Optional (大人口味): 買杯子即可無限試喝清酒。" }, 
-                    { time: "16:45", name: "味蔵天国 (Ajikura Tengoku)", type: "food", typeLabel: "晚餐", desc: "飛驒牛燒肉。", highlights: ["A5飛驒牛"], strategy: "戰術：週末人潮地獄！不能預約，16:45 務必抵達門口機器抽號碼牌。\n\n[☔ 備案]\n丸明飛騨高山店 (Maruaki Takayama)。" }
+                    { time: "14:30", name: "原田酒造場", type: "spot", typeLabel: "品酒", isOptional: true, desc: "大人口味行程。", highlights: ["試喝清酒"], strategy: "Optional: 買杯子即可無限試喝清酒。" }, 
+                    { time: "15:00", name: "Check-in", type: "stay", typeLabel: "入住", desc: "東急 Stay 飛驒高山。", highlights: ["休息"], strategy: "辦理入住手續，稍作休息。" }, 
+                    { time: "16:45", name: "味蔵天国 (Ajikura Tengoku)", type: "food", typeLabel: "晚餐", desc: "飛驒牛燒肉。", highlights: ["A5飛驒牛"], strategy: "戰術：不能預約，週末人極多，16:45 務必抵達門口機器抽號碼牌。\n\n[☔ 備案]\n丸明飛騨高山店。" }
                 ]},
                 { day: 5, date_short: "3/1", date_en: "Sun", location: "Shirakawa", places: [
-                    { time: "08:10", name: "高山濃飛バスセンター", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", highlights: ["8A/8B"], strategy: "預約編號：02062000931，座位 8A/8B。單程 ¥2,800。" }, 
+                    { time: "08:10", name: "高山濃飛バスセンター", type: "transport", typeLabel: "移動", desc: "前往白川鄉。", highlights: ["8A/8B"], strategy: "預約編號：02062000931，座位 8A/8B。單程 ¥2,800。\n高山巴士總站 4 號月台候車，出示 Email 電子票上車。" }, 
                     { time: "09:30", name: "城山天守閣展望台", type: "spot", typeLabel: "展望台", desc: "俯瞰合掌村。", highlights: ["經典角度"], strategy: "戰術：趁早人少，先搭接駁車上山拍全景。" }, 
                     { time: "12:30", name: "お食事処 いろり", type: "food", typeLabel: "午餐", desc: "朴葉味噌燒。", highlights: ["傳統料理"], strategy: "品嚐傳統朴葉味噌燒。" }, 
                     { time: "13:30", name: "白川郷 三小屋", type: "spot", typeLabel: "景點", desc: "村子後方。", highlights: ["田園風光"], strategy: "散步到村子後方，拍攝最著名的三小屋風景。" }, 
-                    { time: "14:15", name: "喫茶落人", type: "food", typeLabel: "甜點", desc: "紅豆湯無限喝。", highlights: ["圍爐裏"], strategy: "在圍爐裡旁邊喝熱紅豆湯，非常有氣氛。" }, 
-                    { time: "15:45", name: "白川郷バスターミナル", type: "transport", typeLabel: "移動", desc: "返回高山。", highlights: ["回程"], strategy: "搭乘預約巴士返回高山。" },
+                    { time: "14:15", name: "喫茶落人", type: "food", typeLabel: "甜點", desc: "紅豆湯無限喝。", highlights: ["圍爐裏"], strategy: "在圍爐裡旁邊喝熱咖啡與紅豆湯。" }, 
+                    { time: "15:45", name: "白川郷バスターミナル", type: "transport", typeLabel: "移動", desc: "返回高山。", highlights: ["回程"], strategy: "搭乘預約巴士返回高山。時間：16:35 抵達高山。" },
                     { time: "18:00", name: "麺屋しらかわ", type: "food", typeLabel: "晚餐", desc: "高山拉麵名店。", highlights: ["排隊店"], strategy: "高山拉麵代表名店，湯頭濃郁。\n\n[☔ 備案]\nLE MIDI (就在附近)，品嚐布丁或法式餐點。" }
                 ]},
                 { day: 6, date_short: "3/2", date_en: "Mon", location: "Okuhida", places: [
                     { time: "09:40", name: "高山濃飛バスセンター", type: "transport", typeLabel: "移動", desc: "購買套票。", highlights: ["套票"], strategy: "在巴士總站購買「奧飛驒 2 日套票」¥6,300，涵蓋巴士與纜車。" }, 
                     { time: "11:30", name: "新穂高ロープウェイ", type: "spot", typeLabel: "展望台", desc: "標高 2156m。", highlights: ["雪之迴廊"], strategy: "搭乘雙層纜車直達 2156m 山頂展望台。" }, 
-                    { time: "13:00", name: "マウントビュー", type: "food", typeLabel: "午餐", desc: "山頂餐廳。", highlights: ["簡單吃"], strategy: "山頂簡單吃熱烏龍麵或咖哩。" }, 
+                    { time: "13:00", name: "マウントビュー", type: "food", typeLabel: "午餐", desc: "山頂餐廳。", highlights: ["簡單吃"], strategy: "山頂簡單吃熱烏龍麵。" }, 
                     { time: "14:16", name: "平湯バスターミナル", type: "transport", typeLabel: "移動", desc: "抵達平湯。", highlights: ["轉乘"], strategy: "準備進行溫泉耍廢時光。" }, 
-                    { time: "14:30", name: "平湯溫泉 (二選一)", type: "spot", typeLabel: "溫泉", desc: "泡湯時光。", highlights: ["溫泉蛋"], strategy: "選項 A(泡全身): ひらゆの森 - 巴士站走 3 分鐘，體驗超美雪中露天風呂。\n選項 B(泡腳吃貨): 平湯温泉 足湯 - 就在巴士站旁邊，買「はんたい玉子 (溫泉蛋)」配飛驒牛奶，邊泡腳邊吃。" }, 
+                    { time: "14:30", name: "平湯溫泉 (二選一)", type: "spot", typeLabel: "溫泉", desc: "泡湯時光。", highlights: ["溫泉蛋"], strategy: "選項 A(泡全身): ひらゆの森 - 巴士站走 3 分鐘，體驗絕美雪中露天風呂(門票約¥700)。\n選項 B(泡腳吃貨): 平湯温泉 足湯 - 就在巴士站旁邊，買「はんたい玉子 (溫泉蛋)」配飛驒牛奶，邊泡腳邊吃。" }, 
                     { time: "16:30", name: "平湯バスターミナル", type: "transport", typeLabel: "移動", desc: "返回高山。", highlights: ["濃飛巴士"], strategy: "搭乘濃飛巴士返回高山。" }, 
-                    { time: "18:30", name: "丸明飛騨高山店", type: "food", typeLabel: "晚餐", desc: "飛驒牛壽喜燒。", highlights: ["壽喜燒"], strategy: "高山著名飛驒牛餐廳。" }
+                    { time: "18:30", name: "丸明飛騨高山店", type: "food", typeLabel: "晚餐", desc: "飛驒牛壽喜燒。", highlights: ["壽喜燒"], strategy: "享受高山的最後一晚，壽喜燒的甜鹹醬汁配飛驒牛絕讚。" }
                 ]},
                 { day: 7, date_short: "3/3", date_en: "Tue", location: "Airport", places: [
                     { time: "09:00", name: "宮川朝市", type: "spot", typeLabel: "市集", desc: "河邊早市。", highlights: ["伴手禮"], strategy: "最後採買蘋果汁、農特產與木雕。" }, 
                     { time: "12:00", name: "レストラン ル・ミディ", type: "food", typeLabel: "午餐", desc: "南瓜布丁。", highlights: ["甜點"], strategy: "享用高山美食與布丁。" }, 
                     { time: "13:20", name: "高山濃飛バスセンター", type: "transport", typeLabel: "移動", desc: "返回名古屋。", highlights: ["回程"], strategy: "使用來回票回程。抵達名鐵巴士中心。" }, 
-                    { time: "16:05", name: "坂角総本舗 名古屋駅エスカ店", type: "spot", typeLabel: "購物", isOptional: true, desc: "最後補貨。", highlights: ["蝦餅"], strategy: "Optional: 在名古屋站轉車的空檔，買超有名的「ゆかり (蝦餅)」回香港。" }, 
+                    { time: "16:05", name: "坂角総本舗 名古屋駅エスカ店", type: "spot", typeLabel: "購物", isOptional: true, desc: "最後補貨。", highlights: ["蝦餅"], strategy: "Optional 終極補貨: 在名古屋站轉車的空檔，買超有名的「ゆかり (黃金蝦餅)」回香港。" }, 
                     { time: "17:20", name: "名鉄名古屋駅", type: "transport", typeLabel: "移動", desc: "前往機場。", highlights: ["NGO"], strategy: "搭乘 μ-Sky 前往機場。" }, 
                     { time: "21:00", name: "起飛返港", type: "transport", typeLabel: "離境", desc: "滿載而歸！", highlights: [], strategy: "滿載而歸！" }
                 ]}
@@ -648,13 +632,12 @@
 
             const tabs = [ { id: 'itinerary', label: 'Plan', icon: 'fas fa-map-marked-alt' }, { id: 'wallet', label: 'Wallet', icon: 'fas fa-wallet' }, { id: 'packing', label: 'Pack', icon: 'fas fa-suitcase' }, { id: 'reservations', label: 'Resv', icon: 'fas fa-ticket-alt' }, { id: 'reminders', label: 'Tips', icon: 'fas fa-lightbulb' }, { id: 'tools', label: 'Tools', icon: 'fas fa-toolbox' } ];
 
-            return { currentView, dayIndex, itinerary, budgetList, packingList, packingTab, newItem, showBudgetInput, detailModal, countdown, openDetail, openTicketDetail, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, totalSpent, spentTszLok, spentTszTung, getTypeColor, tripProgress, nowFormatted, isModalOpen, phrases, 
-                // Calc exports
+            return { currentView, dayIndex, itinerary, budgetList, packingList, packingTab, newItem, showBudgetInput, detailModal, countdown, addItem, deleteBudget, payers, tabs, keyLabels, walletMode, showWishlistInput, newWishItem, wishlist, handleImageUpload, addWishlist, deleteWishlist, currentDayWeather, budgetFilter, filteredBudgetList, filteredTotal, totalSpent, spentTszLok, spentTszTung, getTypeColor, tripProgress, nowFormatted, isModalOpen, phrases, 
                 currencyRate, calcExpression, appendCalc, clearCalc, backspace, calculate, displayValue,
-                // Resv & Utils 
                 ticketList, getMethodClass, getMethodBadge, getMethodLabel, getTicketsByMethod,
-                // Cloud Status
-                syncStatus, syncColor, saveData, syncPacking
+                syncStatus, syncColor, saveData, syncPacking,
+                openDetail: (p) => { detailModal.value = { show:true, data:p }; },
+                openTicketDetail: (t) => { detailModal.value = { show:true, data: { ...t, isTicket: true } }; }
             };
         }
     }).mount('#app');
